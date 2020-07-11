@@ -162,6 +162,10 @@
     <ClInclude Include="interfaces\noncopyable.hpp" />
     <ClInclude Include="materials\diffuse_material.hpp" />
     <ClInclude Include="materials\material.hpp" />
+    <ClInclude Include="scenes\entity.hpp" />
+    <ClInclude Include="scenes\scene.hpp" />
+    <ClInclude Include="shapes\shape.hpp" />
+    <ClInclude Include="shapes\sphere.hpp" />
     <ClInclude Include="shared\transform.hpp" />
   </ItemGroup>
   <ItemGroup>
@@ -171,6 +175,10 @@
     <ClCompile Include="emitters\point_emitter.cpp" />
     <ClCompile Include="materials\diffuse_material.cpp" />
     <ClCompile Include="materials\material.cpp" />
+    <ClCompile Include="scenes\entity.cpp" />
+    <ClCompile Include="scenes\scene.cpp" />
+    <ClCompile Include="shapes\shape.cpp" />
+    <ClCompile Include="shapes\sphere.cpp" />
     <ClCompile Include="shared\transform.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

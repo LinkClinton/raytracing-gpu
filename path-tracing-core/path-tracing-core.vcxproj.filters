@@ -23,6 +23,18 @@
     <ClInclude Include="materials\diffuse_material.hpp">
       <Filter>materials</Filter>
     </ClInclude>
+    <ClInclude Include="shapes\shape.hpp">
+      <Filter>shapes</Filter>
+    </ClInclude>
+    <ClInclude Include="shapes\sphere.hpp">
+      <Filter>shapes</Filter>
+    </ClInclude>
+    <ClInclude Include="scenes\entity.hpp">
+      <Filter>scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="scenes\scene.hpp">
+      <Filter>scenes</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="interfaces">
@@ -39,6 +51,12 @@
     </Filter>
     <Filter Include="materials">
       <UniqueIdentifier>{c8f4a06a-9ddf-4a10-94dc-ed89b876e699}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="shapes">
+      <UniqueIdentifier>{1d71370f-a31e-4dee-9bf7-b306262559b4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="scenes">
+      <UniqueIdentifier>{7c828fef-2b40-475e-a9df-65cbf545a818}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -60,6 +78,18 @@
     </ClCompile>
     <ClCompile Include="materials\diffuse_material.cpp">
       <Filter>materials</Filter>
+    </ClCompile>
+    <ClCompile Include="shapes\shape.cpp">
+      <Filter>shapes</Filter>
+    </ClCompile>
+    <ClCompile Include="shapes\sphere.cpp">
+      <Filter>shapes</Filter>
+    </ClCompile>
+    <ClCompile Include="scenes\entity.cpp">
+      <Filter>scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="scenes\scene.cpp">
+      <Filter>scenes</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

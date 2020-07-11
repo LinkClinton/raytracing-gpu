@@ -2,14 +2,18 @@
 
 #include "glm/glm.hpp"
 
-namespace path_tracing::core::shared {
+namespace path_tracing::core {
 
 	using uint32 = unsigned int;
 	using real = float;
 
-	using matrix4x4 = glm::mat4x4<real>;
-	using vector4 = glm::vec4<real>;
-	using vector3 = glm::vec3<real>;
+}
+
+namespace path_tracing::core::shared {
+
+	using matrix4x4 = glm::mat<4, 4, real>;
+	using vector4 = glm::vec<4, real>;
+	using vector3 = glm::vec<3, real>;
 	
 	struct transform {
 		matrix4x4 inverse = matrix4x4(1);
