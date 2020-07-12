@@ -162,6 +162,7 @@
     <ClInclude Include="interfaces\noncopyable.hpp" />
     <ClInclude Include="materials\diffuse_material.hpp" />
     <ClInclude Include="materials\material.hpp" />
+    <ClInclude Include="renderer_backend.hpp" />
     <ClInclude Include="scenes\entity.hpp" />
     <ClInclude Include="scenes\scene.hpp" />
     <ClInclude Include="shapes\shape.hpp" />
@@ -175,6 +176,7 @@
     <ClCompile Include="emitters\point_emitter.cpp" />
     <ClCompile Include="materials\diffuse_material.cpp" />
     <ClCompile Include="materials\material.cpp" />
+    <ClCompile Include="renderer_backend.cpp" />
     <ClCompile Include="scenes\entity.cpp" />
     <ClCompile Include="scenes\scene.cpp" />
     <ClCompile Include="shapes\shape.cpp" />

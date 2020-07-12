@@ -35,6 +35,7 @@
     <ClInclude Include="scenes\scene.hpp">
       <Filter>scenes</Filter>
     </ClInclude>
+    <ClInclude Include="renderer_backend.hpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="interfaces">
@@ -91,5 +92,6 @@
     <ClCompile Include="scenes\scene.cpp">
       <Filter>scenes</Filter>
     </ClCompile>
+    <ClCompile Include="renderer_backend.cpp" />
   </ItemGroup>
 </Project>

@@ -3,8 +3,22 @@
   <ItemGroup>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="application.cpp" />
+    <ClCompile Include="utilities\wrapper_dx.cpp">
+      <Filter>utilities</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="application.hpp" />
+    <ClInclude Include="utilities\wrapper_dx.hpp">
+      <Filter>utilities</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="shaders">
+      <UniqueIdentifier>{e23b1b44-c28a-4707-ba04-0b057b2f8965}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="utilities">
+      <UniqueIdentifier>{d41958da-c603-49fd-b9cd-a5b434f8d2ef}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
 </Project>
