@@ -1,17 +1,22 @@
 #pragma once
 
-#include "../../path-tracing-core/interfaces/noncopyable.hpp"
-
 #include <dxgi1_6.h>
 #include <d3d12.h>
 #include <wrl.h>
 
 #include <memory>
+#include <vector>
 
 namespace path_tracing::dx {
 
 	using Microsoft::WRL::ComPtr;
 
+	size_t size_of(const DXGI_FORMAT& format);
+
+	size_t align_to(size_t value, size_t alignment);
+
+	D3D12_CPU_DESCRIPTOR_HANDLE offset_handle(const D3D12_CPU_DESCRIPTOR_HANDLE& handle, size_t value);
+	
 	class device final {
 	public:
 		device() = default;
@@ -63,9 +68,14 @@ namespace path_tracing::dx {
 		ID3D12CommandQueue* operator->() const noexcept { return mCommandQueue.Get(); }
 		ID3D12CommandQueue* get() const noexcept { return mCommandQueue.Get(); }
 
+		void wait();
+		
 		static command_queue create(const device& device);
 	private:
 		ComPtr<ID3D12CommandQueue> mCommandQueue = nullptr;
+		ComPtr<ID3D12Fence> mFence = nullptr;
+
+		size_t mFenceValue = 0;
 	};
 
 	class swap_chain final {
@@ -77,9 +87,24 @@ namespace path_tracing::dx {
 		IDXGISwapChain4* operator->() const noexcept { return mSwapChain.Get(); }
 		IDXGISwapChain4* get() const noexcept { return mSwapChain.Get(); }
 
-		static swap_chain create(const command_queue& queue, int width, int height, void* handle);
+		DXGI_FORMAT format() const noexcept;
+
+		D3D12_CPU_DESCRIPTOR_HANDLE render_target_view(size_t index) const;
+		
+		void resize(const device& device, int width, int height) const;
+
+		void present() const;
+		
+		static swap_chain create(const device& device, const command_queue& queue, 
+			int width, int height, void* handle);
 	private:
+		ComPtr<ID3D12DescriptorHeap> mRTVHeap = nullptr;
 		ComPtr<IDXGISwapChain4> mSwapChain = nullptr;
+
+		DXGI_FORMAT mFormat = DXGI_FORMAT_UNKNOWN;
+
+		size_t mDescriptorOffset = 0;
+		size_t mBufferCount = 2;
 	};
 	
 	class resource {
@@ -132,8 +157,6 @@ namespace path_tracing::dx {
 		size_t mSize = 0;
 	};
 
-	size_t format_size(const DXGI_FORMAT& format);
-	
 	class texture2d final : public resource {
 	public:
 		texture2d() = default;

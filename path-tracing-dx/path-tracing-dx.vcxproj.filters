@@ -6,12 +6,14 @@
     <ClCompile Include="utilities\wrapper_dx.cpp">
       <Filter>utilities</Filter>
     </ClCompile>
+    <ClCompile Include="renderer_directx.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="application.hpp" />
     <ClInclude Include="utilities\wrapper_dx.hpp">
       <Filter>utilities</Filter>
     </ClInclude>
+    <ClInclude Include="renderer_directx.hpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="shaders">

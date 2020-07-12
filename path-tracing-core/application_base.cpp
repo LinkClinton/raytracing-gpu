@@ -52,6 +52,8 @@ void path_tracing::core::application_base::run_loop()
 
 		auto duration = std::chrono::duration_cast<
 			std::chrono::duration<float>>(time_point::now() - current);
+
+		mRenderer->render(nullptr);
 		
 		current = time_point::now();
 	}

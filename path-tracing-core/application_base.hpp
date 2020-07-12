@@ -1,6 +1,7 @@
 #pragma once
 
 #include "interfaces/noncopyable.hpp"
+#include "renderer_backend.hpp"
 
 #include <string>
 
@@ -20,6 +21,8 @@ namespace path_tracing::core {
 
 		virtual void initialize_graphics() = 0;
 	protected:
+		std::shared_ptr<renderer_backend> mRenderer = nullptr;
+		
 		std::string mName;
 
 		int mWidth, mHeight;

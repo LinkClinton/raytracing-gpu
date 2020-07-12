@@ -3,9 +3,28 @@
 #pragma comment(lib, "d3d12.lib")
 #pragma comment(lib, "dxgi.lib")
 
-uint64_t align_to(uint64_t value, uint64_t alignment)
+#include <cassert>
+
+size_t path_tracing::dx::size_of(const DXGI_FORMAT& format)
+{
+	switch (format) {
+	case DXGI_FORMAT_R8G8B8A8_UNORM:
+		return 4;
+	case DXGI_FORMAT_R32G32B32A32_FLOAT:
+		return 16;
+	default:
+		return 0;
+	}
+}
+
+size_t path_tracing::dx::align_to(size_t value, size_t alignment)
 {
 	return ((value + alignment - 1) / alignment) * alignment;
+}
+
+D3D12_CPU_DESCRIPTOR_HANDLE path_tracing::dx::offset_handle(const D3D12_CPU_DESCRIPTOR_HANDLE& handle, size_t value)
+{
+	return { handle.ptr + value };
 }
 
 path_tracing::dx::device path_tracing::dx::device::create()
@@ -45,10 +64,26 @@ path_tracing::dx::graphics_command_list path_tracing::dx::graphics_command_list:
 	return command_list;
 }
 
+void path_tracing::dx::command_queue::wait()
+{
+	mCommandQueue->Signal(mFence.Get(), ++mFenceValue);
+
+	if (mFence->GetCompletedValue() < mFenceValue) {
+		const auto event_handle = CreateEventEx(nullptr, nullptr, false, EVENT_ALL_ACCESS);
+
+		mFence->SetEventOnCompletion(mFenceValue, event_handle);
+
+		WaitForSingleObject(event_handle, INFINITE);
+		CloseHandle(event_handle);
+	}
+}
+
 path_tracing::dx::command_queue path_tracing::dx::command_queue::create(const device& device)
 {
 	command_queue queue;
 
+	queue.mFenceValue = 0;
+	
 	D3D12_COMMAND_QUEUE_DESC desc;
 
 	desc.Flags = D3D12_COMMAND_QUEUE_FLAG_NONE;
@@ -58,18 +93,64 @@ path_tracing::dx::command_queue path_tracing::dx::command_queue::create(const de
 	
 	device->CreateCommandQueue(&desc, IID_PPV_ARGS(queue.mCommandQueue.GetAddressOf()));
 
+	device->CreateFence(queue.mFenceValue, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(queue.mFence.GetAddressOf()));
+	
 	return queue;
 }
 
+DXGI_FORMAT path_tracing::dx::swap_chain::format() const noexcept
+{
+	return mFormat;
+}
+
+D3D12_CPU_DESCRIPTOR_HANDLE path_tracing::dx::swap_chain::render_target_view(size_t index) const
+{
+	assert(index < mBufferCount);
+
+	return offset_handle(mRTVHeap->GetCPUDescriptorHandleForHeapStart(), index * mDescriptorOffset);
+}
+
+void path_tracing::dx::swap_chain::resize(const device& device, int width, int height) const
+{
+	mSwapChain->ResizeBuffers(
+		static_cast<UINT>(mBufferCount), static_cast<UINT>(width), static_cast<UINT>(height),
+		mFormat, DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH);
+
+	for (size_t index = 0; index < mBufferCount; index++) {
+		ComPtr<ID3D12Resource> backBuffer;
+		
+		mSwapChain->GetBuffer(static_cast<UINT>(index), IID_PPV_ARGS(backBuffer.GetAddressOf()));
+
+		D3D12_RENDER_TARGET_VIEW_DESC desc = {};
+
+		desc.Format = mFormat;
+		desc.ViewDimension = D3D12_RTV_DIMENSION_TEXTURE2D;
+		desc.Texture2D.PlaneSlice = 0;
+		desc.Texture2D.MipSlice = 0;
+
+		device->CreateRenderTargetView(backBuffer.Get(), &desc,
+			offset_handle(mRTVHeap->GetCPUDescriptorHandleForHeapStart(), index * mDescriptorOffset));
+	}
+}
+
+void path_tracing::dx::swap_chain::present() const
+{
+	mSwapChain->Present(0, 0);
+}
+
 path_tracing::dx::swap_chain path_tracing::dx::swap_chain::create(
-	const command_queue& queue, int width, int height, void* handle)
+	const device& device, const command_queue& queue, int width, int height, void* handle)
 {
 	swap_chain swap_chain;
 
+	swap_chain.mDescriptorOffset = device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
+	swap_chain.mFormat = DXGI_FORMAT_R8G8B8A8_UNORM;
+	swap_chain.mBufferCount = 2;
+
 	DXGI_SWAP_CHAIN_DESC desc;
 
-	desc.BufferCount = 2;
-	desc.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+	desc.BufferCount = static_cast<UINT>(swap_chain.mBufferCount);
+	desc.BufferDesc.Format = swap_chain.mFormat;
 	desc.BufferDesc.Width = static_cast<UINT>(width);
 	desc.BufferDesc.Height = static_cast<UINT>(height);
 	desc.BufferDesc.RefreshRate.Denominator = 1;
@@ -93,6 +174,18 @@ path_tracing::dx::swap_chain path_tracing::dx::swap_chain::create(
 
 	temp_swap_chain->QueryInterface(IID_PPV_ARGS(swap_chain.mSwapChain.GetAddressOf()));
 
+	// create rtv descriptor heap
+	D3D12_DESCRIPTOR_HEAP_DESC heap_desc = {};
+
+	heap_desc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
+	heap_desc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;
+	heap_desc.NumDescriptors = static_cast<UINT>(swap_chain.mBufferCount);
+	heap_desc.NodeMask = 0;
+	
+	device->CreateDescriptorHeap(&heap_desc, IID_PPV_ARGS(swap_chain.mRTVHeap.GetAddressOf()));
+
+	swap_chain.resize(device, width, height);
+	
 	return swap_chain;
 }
 
@@ -199,18 +292,6 @@ path_tracing::dx::buffer path_tracing::dx::buffer::default_type(
 	return create(state, properties, resource_desc(size, flags), device);
 }
 
-size_t path_tracing::dx::format_size(const DXGI_FORMAT& format)
-{
-	switch (format) {
-	case DXGI_FORMAT_R8G8B8A8_UNORM:
-		return 4;
-	case DXGI_FORMAT_R32G32B32A32_FLOAT:
-		return 16;
-	default:
-		return 0;
-	}
-}
-
 DXGI_FORMAT path_tracing::dx::texture2d::format() const noexcept
 {
 	return mFormat;
@@ -228,7 +309,7 @@ size_t path_tracing::dx::texture2d::height() const noexcept
 
 size_t path_tracing::dx::texture2d::alignment() const noexcept
 {
-	return align_to(mWidth * format_size(mFormat), D3D12_TEXTURE_DATA_PITCH_ALIGNMENT);
+	return align_to(mWidth * size_of(mFormat), D3D12_TEXTURE_DATA_PITCH_ALIGNMENT);
 }
 
 void path_tracing::dx::texture2d::upload(const graphics_command_list& command_list, const buffer& buffer) const
