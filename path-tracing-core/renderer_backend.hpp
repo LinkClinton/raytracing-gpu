@@ -19,6 +19,8 @@ namespace path_tracing::core {
 		virtual void build(const std::shared_ptr<scene>& scene) = 0;
 
 		virtual void resize(int new_width, int new_height) = 0;
+
+		virtual void release() = 0;
 	protected:
 		void* mHandle;
 

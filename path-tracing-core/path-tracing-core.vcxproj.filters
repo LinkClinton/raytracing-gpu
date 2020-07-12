@@ -36,6 +36,7 @@
       <Filter>scenes</Filter>
     </ClInclude>
     <ClInclude Include="renderer_backend.hpp" />
+    <ClInclude Include="imgui_impl_win32.hpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="interfaces">
@@ -93,5 +94,6 @@
       <Filter>scenes</Filter>
     </ClCompile>
     <ClCompile Include="renderer_backend.cpp" />
+    <ClCompile Include="imgui_impl_win32.cpp" />
   </ItemGroup>
 </Project>

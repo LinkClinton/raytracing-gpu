@@ -158,6 +158,7 @@
     <ClCompile Include="application.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="renderer_directx.cpp" />
+    <ClCompile Include="utilities\imgui_impl_dx12.cpp" />
     <ClCompile Include="utilities\wrapper_dx.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -168,6 +169,7 @@
   <ItemGroup>
     <ClInclude Include="application.hpp" />
     <ClInclude Include="renderer_directx.hpp" />
+    <ClInclude Include="utilities\imgui_impl_dx12.hpp" />
     <ClInclude Include="utilities\wrapper_dx.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

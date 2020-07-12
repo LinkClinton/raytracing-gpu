@@ -27,6 +27,11 @@ D3D12_CPU_DESCRIPTOR_HANDLE path_tracing::dx::offset_handle(const D3D12_CPU_DESC
 	return { handle.ptr + value };
 }
 
+D3D12_GPU_DESCRIPTOR_HANDLE path_tracing::dx::offset_handle(const D3D12_GPU_DESCRIPTOR_HANDLE& handle, size_t value)
+{
+	return { handle.ptr + value };
+}
+
 path_tracing::dx::device path_tracing::dx::device::create()
 {
 #ifdef _DEBUG
@@ -61,7 +66,18 @@ path_tracing::dx::graphics_command_list path_tracing::dx::graphics_command_list:
 	device->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT, allocator.get(), nullptr,
 		IID_PPV_ARGS(command_list.mCommandList.GetAddressOf()));
 
+	command_list->Close();
+	
 	return command_list;
+}
+
+void path_tracing::dx::command_queue::execute(const std::vector<graphics_command_list>& command_lists) const
+{
+	std::vector<ID3D12CommandList*> lists;
+
+	for (auto& list : command_lists) lists.push_back(list.get());
+
+	mCommandQueue->ExecuteCommandLists(static_cast<UINT>(lists.size()), lists.data());
 }
 
 void path_tracing::dx::command_queue::wait()
@@ -98,95 +114,43 @@ path_tracing::dx::command_queue path_tracing::dx::command_queue::create(const de
 	return queue;
 }
 
-DXGI_FORMAT path_tracing::dx::swap_chain::format() const noexcept
+D3D12_CPU_DESCRIPTOR_HANDLE path_tracing::dx::descriptor_heap::cpu_handle(size_t index) const
 {
-	return mFormat;
-}
-
-D3D12_CPU_DESCRIPTOR_HANDLE path_tracing::dx::swap_chain::render_target_view(size_t index) const
-{
-	assert(index < mBufferCount);
-
-	return offset_handle(mRTVHeap->GetCPUDescriptorHandleForHeapStart(), index * mDescriptorOffset);
-}
-
-void path_tracing::dx::swap_chain::resize(const device& device, int width, int height) const
-{
-	mSwapChain->ResizeBuffers(
-		static_cast<UINT>(mBufferCount), static_cast<UINT>(width), static_cast<UINT>(height),
-		mFormat, DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH);
-
-	for (size_t index = 0; index < mBufferCount; index++) {
-		ComPtr<ID3D12Resource> backBuffer;
-		
-		mSwapChain->GetBuffer(static_cast<UINT>(index), IID_PPV_ARGS(backBuffer.GetAddressOf()));
-
-		D3D12_RENDER_TARGET_VIEW_DESC desc = {};
-
-		desc.Format = mFormat;
-		desc.ViewDimension = D3D12_RTV_DIMENSION_TEXTURE2D;
-		desc.Texture2D.PlaneSlice = 0;
-		desc.Texture2D.MipSlice = 0;
-
-		device->CreateRenderTargetView(backBuffer.Get(), &desc,
-			offset_handle(mRTVHeap->GetCPUDescriptorHandleForHeapStart(), index * mDescriptorOffset));
-	}
-}
-
-void path_tracing::dx::swap_chain::present() const
-{
-	mSwapChain->Present(0, 0);
-}
-
-path_tracing::dx::swap_chain path_tracing::dx::swap_chain::create(
-	const device& device, const command_queue& queue, int width, int height, void* handle)
-{
-	swap_chain swap_chain;
-
-	swap_chain.mDescriptorOffset = device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
-	swap_chain.mFormat = DXGI_FORMAT_R8G8B8A8_UNORM;
-	swap_chain.mBufferCount = 2;
-
-	DXGI_SWAP_CHAIN_DESC desc;
-
-	desc.BufferCount = static_cast<UINT>(swap_chain.mBufferCount);
-	desc.BufferDesc.Format = swap_chain.mFormat;
-	desc.BufferDesc.Width = static_cast<UINT>(width);
-	desc.BufferDesc.Height = static_cast<UINT>(height);
-	desc.BufferDesc.RefreshRate.Denominator = 1;
-	desc.BufferDesc.RefreshRate.Numerator = 60;
-	desc.BufferDesc.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;
-	desc.BufferDesc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
-	desc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
-	desc.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
-	desc.OutputWindow = static_cast<HWND>(handle);
-	desc.SampleDesc.Quality = 0;
-	desc.SampleDesc.Count = 1;
-	desc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;
-	desc.Windowed = true;
-
-	ComPtr<IDXGIFactory4> factory;
-	ComPtr<IDXGISwapChain> temp_swap_chain;
-
-	CreateDXGIFactory2(DXGI_CREATE_FACTORY_DEBUG, IID_PPV_ARGS(&factory));
-
-	factory->CreateSwapChain(queue.get(), &desc, temp_swap_chain.GetAddressOf());
-
-	temp_swap_chain->QueryInterface(IID_PPV_ARGS(swap_chain.mSwapChain.GetAddressOf()));
-
-	// create rtv descriptor heap
-	D3D12_DESCRIPTOR_HEAP_DESC heap_desc = {};
-
-	heap_desc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
-	heap_desc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;
-	heap_desc.NumDescriptors = static_cast<UINT>(swap_chain.mBufferCount);
-	heap_desc.NodeMask = 0;
+	assert(index < mCount);
 	
-	device->CreateDescriptorHeap(&heap_desc, IID_PPV_ARGS(swap_chain.mRTVHeap.GetAddressOf()));
+	return offset_handle(mHeap->GetCPUDescriptorHandleForHeapStart(), index * mOffset);
+}
 
-	swap_chain.resize(device, width, height);
-	
-	return swap_chain;
+D3D12_GPU_DESCRIPTOR_HANDLE path_tracing::dx::descriptor_heap::gpu_handle(size_t index) const
+{
+	assert(index < mCount);
+
+	return offset_handle(mHeap->GetGPUDescriptorHandleForHeapStart(), index * mOffset);
+}
+
+size_t path_tracing::dx::descriptor_heap::count() const noexcept
+{
+	return mCount;
+}
+
+path_tracing::dx::descriptor_heap path_tracing::dx::descriptor_heap::create(const device& device,
+	const D3D12_DESCRIPTOR_HEAP_TYPE& type, size_t count)
+{
+	descriptor_heap heap;
+
+	heap.mCount = count;
+	heap.mOffset = device->GetDescriptorHandleIncrementSize(type);
+
+	D3D12_DESCRIPTOR_HEAP_DESC desc = {};
+
+	desc.Type = type;
+	desc.Flags = type == D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV ? D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE : D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
+	desc.NodeMask = 0;
+	desc.NumDescriptors = static_cast<UINT>(heap.mCount);
+
+	device->CreateDescriptorHeap(&desc, IID_PPV_ARGS(heap.mHeap.GetAddressOf()));
+
+	return heap;
 }
 
 D3D12_RESOURCE_BARRIER path_tracing::dx::resource::barrier_transition(
@@ -358,6 +322,20 @@ path_tracing::dx::texture2d path_tracing::dx::texture2d::create(
 	return texture;
 }
 
+path_tracing::dx::texture2d path_tracing::dx::texture2d::create(
+	ComPtr<ID3D12Resource>& resource,
+	const DXGI_FORMAT& format, size_t width, size_t height)
+{
+	texture2d texture;
+
+	texture.mWidth = width;
+	texture.mHeight = height;
+	texture.mFormat = format;
+	texture.mResource = resource;
+
+	return texture;
+}
+
 path_tracing::dx::texture2d path_tracing::dx::texture2d::default_type(
 	const D3D12_RESOURCE_STATES& state, 
 	const D3D12_RESOURCE_FLAGS& flags, 
@@ -388,4 +366,100 @@ path_tracing::dx::texture2d path_tracing::dx::texture2d::default_type(
 	desc.Alignment = 0;
 
 	return create(state, properties, desc, device);
+}
+
+
+DXGI_FORMAT path_tracing::dx::swap_chain::format() const noexcept
+{
+	return mFormat;
+}
+
+size_t path_tracing::dx::swap_chain::count() const noexcept
+{
+	return mBufferCount;
+}
+
+D3D12_CPU_DESCRIPTOR_HANDLE path_tracing::dx::swap_chain::render_target_view(size_t index) const
+{
+	return mHeap.cpu_handle(index);
+}
+
+path_tracing::dx::texture2d path_tracing::dx::swap_chain::buffer(size_t index) const
+{
+	return mBackBuffers[index];
+}
+
+void path_tracing::dx::swap_chain::resize(const device& device, int width, int height)
+{
+	mSwapChain->ResizeBuffers(
+		static_cast<UINT>(mBufferCount), static_cast<UINT>(width), static_cast<UINT>(height),
+		mFormat, DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH);
+
+	mBackBuffers.clear();
+
+	for (size_t index = 0; index < mBufferCount; index++) {
+		ComPtr<ID3D12Resource> backBuffer;
+
+		mSwapChain->GetBuffer(static_cast<UINT>(index), IID_PPV_ARGS(backBuffer.GetAddressOf()));
+
+		D3D12_RENDER_TARGET_VIEW_DESC desc = {};
+
+		desc.Format = mFormat;
+		desc.ViewDimension = D3D12_RTV_DIMENSION_TEXTURE2D;
+		desc.Texture2D.PlaneSlice = 0;
+		desc.Texture2D.MipSlice = 0;
+
+		device->CreateRenderTargetView(backBuffer.Get(), &desc, mHeap.cpu_handle(index));
+
+		mBackBuffers.push_back(texture2d::create(backBuffer, mFormat, width, height));
+	}
+}
+
+void path_tracing::dx::swap_chain::present(bool sync) const
+{
+	mSwapChain->Present(sync ? 1 : 0, 0);
+}
+
+path_tracing::dx::swap_chain path_tracing::dx::swap_chain::create(
+	const device& device, const command_queue& queue, int width, int height, void* handle)
+{
+	swap_chain swap_chain;
+
+	swap_chain.mDescriptorOffset = device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
+	swap_chain.mFormat = DXGI_FORMAT_R8G8B8A8_UNORM;
+	swap_chain.mBufferCount = 2;
+
+	DXGI_SWAP_CHAIN_DESC desc;
+
+	desc.BufferCount = static_cast<UINT>(swap_chain.mBufferCount);
+	desc.BufferDesc.Format = swap_chain.mFormat;
+	desc.BufferDesc.Width = static_cast<UINT>(width);
+	desc.BufferDesc.Height = static_cast<UINT>(height);
+	desc.BufferDesc.RefreshRate.Denominator = 1;
+	desc.BufferDesc.RefreshRate.Numerator = 60;
+	desc.BufferDesc.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;
+	desc.BufferDesc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
+	desc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
+	desc.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
+	desc.OutputWindow = static_cast<HWND>(handle);
+	desc.SampleDesc.Quality = 0;
+	desc.SampleDesc.Count = 1;
+	desc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;
+	desc.Windowed = true;
+
+	ComPtr<IDXGIFactory4> factory;
+	ComPtr<IDXGISwapChain> temp_swap_chain;
+
+	CreateDXGIFactory2(DXGI_CREATE_FACTORY_DEBUG, IID_PPV_ARGS(&factory));
+
+	factory->CreateSwapChain(queue.get(), &desc, temp_swap_chain.GetAddressOf());
+
+	temp_swap_chain->QueryInterface(IID_PPV_ARGS(swap_chain.mSwapChain.GetAddressOf()));
+
+	// create rtv descriptor heap
+	swap_chain.mHeap = descriptor_heap::create(device, D3D12_DESCRIPTOR_HEAP_TYPE_RTV, swap_chain.mBufferCount);
+
+	swap_chain.resize(device, width, height);
+
+	return swap_chain;
 }

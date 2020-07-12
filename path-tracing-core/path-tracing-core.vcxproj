@@ -159,6 +159,7 @@
     <ClInclude Include="cameras\camera.hpp" />
     <ClInclude Include="emitters\emitter.hpp" />
     <ClInclude Include="emitters\point_emitter.hpp" />
+    <ClInclude Include="imgui_impl_win32.hpp" />
     <ClInclude Include="interfaces\noncopyable.hpp" />
     <ClInclude Include="materials\diffuse_material.hpp" />
     <ClInclude Include="materials\material.hpp" />
@@ -174,6 +175,7 @@
     <ClCompile Include="cameras\camera.cpp" />
     <ClCompile Include="emitters\emitter.cpp" />
     <ClCompile Include="emitters\point_emitter.cpp" />
+    <ClCompile Include="imgui_impl_win32.cpp" />
     <ClCompile Include="materials\diffuse_material.cpp" />
     <ClCompile Include="materials\material.cpp" />
     <ClCompile Include="renderer_backend.cpp" />

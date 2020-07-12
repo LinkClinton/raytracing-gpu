@@ -7,6 +7,9 @@
       <Filter>utilities</Filter>
     </ClCompile>
     <ClCompile Include="renderer_directx.cpp" />
+    <ClCompile Include="utilities\imgui_impl_dx12.cpp">
+      <Filter>utilities</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="application.hpp" />
@@ -14,6 +17,9 @@
       <Filter>utilities</Filter>
     </ClInclude>
     <ClInclude Include="renderer_directx.hpp" />
+    <ClInclude Include="utilities\imgui_impl_dx12.hpp">
+      <Filter>utilities</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="shaders">

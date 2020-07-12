@@ -1,4 +1,5 @@
 #include "application_base.hpp"
+#include "imgui_impl_win32.hpp"
 
 #include <Windows.h>
 
@@ -6,10 +7,12 @@
 
 using time_point = std::chrono::high_resolution_clock;
 
+extern LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+
 LRESULT DefaultWindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) {
-	//if (ImGui_ImplWin32_WndProcHandler(hWnd, message, wParam, lParam))
-		//return true;
-		//
+	if (ImGui_ImplWin32_WndProcHandler(hWnd, message, wParam, lParam))
+		return true;
+		
 	switch (message)
 	{
 	case WM_DESTROY: {
@@ -30,6 +33,10 @@ path_tracing::core::application_base::application_base(const std::string& name, 
 
 path_tracing::core::application_base::~application_base()
 {
+	mRenderer->release();
+	
+	ImGui_ImplWin32_Shutdown();
+	ImGui::DestroyContext();
 }
 
 void path_tracing::core::application_base::run_loop()
@@ -53,6 +60,8 @@ void path_tracing::core::application_base::run_loop()
 		auto duration = std::chrono::duration_cast<
 			std::chrono::duration<float>>(time_point::now() - current);
 
+		ImGui_ImplWin32_NewFrame();
+		
 		mRenderer->render(nullptr);
 		
 		current = time_point::now();
@@ -95,6 +104,9 @@ void path_tracing::core::application_base::initialize_windows()
 	mExisted = true;
 
 	ShowWindow(static_cast<HWND>(mHandle), SW_SHOW);
+
+	ImGui::CreateContext();
+	ImGui_ImplWin32_Init(mHandle);
 }
 
 void path_tracing::core::application_base::initialize()
