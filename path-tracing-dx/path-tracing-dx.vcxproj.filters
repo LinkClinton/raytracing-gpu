@@ -3,22 +3,70 @@
   <ItemGroup>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="application.cpp" />
-    <ClCompile Include="utilities\wrapper_dx.cpp">
-      <Filter>utilities</Filter>
-    </ClCompile>
     <ClCompile Include="renderer_directx.cpp" />
     <ClCompile Include="utilities\imgui_impl_dx12.cpp">
       <Filter>utilities</Filter>
     </ClCompile>
+    <ClCompile Include="wrapper\utility.cpp">
+      <Filter>wrapper</Filter>
+    </ClCompile>
+    <ClCompile Include="wrapper\device.cpp">
+      <Filter>wrapper</Filter>
+    </ClCompile>
+    <ClCompile Include="wrapper\command_list.cpp">
+      <Filter>wrapper</Filter>
+    </ClCompile>
+    <ClCompile Include="wrapper\descriptor_heap.cpp">
+      <Filter>wrapper</Filter>
+    </ClCompile>
+    <ClCompile Include="wrapper\root_signature.cpp">
+      <Filter>wrapper</Filter>
+    </ClCompile>
+    <ClCompile Include="wrapper\shader_library.cpp">
+      <Filter>wrapper</Filter>
+    </ClCompile>
+    <ClCompile Include="wrapper\shader_resource.cpp">
+      <Filter>wrapper</Filter>
+    </ClCompile>
+    <ClCompile Include="wrapper\swap_chain.cpp">
+      <Filter>wrapper</Filter>
+    </ClCompile>
+    <ClCompile Include="wrapper\raytracing_pipeline.cpp">
+      <Filter>wrapper</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="application.hpp" />
-    <ClInclude Include="utilities\wrapper_dx.hpp">
-      <Filter>utilities</Filter>
-    </ClInclude>
     <ClInclude Include="renderer_directx.hpp" />
     <ClInclude Include="utilities\imgui_impl_dx12.hpp">
       <Filter>utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="wrapper\utility.hpp">
+      <Filter>wrapper</Filter>
+    </ClInclude>
+    <ClInclude Include="wrapper\device.hpp">
+      <Filter>wrapper</Filter>
+    </ClInclude>
+    <ClInclude Include="wrapper\command_list.hpp">
+      <Filter>wrapper</Filter>
+    </ClInclude>
+    <ClInclude Include="wrapper\descriptor_heap.hpp">
+      <Filter>wrapper</Filter>
+    </ClInclude>
+    <ClInclude Include="wrapper\root_signature.hpp">
+      <Filter>wrapper</Filter>
+    </ClInclude>
+    <ClInclude Include="wrapper\shader_library.hpp">
+      <Filter>wrapper</Filter>
+    </ClInclude>
+    <ClInclude Include="wrapper\shader_resource.hpp">
+      <Filter>wrapper</Filter>
+    </ClInclude>
+    <ClInclude Include="wrapper\swap_chain.hpp">
+      <Filter>wrapper</Filter>
+    </ClInclude>
+    <ClInclude Include="wrapper\raytracing_pipeline.hpp">
+      <Filter>wrapper</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -27,6 +75,9 @@
     </Filter>
     <Filter Include="utilities">
       <UniqueIdentifier>{d41958da-c603-49fd-b9cd-a5b434f8d2ef}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="wrapper">
+      <UniqueIdentifier>{8de4177e-be2c-4426-99de-756b2d9e73c4}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

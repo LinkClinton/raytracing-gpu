@@ -59,25 +59,23 @@ void path_tracing::dx::renderer_directx::render_imgui() const
 
 	const auto current_frame_index = mSwapChain->GetCurrentBackBufferIndex();
 
-	const auto before_barrier = resource::barrier_transition(D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET,
+	const auto before_barrier = shader_resource::barrier_transition(D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET,
 		mSwapChain.buffer(current_frame_index));
 
-	const auto after_barrier = resource::barrier_transition(D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT,
+	const auto after_barrier = shader_resource::barrier_transition(D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT,
 		mSwapChain.buffer(current_frame_index));
 
 	const float clear_color[4] = { 1, 1, 1, 1 };
 
 	const auto render_target_view = mSwapChain.render_target_view(current_frame_index);
-	const auto imgui_descriptor_heap = mImGuiDescriptorHeap.get();
-	const auto command_list = mCommandList.get();
-
+	
 	mCommandAllocator->Reset();
 	
 	mCommandList->Reset(mCommandAllocator.get(), nullptr);
 	mCommandList->ResourceBarrier(1, &before_barrier);
 	mCommandList->ClearRenderTargetView(render_target_view, clear_color, 0, nullptr);
 	mCommandList->OMSetRenderTargets(1, &render_target_view, false, nullptr);
-	mCommandList->SetDescriptorHeaps(1, &imgui_descriptor_heap);
+	mCommandList->SetDescriptorHeaps(1, mImGuiDescriptorHeap.get_address_of());
 
 	ImGui::Render();
 	ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), mCommandList.get());

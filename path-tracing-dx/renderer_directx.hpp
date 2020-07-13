@@ -2,10 +2,13 @@
 
 #include "../path-tracing-core/renderer_backend.hpp"
 
-#include "utilities/wrapper_dx.hpp"
+#include "wrapper/command_list.hpp"
+#include "wrapper/swap_chain.hpp"
 
 namespace path_tracing::dx {
 
+	using namespace wrapper;
+	
 	class renderer_directx final : public core::renderer_backend {
 	public:
 		explicit renderer_directx(void* handle, int width, int height);
