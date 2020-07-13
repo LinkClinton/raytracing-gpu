@@ -4,39 +4,37 @@
 
 namespace path_tracing::dx::wrapper {
 
-	class command_allocator final {
+	class command_allocator final : public noncopyable {
 	public:
-		command_allocator() = default;
+		explicit command_allocator(const std::shared_ptr<device>& device);
 
 		~command_allocator() = default;
 
 		ID3D12CommandAllocator* const* get_address_of() const;
 		ID3D12CommandAllocator* operator->() const;
 		ID3D12CommandAllocator* get() const;
-
-		static command_allocator create(const device& device);
 	private:
 		ComPtr<ID3D12CommandAllocator> mAllocator = nullptr;
 	};
 
-	class graphics_command_list final {
+	class graphics_command_list final : public noncopyable {
 	public:
-		graphics_command_list() = default;
+		explicit graphics_command_list(
+			const std::shared_ptr<command_allocator>& allocator,
+			const std::shared_ptr<device>& device);
 
 		~graphics_command_list() = default;
 
 		ID3D12GraphicsCommandList4* const* get_address_of() const;
 		ID3D12GraphicsCommandList4* operator->() const;
 		ID3D12GraphicsCommandList4* get() const;
-		
-		static graphics_command_list create(const device& device, const command_allocator& allocator);
 	public:
 		ComPtr<ID3D12GraphicsCommandList4> mCommandList = nullptr;
 	};
 
-	class command_queue final {
+	class command_queue final : public noncopyable {
 	public:
-		command_queue() = default;
+		explicit command_queue(const std::shared_ptr<device>& device);
 
 		~command_queue() = default;
 
@@ -44,11 +42,9 @@ namespace path_tracing::dx::wrapper {
 		ID3D12CommandQueue* operator->() const;
 		ID3D12CommandQueue* get() const;
 
-		void execute(const std::vector<graphics_command_list>& command_lists) const;
+		void execute(const std::vector<std::shared_ptr<graphics_command_list>>& command_lists) const;
 
 		void wait();
-
-		static command_queue create(const device& device);
 	private:
 		ComPtr<ID3D12CommandQueue> mCommandQueue = nullptr;
 		ComPtr<ID3D12Fence> mFence = nullptr;

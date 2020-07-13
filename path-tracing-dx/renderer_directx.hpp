@@ -25,16 +25,17 @@ namespace path_tracing::dx {
 	private:
 		void render_imgui() const;
 	private:
-		command_allocator mCommandAllocator;
-		command_queue mCommandQueue;
+		std::shared_ptr<command_allocator> mCommandAllocator;
+		std::shared_ptr<command_queue> mCommandQueue;
 
-		graphics_command_list mCommandList;
+		std::shared_ptr<graphics_command_list> mCommandList;
 
-		descriptor_heap mImGuiDescriptorHeap;
+		std::shared_ptr<descriptor_heap> mRenderTargetViewHeap;
+		std::shared_ptr<descriptor_heap> mImGuiDescriptorHeap;
 		
-		swap_chain mSwapChain;
+		std::shared_ptr<swap_chain> mSwapChain;
 		
-		device mDevice;
+		std::shared_ptr<device> mDevice;
 	};
 	
 }

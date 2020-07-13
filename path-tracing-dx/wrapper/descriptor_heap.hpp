@@ -4,7 +4,7 @@
 
 namespace path_tracing::dx::wrapper {
 
-	class descriptor_table final {
+	class descriptor_table final : public noncopyable {
 	public:
 		descriptor_table() = default;
 
@@ -18,23 +18,23 @@ namespace path_tracing::dx::wrapper {
 
 		void add_range(const std::vector<std::string>& name, const D3D12_DESCRIPTOR_RANGE_TYPE& type, size_t base, size_t space);
 
-		D3D12_ROOT_PARAMETER root_parameter() const noexcept;
-
-		size_t descriptors() const noexcept;
-
-		size_t operator[](const std::string& name) const;
-
-		static descriptor_table create();
+		D3D12_ROOT_PARAMETER parameter() const;
+		
+		size_t index(const std::string& name) const;
+		
+		size_t count() const noexcept;
 	private:
-		std::unordered_map<std::string, size_t> mDescriptorIndex;
+		std::unordered_map<std::string, size_t> mDescriptorsIndex;
 
 		std::vector<D3D12_DESCRIPTOR_RANGE> mRanges;
 	};
-
-	class descriptor_heap final {
+	
+	class descriptor_heap final : public noncopyable {
 	public:
-		descriptor_heap() = default;
+		explicit descriptor_heap(const std::shared_ptr<device>& device, const D3D12_DESCRIPTOR_HEAP_TYPE& type, size_t count);
 
+		explicit descriptor_heap(const std::shared_ptr<device>& device, const std::shared_ptr<descriptor_table>& table);
+		
 		~descriptor_heap() = default;
 
 		ID3D12DescriptorHeap* const* get_address_of() const;
@@ -45,10 +45,6 @@ namespace path_tracing::dx::wrapper {
 		D3D12_GPU_DESCRIPTOR_HANDLE gpu_handle(size_t index = 0) const;
 
 		size_t count() const noexcept;
-
-		static descriptor_heap create(const device& device, const D3D12_DESCRIPTOR_HEAP_TYPE& type, size_t count);
-
-		static descriptor_heap create(const device& device, const descriptor_table& table);
 	private:
 		ComPtr<ID3D12DescriptorHeap> mHeap = nullptr;
 
@@ -56,5 +52,4 @@ namespace path_tracing::dx::wrapper {
 		size_t mCount = 0;
 	};
 
-	
 }

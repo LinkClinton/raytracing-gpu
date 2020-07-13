@@ -162,9 +162,7 @@
     <ClCompile Include="wrapper\command_list.cpp" />
     <ClCompile Include="wrapper\descriptor_heap.cpp" />
     <ClCompile Include="wrapper\device.cpp" />
-    <ClCompile Include="wrapper\raytracing_pipeline.cpp" />
     <ClCompile Include="wrapper\root_signature.cpp" />
-    <ClCompile Include="wrapper\shader_library.cpp" />
     <ClCompile Include="wrapper\shader_resource.cpp" />
     <ClCompile Include="wrapper\swap_chain.cpp" />
     <ClCompile Include="wrapper\utility.cpp" />
@@ -181,9 +179,7 @@
     <ClInclude Include="wrapper\command_list.hpp" />
     <ClInclude Include="wrapper\descriptor_heap.hpp" />
     <ClInclude Include="wrapper\device.hpp" />
-    <ClInclude Include="wrapper\raytracing_pipeline.hpp" />
     <ClInclude Include="wrapper\root_signature.hpp" />
-    <ClInclude Include="wrapper\shader_library.hpp" />
     <ClInclude Include="wrapper\shader_resource.hpp" />
     <ClInclude Include="wrapper\swap_chain.hpp" />
     <ClInclude Include="wrapper\utility.hpp" />

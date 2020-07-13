@@ -19,19 +19,13 @@
     <ClCompile Include="wrapper\descriptor_heap.cpp">
       <Filter>wrapper</Filter>
     </ClCompile>
-    <ClCompile Include="wrapper\root_signature.cpp">
-      <Filter>wrapper</Filter>
-    </ClCompile>
-    <ClCompile Include="wrapper\shader_library.cpp">
-      <Filter>wrapper</Filter>
-    </ClCompile>
     <ClCompile Include="wrapper\shader_resource.cpp">
       <Filter>wrapper</Filter>
     </ClCompile>
     <ClCompile Include="wrapper\swap_chain.cpp">
       <Filter>wrapper</Filter>
     </ClCompile>
-    <ClCompile Include="wrapper\raytracing_pipeline.cpp">
+    <ClCompile Include="wrapper\root_signature.cpp">
       <Filter>wrapper</Filter>
     </ClCompile>
   </ItemGroup>
@@ -53,19 +47,13 @@
     <ClInclude Include="wrapper\descriptor_heap.hpp">
       <Filter>wrapper</Filter>
     </ClInclude>
-    <ClInclude Include="wrapper\root_signature.hpp">
-      <Filter>wrapper</Filter>
-    </ClInclude>
-    <ClInclude Include="wrapper\shader_library.hpp">
-      <Filter>wrapper</Filter>
-    </ClInclude>
     <ClInclude Include="wrapper\shader_resource.hpp">
       <Filter>wrapper</Filter>
     </ClInclude>
     <ClInclude Include="wrapper\swap_chain.hpp">
       <Filter>wrapper</Filter>
     </ClInclude>
-    <ClInclude Include="wrapper\raytracing_pipeline.hpp">
+    <ClInclude Include="wrapper\root_signature.hpp">
       <Filter>wrapper</Filter>
     </ClInclude>
   </ItemGroup>

@@ -1,5 +1,7 @@
 #pragma once
 
+#include "../../path-tracing-core/interfaces/noncopyable.hpp"
+
 #include <dxgi1_6.h>
 #include <d3d12.h>
 #include <wrl.h>
@@ -9,8 +11,10 @@
 #include <vector>
 #include <string>
 
-namespace path_tracing::dx::wrapper {
+using path_tracing::core::interfaces::noncopyable;
 
+namespace path_tracing::dx::wrapper {
+	
 	using Microsoft::WRL::ComPtr;
 
 	size_t size_of(const DXGI_FORMAT& format);

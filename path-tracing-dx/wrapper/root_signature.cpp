@@ -15,8 +15,8 @@ ID3D12RootSignature* path_tracing::dx::wrapper::root_signature::get() const
 	return mRootSignature.Get();
 }
 
-void path_tracing::dx::wrapper::root_signature::add_descriptor(
-	const std::string& name, const D3D12_ROOT_PARAMETER_TYPE& type, size_t base, size_t space)
+void path_tracing::dx::wrapper::root_signature::add_descriptor(const std::string& name,
+	const D3D12_ROOT_PARAMETER_TYPE& type, size_t base, size_t space)
 {
 	D3D12_ROOT_PARAMETER parameter;
 
@@ -25,12 +25,13 @@ void path_tracing::dx::wrapper::root_signature::add_descriptor(
 	parameter.Descriptor.ShaderRegister = static_cast<UINT>(base);
 	parameter.Descriptor.RegisterSpace = static_cast<UINT>(space);
 
-	push_root_parameter(name, parameter);
+	add_root_parameter(name, parameter);
 }
 
-void path_tracing::dx::wrapper::root_signature::add_descriptor_table(const std::string& name, const descriptor_table& table)
+void path_tracing::dx::wrapper::root_signature::add_descriptor_table(const std::string& name,
+	const std::shared_ptr<descriptor_table>& table)
 {
-	push_root_parameter(name, table.root_parameter());
+	add_root_parameter(name, table->parameter());
 }
 
 void path_tracing::dx::wrapper::root_signature::add_constants(const std::string& name, size_t base, size_t space, size_t count)
@@ -39,11 +40,11 @@ void path_tracing::dx::wrapper::root_signature::add_constants(const std::string&
 
 	parameter.ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;
 	parameter.ParameterType = D3D12_ROOT_PARAMETER_TYPE_32BIT_CONSTANTS;
+	parameter.Constants.Num32BitValues = static_cast<UINT>(count);
 	parameter.Constants.ShaderRegister = static_cast<UINT>(base);
 	parameter.Constants.RegisterSpace = static_cast<UINT>(space);
-	parameter.Constants.Num32BitValues = static_cast<UINT>(count);
 
-	push_root_parameter(name, parameter);
+	add_root_parameter(name, parameter);
 }
 
 void path_tracing::dx::wrapper::root_signature::add_srv(const std::string& name, size_t base, size_t space)
@@ -61,7 +62,7 @@ void path_tracing::dx::wrapper::root_signature::add_cbv(const std::string& name,
 	add_descriptor(name, D3D12_ROOT_PARAMETER_TYPE_CBV, base, space);
 }
 
-void path_tracing::dx::wrapper::root_signature::serialize(const device& device)
+void path_tracing::dx::wrapper::root_signature::serialize(const std::shared_ptr<device>& device)
 {
 	D3D12_ROOT_SIGNATURE_DESC desc = {};
 
@@ -74,13 +75,13 @@ void path_tracing::dx::wrapper::root_signature::serialize(const device& device)
 
 	D3D12SerializeRootSignature(&desc, D3D_ROOT_SIGNATURE_VERSION_1, signature_blob.GetAddressOf(), error_blob.GetAddressOf());
 
-	device->CreateRootSignature(0, signature_blob->GetBufferPointer(), signature_blob->GetBufferSize(),
+	(*device)->CreateRootSignature(0, signature_blob->GetBufferPointer(), signature_blob->GetBufferSize(),
 		IID_PPV_ARGS(mRootSignature.GetAddressOf()));
 }
 
-size_t path_tracing::dx::wrapper::root_signature::offset(const std::string& name) const
+size_t path_tracing::dx::wrapper::root_signature::base(const std::string& name) const
 {
-	return mDescriptorOffset[mDescriptorIndex.at(name)];
+	return mDescriptorBase[mDescriptorIndex.at(name)];
 }
 
 size_t path_tracing::dx::wrapper::root_signature::size(const std::string& name) const
@@ -88,22 +89,18 @@ size_t path_tracing::dx::wrapper::root_signature::size(const std::string& name) 
 	return mDescriptorSize[mDescriptorIndex.at(name)];
 }
 
-path_tracing::dx::wrapper::root_signature path_tracing::dx::wrapper::root_signature::create()
-{
-	return root_signature();
-}
 
-void path_tracing::dx::wrapper::root_signature::push_root_parameter(const std::string& name, const D3D12_ROOT_PARAMETER& parameter)
+void path_tracing::dx::wrapper::root_signature::add_root_parameter(const std::string& name, const D3D12_ROOT_PARAMETER& parameter)
 {
 	mRootParameters.push_back(parameter);
 
 	mDescriptorIndex.insert({ name, mDescriptorIndex.size() });
 
-	const auto base = mDescriptorOffset.empty() ? D3D12_SHADER_IDENTIFIER_SIZE_IN_BYTES : mDescriptorOffset.back();
-	const auto offset = parameter.ParameterType == D3D12_ROOT_PARAMETER_TYPE_32BIT_CONSTANTS ?
+	const auto base = mDescriptorIndex.empty() ? D3D12_SHADER_IDENTIFIER_SIZE_IN_BYTES : mDescriptorBase.back();
+	const auto size = parameter.ParameterType == D3D12_ROOT_PARAMETER_TYPE_32BIT_CONSTANTS ?
 		align_to(static_cast<size_t>(parameter.Constants.Num32BitValues) * 4, sizeof(D3D12_GPU_DESCRIPTOR_HANDLE)) :
 		sizeof(D3D12_GPU_DESCRIPTOR_HANDLE);
 
-	mDescriptorOffset.push_back(base + offset);
-	mDescriptorSize.push_back(offset);
+	mDescriptorBase.push_back(base);
+	mDescriptorSize.push_back(size);
 }
