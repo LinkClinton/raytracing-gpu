@@ -3,6 +3,49 @@
 #include <algorithm>
 #include <cassert>
 
+path_tracing::dx::wrapper::shader_functions::shader_functions(const shader_functions& other) :
+	shader_functions(other.functions)
+{
+}
+
+path_tracing::dx::wrapper::shader_functions::shader_functions(shader_functions&& other) noexcept :
+	shader_functions(std::move(other.functions))
+{
+}
+
+path_tracing::dx::wrapper::shader_functions::shader_functions(const std::vector<std::wstring>& functions) :
+	functions(functions)
+{
+	pointers = std::vector<LPCWSTR>(functions.size());
+
+	for (size_t index = 0; index < functions.size(); index++)
+		pointers[index] = functions[index].c_str();
+}
+
+path_tracing::dx::wrapper::shader_functions& path_tracing::dx::wrapper::shader_functions::operator=(const shader_functions& other)
+{
+	functions = other.functions;
+
+	pointers = std::vector<LPCWSTR>(functions.size());
+
+	for (size_t index = 0; index < functions.size(); index++)
+		pointers[index] = functions[index].c_str();
+
+	return *this;
+}
+
+path_tracing::dx::wrapper::shader_functions& path_tracing::dx::wrapper::shader_functions::operator=(shader_functions&& other) noexcept
+{
+	functions = std::move(other.functions);
+
+	pointers = std::vector<LPCWSTR>(functions.size());
+
+	for (size_t index = 0; index < functions.size(); index++)
+		pointers[index] = functions[index].c_str();
+
+	return *this;
+}
+
 path_tracing::dx::wrapper::shader_record::shader_record(size_t address, size_t size) :
 	address(address), size(size)
 {
@@ -28,26 +71,28 @@ path_tracing::dx::wrapper::shader_table::shader_table(
 	const auto shader_without_signature_size = align_to(D3D12_SHADER_IDENTIFIER_SIZE_IN_BYTES, 
 		D3D12_RAYTRACING_SHADER_RECORD_BYTE_ALIGNMENT);
 
+	mRayGenerationShader.address = 0;
+	
 	// find the max_size of each shader type
 	// for ray generation shader, if it has root signature we can find the size from mShaderRecords
 	// otherwise, the size should be "shader_without_signature_size"
 	if (mShaderRecords.find(ray_generation_shader) != mShaderRecords.end())
-		mRayGenerationShaderSize = mShaderRecords[ray_generation_shader].size;
+		mRayGenerationShader.size = mShaderRecords[ray_generation_shader].size;
 	else
-		mRayGenerationShaderSize = shader_without_signature_size;
-
+		mRayGenerationShader.size = shader_without_signature_size;
+	
 	for (const auto& shader : miss_shaders) {
 		auto shader_size = mShaderRecords.find(shader) != mShaderRecords.end() ? 
 			mShaderRecords[shader].size : shader_without_signature_size;
 
-		mMissShaderSize = std::max(mMissShaderSize, shader_size);
+		mMissShaders.size = std::max(mMissShaders.size, shader_size);
 	}
 
 	for (const auto& shader : hit_group_shaders) {
 		auto shader_size = mShaderRecords.find(shader) != mShaderRecords.end() ?
 			mShaderRecords[shader].size : shader_without_signature_size;
 
-		mHitGroupShaderSize = std::max(mHitGroupShaderSize, shader_size);
+		mHitGroupShaders.size = std::max(mHitGroupShaders.size, shader_size);
 	}
 	
 	// if the ray_generation_shader is not in the mShaderRecords, means the shader does not have local root signature
@@ -57,22 +102,39 @@ path_tracing::dx::wrapper::shader_table::shader_table(
 
 	auto shader_record_offset = mShaderRecords[ray_generation_shader].address + mShaderRecords[ray_generation_shader].size;
 
+	mMissShaders.address = shader_record_offset;
+	
 	for (const auto& shader : miss_shaders) {
-		mShaderRecords[shader] = shader_record(shader_record_offset, mMissShaderSize);
+		mShaderRecords[shader] = shader_record(shader_record_offset, mMissShaders.size);
 
-		shader_record_offset = shader_record_offset + mMissShaderSize;
+		shader_record_offset = shader_record_offset + mMissShaders.size;
 	}
 
+	mHitGroupShaders.address = shader_record_offset;
+	
 	for (const auto& shader : hit_group_shaders) {
-		mShaderRecords[shader] = shader_record(shader_record_offset, mHitGroupShaderSize);
+		mShaderRecords[shader] = shader_record(shader_record_offset, mHitGroupShaders.size);
 
-		shader_record_offset = shader_record_offset + mHitGroupShaderSize;
+		shader_record_offset = shader_record_offset + mHitGroupShaders.size;
 	}
 
 	mCpuBuffer = std::make_shared<buffer>(device, D3D12_RESOURCE_STATE_GENERIC_READ,
 		D3D12_RESOURCE_FLAG_NONE, D3D12_HEAP_TYPE_UPLOAD, shader_record_offset);
 	mGpuBuffer = std::make_shared<buffer>(device, D3D12_RESOURCE_STATE_GENERIC_READ,
 		D3D12_RESOURCE_FLAG_NONE, D3D12_HEAP_TYPE_DEFAULT, shader_record_offset);
+}
+
+void path_tracing::dx::wrapper::shader_table::copy_shader_identifier_from(
+	const ComPtr<ID3D12StateObjectProperties>& properties)
+{
+	begin_mapping();
+
+	for (const auto& shader : mShaderRecords)
+		std::memcpy(mBufferMapping + shader.second.address,
+			properties->GetShaderIdentifier(shader.first.c_str()),
+			D3D12_SHADER_IDENTIFIER_SIZE_IN_BYTES);
+
+	end_mapping();
 }
 
 void path_tracing::dx::wrapper::shader_table::begin_mapping()
@@ -105,17 +167,17 @@ byte* path_tracing::dx::wrapper::shader_table::shader_record_address(const std::
 	return mBufferMapping + mShaderRecords.at(name).address;
 }
 
-size_t path_tracing::dx::wrapper::shader_table::ray_generation_shader_size() const noexcept
+path_tracing::dx::wrapper::shader_record path_tracing::dx::wrapper::shader_table::ray_generation_shader() const noexcept
 {
-	return mRayGenerationShaderSize;
+	return mRayGenerationShader;
 }
 
-size_t path_tracing::dx::wrapper::shader_table::hit_group_shader_size() const noexcept
+path_tracing::dx::wrapper::shader_record path_tracing::dx::wrapper::shader_table::hit_group_shaders() const noexcept
 {
-	return mHitGroupShaderSize;
+	return mHitGroupShaders;
 }
 
-size_t path_tracing::dx::wrapper::shader_table::miss_shader_size() const noexcept
+path_tracing::dx::wrapper::shader_record path_tracing::dx::wrapper::shader_table::miss_shaders() const noexcept
 {
-	return mMissShaderSize;
+	return mMissShaders;
 }

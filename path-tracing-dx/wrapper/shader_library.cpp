@@ -11,8 +11,20 @@ path_tracing::dx::wrapper::shader_raytracing_config::shader_raytracing_config(si
 size_t path_tracing::dx::wrapper::shader_raytracing_config::hash() const noexcept
 {
 	assert(max_attribute_size <= D3D12_RAYTRACING_MAX_ATTRIBUTE_SIZE_IN_BYTES);
-	
-	return max_payload_size * D3D12_RAYTRACING_MAX_ATTRIBUTE_SIZE_IN_BYTES + max_attribute_size;
+
+	return encode(*this);
+}
+
+size_t path_tracing::dx::wrapper::shader_raytracing_config::encode(const shader_raytracing_config& config)
+{
+	return config.max_payload_size * D3D12_RAYTRACING_MAX_ATTRIBUTE_SIZE_IN_BYTES + config.max_attribute_size;
+}
+
+path_tracing::dx::wrapper::shader_raytracing_config path_tracing::dx::wrapper::shader_raytracing_config::decode(size_t code)
+{
+	return shader_raytracing_config(
+		code % D3D12_RAYTRACING_MAX_ATTRIBUTE_SIZE_IN_BYTES, 
+		code / D3D12_RAYTRACING_MAX_ATTRIBUTE_SIZE_IN_BYTES);
 }
 
 path_tracing::dx::wrapper::shader_association::shader_association(

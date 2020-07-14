@@ -14,6 +14,10 @@ namespace path_tracing::dx::wrapper {
 		shader_raytracing_config(size_t max_attribute_size, size_t max_payload_size);
 
 		size_t hash() const noexcept;
+
+		static size_t encode(const shader_raytracing_config& config);
+
+		static shader_raytracing_config decode(size_t code);
 	};
 	
 	struct shader_association final {

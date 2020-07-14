@@ -5,8 +5,22 @@
 
 namespace path_tracing::dx::wrapper {
 
-	using shader_functions = std::vector<std::wstring>;
+	struct shader_functions {
+		std::vector<std::wstring> functions;
+		std::vector<LPCWSTR> pointers;
 
+		shader_functions() = default;
+
+		shader_functions(const shader_functions& other);
+
+		shader_functions(shader_functions&& other) noexcept;
+
+		shader_functions(const std::vector<std::wstring>& functions);
+
+		shader_functions& operator=(const shader_functions& other);
+		shader_functions& operator=(shader_functions&& other) noexcept;
+	};
+	
 	struct shader_record final {
 		size_t address = 0;
 		size_t size = 0;
@@ -27,31 +41,31 @@ namespace path_tracing::dx::wrapper {
 
 		~shader_table() = default;
 
+		void copy_shader_identifier_from(const ComPtr<ID3D12StateObjectProperties>& properties);
+		
 		void begin_mapping();
 
 		void end_mapping();
-
+		
 		void upload(const std::shared_ptr<graphics_command_list>& command_list) const;
 		
 		byte* shader_record_address(const std::wstring& name) const;
 
-		size_t ray_generation_shader_size() const noexcept;
+		shader_record ray_generation_shader() const noexcept;
 
-		size_t hit_group_shader_size() const noexcept;
+		shader_record hit_group_shaders() const noexcept;
 
-		size_t miss_shader_size() const noexcept;
+		shader_record miss_shaders() const noexcept;
 	private:
-		std::unordered_map<std::shared_ptr<root_signature>, shader_functions> mRootSignatureAssociations;
-		std::unordered_map<size_t, shader_functions> mShaderRaytracingConfigAssociations;
 		std::unordered_map<std::wstring, shader_record> mShaderRecords;
 		
 		std::shared_ptr<buffer> mCpuBuffer;
 		std::shared_ptr<buffer> mGpuBuffer;
 
-		size_t mRayGenerationShaderSize = 0;
-		size_t mHitGroupShaderSize = 0;
-		size_t mMissShaderSize = 0;
-
+		shader_record mRayGenerationShader;
+		shader_record mHitGroupShaders;
+		shader_record mMissShaders;
+		
 		byte* mBufferMapping = nullptr;
 	};
 	
