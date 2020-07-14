@@ -89,6 +89,11 @@ size_t path_tracing::dx::wrapper::root_signature::size(const std::string& name) 
 	return mDescriptorSize[mDescriptorIndex.at(name)];
 }
 
+size_t path_tracing::dx::wrapper::root_signature::size() const
+{
+	return mSize;
+}
+
 
 void path_tracing::dx::wrapper::root_signature::add_root_parameter(const std::string& name, const D3D12_ROOT_PARAMETER& parameter)
 {
@@ -96,11 +101,12 @@ void path_tracing::dx::wrapper::root_signature::add_root_parameter(const std::st
 
 	mDescriptorIndex.insert({ name, mDescriptorIndex.size() });
 
-	const auto base = mDescriptorIndex.empty() ? D3D12_SHADER_IDENTIFIER_SIZE_IN_BYTES : mDescriptorBase.back();
 	const auto size = parameter.ParameterType == D3D12_ROOT_PARAMETER_TYPE_32BIT_CONSTANTS ?
 		align_to(static_cast<size_t>(parameter.Constants.Num32BitValues) * 4, sizeof(D3D12_GPU_DESCRIPTOR_HANDLE)) :
 		sizeof(D3D12_GPU_DESCRIPTOR_HANDLE);
 
-	mDescriptorBase.push_back(base);
+	mDescriptorBase.push_back(mSize + D3D12_SHADER_IDENTIFIER_SIZE_IN_BYTES);
 	mDescriptorSize.push_back(size);
+
+	mSize = mSize + size;
 }

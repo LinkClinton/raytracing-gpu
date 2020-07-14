@@ -28,6 +28,15 @@
     <ClCompile Include="wrapper\root_signature.cpp">
       <Filter>wrapper</Filter>
     </ClCompile>
+    <ClCompile Include="wrapper\shader_library.cpp">
+      <Filter>wrapper</Filter>
+    </ClCompile>
+    <ClCompile Include="wrapper\shader_table.cpp">
+      <Filter>wrapper</Filter>
+    </ClCompile>
+    <ClCompile Include="wrapper\raytracing_pipeline.cpp">
+      <Filter>wrapper</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="application.hpp" />
@@ -54,6 +63,15 @@
       <Filter>wrapper</Filter>
     </ClInclude>
     <ClInclude Include="wrapper\root_signature.hpp">
+      <Filter>wrapper</Filter>
+    </ClInclude>
+    <ClInclude Include="wrapper\shader_library.hpp">
+      <Filter>wrapper</Filter>
+    </ClInclude>
+    <ClInclude Include="wrapper\shader_table.hpp">
+      <Filter>wrapper</Filter>
+    </ClInclude>
+    <ClInclude Include="wrapper\raytracing_pipeline.hpp">
       <Filter>wrapper</Filter>
     </ClInclude>
   </ItemGroup>

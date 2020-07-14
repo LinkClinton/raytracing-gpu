@@ -32,6 +32,8 @@ namespace path_tracing::dx::wrapper {
 		size_t base(const std::string& name) const;
 
 		size_t size(const std::string& name) const;
+
+		size_t size() const;
 	private:
 		void add_root_parameter(const std::string& name, const D3D12_ROOT_PARAMETER& parameter);
 		
@@ -43,6 +45,7 @@ namespace path_tracing::dx::wrapper {
 
 		std::vector<size_t> mDescriptorBase;
 		std::vector<size_t> mDescriptorSize;
+		size_t mSize = 0;
 	};
 	
 }

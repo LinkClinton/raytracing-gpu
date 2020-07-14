@@ -11,6 +11,9 @@
 #include <vector>
 #include <string>
 
+#undef max
+#undef min
+
 using path_tracing::core::interfaces::noncopyable;
 
 namespace path_tracing::dx::wrapper {
