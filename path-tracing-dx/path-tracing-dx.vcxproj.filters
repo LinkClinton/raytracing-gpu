@@ -37,6 +37,9 @@
     <ClCompile Include="wrapper\raytracing_pipeline.cpp">
       <Filter>wrapper</Filter>
     </ClCompile>
+    <ClCompile Include="wrapper\raytracing_acceleration.cpp">
+      <Filter>wrapper</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="application.hpp" />
@@ -72,6 +75,9 @@
       <Filter>wrapper</Filter>
     </ClInclude>
     <ClInclude Include="wrapper\raytracing_pipeline.hpp">
+      <Filter>wrapper</Filter>
+    </ClInclude>
+    <ClInclude Include="wrapper\raytracing_acceleration.hpp">
       <Filter>wrapper</Filter>
     </ClInclude>
   </ItemGroup>

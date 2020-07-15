@@ -71,4 +71,25 @@ namespace path_tracing::dx::wrapper {
 
 		DXGI_FORMAT mFormat = DXGI_FORMAT_UNKNOWN;
 	};
+
+	template <typename T>
+	void copy_data_to_gpu_buffer(
+		const std::shared_ptr<graphics_command_list>& command_list,
+		const std::shared_ptr<device>& device,
+		const std::vector<T>& data,
+		std::shared_ptr<buffer>& cpu_buffer,
+		std::shared_ptr<buffer>& gpu_buffer)
+	{
+		cpu_buffer = std::make_shared<buffer>(device, D3D12_RESOURCE_STATE_GENERIC_READ, D3D12_RESOURCE_FLAG_NONE,
+			D3D12_HEAP_TYPE_UPLOAD, sizeof(T) * data.size());
+		gpu_buffer = std::make_shared<buffer>(device, D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_FLAG_NONE,
+			D3D12_HEAP_TYPE_DEFAULT, sizeof(T) * data.size());
+
+		std::memcpy(cpu_buffer->map(), data.data(), sizeof(T) * data.size()); cpu_buffer->unmap();
+
+		const auto barrier = gpu_buffer->barrier(D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_GENERIC_READ);
+
+		(*command_list)->CopyResource(gpu_buffer->get(), cpu_buffer->get());
+		(*command_list)->ResourceBarrier(1, &barrier);
+	}
 }
