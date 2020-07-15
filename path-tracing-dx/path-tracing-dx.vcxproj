@@ -159,6 +159,9 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="renderer_directx.cpp" />
     <ClCompile Include="utilities\imgui_impl_dx12.cpp" />
+    <ClCompile Include="utilities\resource_cache.cpp" />
+    <ClCompile Include="utilities\resource_scene.cpp" />
+    <ClCompile Include="utilities\scene_pipeline.cpp" />
     <ClCompile Include="wrapper\command_list.cpp" />
     <ClCompile Include="wrapper\descriptor_heap.cpp" />
     <ClCompile Include="wrapper\device.cpp" />
@@ -180,6 +183,9 @@
     <ClInclude Include="application.hpp" />
     <ClInclude Include="renderer_directx.hpp" />
     <ClInclude Include="utilities\imgui_impl_dx12.hpp" />
+    <ClInclude Include="utilities\resource_cache.hpp" />
+    <ClInclude Include="utilities\resource_scene.hpp" />
+    <ClInclude Include="utilities\scene_pipeline.hpp" />
     <ClInclude Include="wrapper\command_list.hpp" />
     <ClInclude Include="wrapper\descriptor_heap.hpp" />
     <ClInclude Include="wrapper\device.hpp" />

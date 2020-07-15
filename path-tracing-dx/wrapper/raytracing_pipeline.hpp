@@ -37,13 +37,13 @@ namespace path_tracing::dx::wrapper {
 		ID3D12StateObject* operator->() const;
 		ID3D12StateObject* get() const;
 		
-		void add_shader_library(const std::shared_ptr<shader_library>& library);
-		
-		void add_shader_association(const shader_association& association);
+		void set_shader_libraries(const std::vector<std::shared_ptr<shader_library>>& libraries);
 
-		void add_hit_group_shader(const hit_group& hit_group);
+		void set_shader_associations(const std::vector<shader_association>& associations);
 
-		void add_miss_shader(const std::wstring& name);
+		void set_hit_group_shaders(const std::vector<hit_group>& hit_groups);
+
+		void set_miss_shaders(const std::vector<std::wstring>& shaders);
 
 		void set_root_signature(const std::shared_ptr<root_signature>& root_signature);
 

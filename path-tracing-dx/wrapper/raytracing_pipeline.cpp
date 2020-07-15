@@ -42,24 +42,24 @@ ID3D12StateObject* path_tracing::dx::wrapper::raytracing_pipeline::get() const
 	return mStateObject.Get();
 }
 
-void path_tracing::dx::wrapper::raytracing_pipeline::add_shader_library(const std::shared_ptr<shader_library>& library)
+void path_tracing::dx::wrapper::raytracing_pipeline::set_shader_libraries(const std::vector<std::shared_ptr<shader_library>>& libraries)
 {
-	mShaderLibraries.push_back(library);
+	mShaderLibraries = libraries;
 }
 
-void path_tracing::dx::wrapper::raytracing_pipeline::add_shader_association(const shader_association& association)
+void path_tracing::dx::wrapper::raytracing_pipeline::set_shader_associations(const std::vector<shader_association>& associations)
 {
-	mShaderAssociations.push_back(association);
+	mShaderAssociations = associations;
 }
 
-void path_tracing::dx::wrapper::raytracing_pipeline::add_hit_group_shader(const hit_group& hit_group)
+void path_tracing::dx::wrapper::raytracing_pipeline::set_hit_group_shaders(const std::vector<hit_group>& hit_groups)
 {
-	mHitGroupShaders.push_back(hit_group);
+	mHitGroupShaders = hit_groups;
 }
 
-void path_tracing::dx::wrapper::raytracing_pipeline::add_miss_shader(const std::wstring& name)
+void path_tracing::dx::wrapper::raytracing_pipeline::set_miss_shaders(const std::vector<std::wstring>& shaders)
 {
-	mMissShaders.push_back(name);
+	mMissShaders = shaders;
 }
 
 void path_tracing::dx::wrapper::raytracing_pipeline::set_root_signature(const std::shared_ptr<root_signature>& root_signature)

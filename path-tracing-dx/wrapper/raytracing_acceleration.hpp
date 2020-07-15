@@ -30,24 +30,19 @@ namespace path_tracing::dx::wrapper {
 		std::shared_ptr<buffer> mScratch;
 	};
 
-	class raytracing_instance final : public noncopyable {
-	public:
-		explicit raytracing_instance(const std::shared_ptr<raytracing_geometry>& geometry, const matrix4x4& transform);
+	struct raytracing_instance final {
+		std::shared_ptr<raytracing_geometry> geometry;
 
-		~raytracing_instance() = default;
+		matrix4x4 transform = matrix4x4(1);
 
-		std::shared_ptr<raytracing_geometry> geometry() const noexcept;
+		raytracing_instance() = default;
 
-		matrix4x4 transform() const noexcept;
-	private:
-		std::shared_ptr<raytracing_geometry> mGeometry;
-		
-		matrix4x4 mTransform = matrix4x4(1);
+		raytracing_instance(const std::shared_ptr<raytracing_geometry>& geometry, const matrix4x4& transform);
 	};
-
+	
 	class raytracing_acceleration final : public noncopyable {
 	public:
-		explicit raytracing_acceleration(const std::vector<std::shared_ptr<raytracing_instance>>& instances);
+		explicit raytracing_acceleration(const std::vector<raytracing_instance>& instances);
 
 		~raytracing_acceleration() = default;
 
@@ -55,6 +50,8 @@ namespace path_tracing::dx::wrapper {
 			const D3D12_RAYTRACING_ACCELERATION_STRUCTURE_BUILD_FLAGS& flags,
 			const std::shared_ptr<graphics_command_list>& command_list,
 			const std::shared_ptr<device>& device);
+
+		std::shared_ptr<buffer> data() const noexcept;
 	private:
 		std::shared_ptr<buffer> mAcceleration;
 		std::shared_ptr<buffer> mScratch;

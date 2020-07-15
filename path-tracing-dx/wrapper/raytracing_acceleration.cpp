@@ -66,21 +66,11 @@ std::shared_ptr<path_tracing::dx::wrapper::buffer> path_tracing::dx::wrapper::ra
 }
 
 path_tracing::dx::wrapper::raytracing_instance::raytracing_instance(const std::shared_ptr<raytracing_geometry>& geometry, const matrix4x4& transform) :
-	mGeometry(geometry), mTransform(transform)
+	geometry(geometry), transform(transform)
 {
 }
 
-std::shared_ptr<path_tracing::dx::wrapper::raytracing_geometry> path_tracing::dx::wrapper::raytracing_instance::geometry() const noexcept
-{
-	return mGeometry;
-}
-
-path_tracing::core::shared::matrix4x4 path_tracing::dx::wrapper::raytracing_instance::transform() const noexcept
-{
-	return mTransform;
-}
-
-path_tracing::dx::wrapper::raytracing_acceleration::raytracing_acceleration(const std::vector<std::shared_ptr<raytracing_instance>>& instances)
+path_tracing::dx::wrapper::raytracing_acceleration::raytracing_acceleration(const std::vector<raytracing_instance>& instances)
 {
 	mInstancesDesc = std::vector<D3D12_RAYTRACING_INSTANCE_DESC>(instances.size());
 
@@ -90,11 +80,11 @@ path_tracing::dx::wrapper::raytracing_acceleration::raytracing_acceleration(cons
 		desc.Flags = D3D12_RAYTRACING_INSTANCE_FLAG_FORCE_OPAQUE;
 		desc.InstanceID = static_cast<UINT>(index);
 		desc.InstanceContributionToHitGroupIndex = static_cast<UINT>(index);
-		desc.AccelerationStructure = (*instances[index]->geometry()->acceleration())->GetGPUVirtualAddress();
+		desc.AccelerationStructure = (*instances[index].geometry->acceleration())->GetGPUVirtualAddress();
 		desc.InstanceMask = 0xff;
 
 		// convert column matrix to row matrix
-		const auto matrix = transpose(instances[index]->transform());
+		const auto matrix = transpose(instances[index].transform);
 
 		for (int r = 0; r < 3; r++) for (int c = 0; c < 4; c++) desc.Transform[r][c] = matrix[r][c];
 	}
@@ -144,4 +134,9 @@ void path_tracing::dx::wrapper::raytracing_acceleration::build(
 
 	(*command_list)->BuildRaytracingAccelerationStructure(&desc, 0, nullptr);
 	(*command_list)->ResourceBarrier(1, &barrier);
+}
+
+std::shared_ptr<path_tracing::dx::wrapper::buffer> path_tracing::dx::wrapper::raytracing_acceleration::data() const noexcept
+{
+	return mAcceleration;
 }

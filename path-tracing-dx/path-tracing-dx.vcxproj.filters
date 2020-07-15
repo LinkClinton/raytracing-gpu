@@ -40,6 +40,15 @@
     <ClCompile Include="wrapper\raytracing_acceleration.cpp">
       <Filter>wrapper</Filter>
     </ClCompile>
+    <ClCompile Include="utilities\resource_cache.cpp">
+      <Filter>utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="utilities\resource_scene.cpp">
+      <Filter>utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="utilities\scene_pipeline.cpp">
+      <Filter>utilities</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="application.hpp" />
@@ -79,6 +88,15 @@
     </ClInclude>
     <ClInclude Include="wrapper\raytracing_acceleration.hpp">
       <Filter>wrapper</Filter>
+    </ClInclude>
+    <ClInclude Include="utilities\resource_cache.hpp">
+      <Filter>utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="utilities\resource_scene.hpp">
+      <Filter>utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="utilities\scene_pipeline.hpp">
+      <Filter>utilities</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
