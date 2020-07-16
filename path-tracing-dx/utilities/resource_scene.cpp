@@ -46,22 +46,11 @@ void path_tracing::dx::utilities::resource_scene::set_entities(
 	const std::vector<std::shared_ptr<entity>>& entities, const std::shared_ptr<resource_cache>& cache)
 {
 	for (const auto& entity : entities) {
-		if (entity->has_component<emitter>()) {
-			mEmittersData.push_back(entity->component<emitter>()->gpu_buffer(entity->transform()));
+		const auto cache_data = cache->cache(entity);
 
-			continue;;
-		}
-
-		assert((entity->has_component<material>() ^ entity->has_component<shape>()) == false);
-		
-		// now we do not support a shape without material
-		// todo : support shape without material
-		if (entity->has_component<material>() && entity->has_component<shape>()) {
-			mMaterialsData.push_back(entity->component<material>()->gpu_buffer());
-
-			mInstancesData.push_back(raytracing_instance(cache->cache(entity->component<shape>()).geometry,
-				entity->transform().matrix));
-		}
+		if (cache_data.material.has_value()) mMaterialsData.push_back(cache_data.material.value());
+		if (cache_data.emitter.has_value()) mEmittersData.push_back(cache_data.emitter.value());
+		if (cache_data.instance.has_value()) mInstancesData.push_back(cache_data.instance.value());
 	}
 }
 
@@ -145,4 +134,9 @@ void path_tracing::dx::utilities::resource_scene::execute(const std::shared_ptr<
 		&render_target_desc, mDescriptorHeap->cpu_handle(render_target_index));
 
 	queue->wait();
+}
+
+std::shared_ptr<path_tracing::dx::wrapper::root_signature> path_tracing::dx::utilities::resource_scene::signature() const noexcept
+{
+	return mRootSignature;
 }

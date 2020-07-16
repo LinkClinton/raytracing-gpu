@@ -34,6 +34,8 @@ namespace path_tracing::dx::utilities {
 		void set_scene_info(const scene_info& info);
 
 		void execute(const std::shared_ptr<command_queue>& queue);
+
+		std::shared_ptr<root_signature> signature() const noexcept;
 	private:
 		std::shared_ptr<descriptor_table> mDescriptorTable;
 		std::shared_ptr<descriptor_heap> mDescriptorHeap;

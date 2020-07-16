@@ -105,7 +105,7 @@ void path_tracing::dx::wrapper::root_signature::add_root_parameter(const std::st
 		align_to(static_cast<size_t>(parameter.Constants.Num32BitValues) * 4, sizeof(D3D12_GPU_DESCRIPTOR_HANDLE)) :
 		sizeof(D3D12_GPU_DESCRIPTOR_HANDLE);
 
-	mDescriptorBase.push_back(mSize + D3D12_SHADER_IDENTIFIER_SIZE_IN_BYTES);
+	mDescriptorBase.push_back(mSize);
 	mDescriptorSize.push_back(size);
 
 	mSize = mSize + size;
