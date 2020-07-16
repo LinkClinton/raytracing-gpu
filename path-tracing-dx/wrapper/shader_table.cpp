@@ -61,6 +61,8 @@ path_tracing::dx::wrapper::shader_table::shader_table(
 	// first, build the shader record.size with shader has root signature
 	// the size of shader_record is not the real size
 	for (const auto& association : associations) {
+		if (association.root_signature == nullptr) continue;
+		
 		const auto size = align_to(
 			D3D12_SHADER_IDENTIFIER_SIZE_IN_BYTES + association.root_signature->size(),
 			D3D12_RAYTRACING_SHADER_RECORD_BYTE_ALIGNMENT);
@@ -100,7 +102,9 @@ path_tracing::dx::wrapper::shader_table::shader_table(
 	if (mShaderRecords.find(ray_generation_shader) == mShaderRecords.end())
 		mShaderRecords.insert({ ray_generation_shader, shader_record(0, shader_without_signature_size) });
 
-	auto shader_record_offset = mShaderRecords[ray_generation_shader].address + mShaderRecords[ray_generation_shader].size;
+	auto shader_record_offset = 
+		align_to(mShaderRecords[ray_generation_shader].address + mShaderRecords[ray_generation_shader].size, 
+			D3D12_RAYTRACING_SHADER_TABLE_BYTE_ALIGNMENT);
 
 	mMissShaders.address = shader_record_offset;
 	
@@ -110,6 +114,8 @@ path_tracing::dx::wrapper::shader_table::shader_table(
 		shader_record_offset = shader_record_offset + mMissShaders.size;
 	}
 
+	shader_record_offset = align_to(shader_record_offset, D3D12_RAYTRACING_SHADER_TABLE_BYTE_ALIGNMENT);
+	
 	mHitGroupShaders.address = shader_record_offset;
 	
 	for (const auto& shader : hit_group_shaders) {
@@ -165,6 +171,11 @@ byte* path_tracing::dx::wrapper::shader_table::shader_record_address(const std::
 	assert(mBufferMapping != nullptr);
 
 	return mBufferMapping + mShaderRecords.at(name).address;
+}
+
+D3D12_GPU_VIRTUAL_ADDRESS path_tracing::dx::wrapper::shader_table::address() const noexcept
+{
+	return (*mGpuBuffer)->GetGPUVirtualAddress();
 }
 
 path_tracing::dx::wrapper::shader_record path_tracing::dx::wrapper::shader_table::ray_generation_shader() const noexcept

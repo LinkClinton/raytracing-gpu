@@ -1,5 +1,6 @@
 #pragma once
 
+#include <glm/gtc/matrix_transform.hpp>
 #include "glm/glm.hpp"
 
 namespace path_tracing::core {

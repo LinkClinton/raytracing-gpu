@@ -9,7 +9,10 @@
 namespace path_tracing::dx::utilities {
 
 	struct scene_info final {
-		matrix4x4 mInvViewProjection = matrix4x4(1);
+		matrix4x4 inv_view_projection = matrix4x4(1);
+		matrix4x4 unused0 = matrix4x4(1);
+		matrix4x4 unused1 = matrix4x4(1);
+		matrix4x4 unused2 = matrix4x4(1);
 
 		scene_info() = default;
 	};
@@ -21,12 +24,6 @@ namespace path_tracing::dx::utilities {
 		~resource_scene() = default;
 
 		void set_render_target(const std::shared_ptr<texture2d>& render_target);
-		
-		void set_instances(const std::vector<raytracing_instance>& instances);
-		
-		void set_materials(const std::vector<material_gpu_buffer>& materials);
-
-		void set_emitters(const std::vector<emitter_gpu_buffer>& emitters);
 
 		void set_entities(const std::vector<std::shared_ptr<entity>>& entities,
 			const std::shared_ptr<resource_cache>& cache);
@@ -35,6 +32,10 @@ namespace path_tracing::dx::utilities {
 
 		void execute(const std::shared_ptr<command_queue>& queue);
 
+		void render(const std::shared_ptr<graphics_command_list>& command_list) const;
+
+		std::shared_ptr<texture2d> render_target() const noexcept;
+		
 		std::shared_ptr<root_signature> signature() const noexcept;
 	private:
 		std::shared_ptr<descriptor_table> mDescriptorTable;

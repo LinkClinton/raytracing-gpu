@@ -31,7 +31,16 @@ void path_tracing::dx::utilities::scene_pipeline::execute(const std::shared_ptr<
 {
 	const std::wstring ray_generation_shader = L"ray_generation_shader";
 	const std::vector<std::wstring> miss_shaders = { L"miss_shader" };
-	const shader_raytracing_config config = { D3D12_RAYTRACING_MAX_ATTRIBUTE_SIZE_IN_BYTES, 32 };
+	const shader_raytracing_config config = { 8, 32 };
+
+	std::unordered_map<std::wstring, std::vector<std::wstring>> shaders_map;
+
+	shaders_map.insert({ L"./shaders/ray_generation.hlsl", {
+		ray_generation_shader,
+		L"closest_hit_shader"
+	} });
+
+	shaders_map.insert({ L"./shaders/miss_shaders.hlsl", miss_shaders });
 	
 	mPipeline = std::make_shared<raytracing_pipeline>();
 
@@ -47,12 +56,20 @@ void path_tracing::dx::utilities::scene_pipeline::execute(const std::shared_ptr<
 		groups.push_back(entity_cache.group.value());
 	}
 
-	associations.push_back(shader_association(nullptr, config, ray_generation_shader));
+	for (const auto& shaders : shaders_map) {
+		for (const auto shader : shaders.second) {
+			associations.push_back(shader_association(nullptr, config, shader));
+		}
+	}
+	
+	std::vector<std::shared_ptr<shader_library>> libraries;
 
-	for (size_t index = 0; index < miss_shaders.size(); index++) 
-		associations.push_back(shader_association(nullptr, config, miss_shaders[index]));
-
-	// todo: set shader libraries
+	for (const auto& library : shaders_map) {
+		libraries.push_back(std::make_shared<shader_library>(library.second,
+			shader_library::compile_from_file(library.first)));
+	}
+	
+	mPipeline->set_shader_libraries(libraries);
 	mPipeline->set_shader_associations(associations);
 	mPipeline->set_hit_group_shaders(groups);
 	mPipeline->set_miss_shaders(miss_shaders);
@@ -88,4 +105,28 @@ void path_tracing::dx::utilities::scene_pipeline::execute(const std::shared_ptr<
 
 	queue->execute({ mCommandList });
 	queue->wait();
+}
+
+void path_tracing::dx::utilities::scene_pipeline::render(const std::shared_ptr<graphics_command_list>& command_list) const
+{
+	(*command_list)->SetPipelineState1(mPipeline->get());
+
+	const auto shader_table = mPipeline->shader_table();
+	const auto base_address = shader_table->address();
+	
+	D3D12_DISPATCH_RAYS_DESC desc = {};
+
+	desc.Width = static_cast<UINT>(mResourceScene->render_target()->width());
+	desc.Height = static_cast<UINT>(mResourceScene->render_target()->height());
+	desc.Depth = 1;
+	desc.RayGenerationShaderRecord.StartAddress = base_address + shader_table->ray_generation_shader().address;
+	desc.RayGenerationShaderRecord.SizeInBytes = shader_table->ray_generation_shader().size;
+	desc.MissShaderTable.StartAddress = base_address + shader_table->miss_shaders().address;
+	desc.MissShaderTable.StrideInBytes = shader_table->miss_shaders().size;
+	desc.MissShaderTable.SizeInBytes = shader_table->miss_shaders().size * mPipeline->miss_shaders().size();
+	desc.HitGroupTable.StartAddress = base_address + shader_table->hit_group_shaders().address;
+	desc.HitGroupTable.StrideInBytes = shader_table->hit_group_shaders().size;
+	desc.HitGroupTable.SizeInBytes = shader_table->hit_group_shaders().size * mPipeline->hit_group_shaders().size();
+
+	(*command_list)->DispatchRays(&desc);
 }

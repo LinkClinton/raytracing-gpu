@@ -60,6 +60,9 @@
     <Filter Include="scenes">
       <UniqueIdentifier>{7c828fef-2b40-475e-a9df-65cbf545a818}</UniqueIdentifier>
     </Filter>
+    <Filter Include="converter">
+      <UniqueIdentifier>{b38041d2-c618-413a-97a6-ae82c7d609f2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="application_base.cpp" />

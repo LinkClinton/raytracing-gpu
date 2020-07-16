@@ -62,7 +62,7 @@ void path_tracing::core::application_base::run_loop()
 
 		ImGui_ImplWin32_NewFrame();
 		
-		mRenderer->render(nullptr);
+		mRenderer->render(mCamera);
 		
 		current = time_point::now();
 	}
@@ -113,4 +113,12 @@ void path_tracing::core::application_base::initialize()
 {
 	initialize_windows();
 	initialize_graphics();
+}
+
+void path_tracing::core::application_base::load(const std::shared_ptr<camera>& camera, const std::shared_ptr<scene>& scene)
+{
+	mCamera = camera;
+	mScene = scene;
+
+	mRenderer->build(scene);
 }

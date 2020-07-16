@@ -41,7 +41,7 @@ void path_tracing::dx::wrapper::raytracing_geometry::build(
 	mAcceleration = std::make_shared<buffer>(device, D3D12_RESOURCE_STATE_RAYTRACING_ACCELERATION_STRUCTURE,
 		D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS, D3D12_HEAP_TYPE_DEFAULT, pre_build_info.ResultDataMaxSizeInBytes);
 
-	mScratch = std::make_shared<buffer>(device, D3D12_RESOURCE_STATE_RAYTRACING_ACCELERATION_STRUCTURE,
+	mScratch = std::make_shared<buffer>(device, D3D12_RESOURCE_STATE_UNORDERED_ACCESS,
 		D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS, D3D12_HEAP_TYPE_DEFAULT, pre_build_info.ScratchDataSizeInBytes);
 
 	D3D12_BUILD_RAYTRACING_ACCELERATION_STRUCTURE_DESC desc = {};
@@ -117,7 +117,7 @@ void path_tracing::dx::wrapper::raytracing_acceleration::build(
 	mAcceleration = std::make_shared<buffer>(device, D3D12_RESOURCE_STATE_RAYTRACING_ACCELERATION_STRUCTURE,
 		D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS, D3D12_HEAP_TYPE_DEFAULT, pre_build_info.ResultDataMaxSizeInBytes);
 
-	mScratch = std::make_shared<buffer>(device, D3D12_RESOURCE_STATE_RAYTRACING_ACCELERATION_STRUCTURE,
+	mScratch = std::make_shared<buffer>(device, D3D12_RESOURCE_STATE_UNORDERED_ACCESS,
 		D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS, D3D12_HEAP_TYPE_DEFAULT, pre_build_info.ScratchDataSizeInBytes);
 
 	D3D12_BUILD_RAYTRACING_ACCELERATION_STRUCTURE_DESC desc = {};

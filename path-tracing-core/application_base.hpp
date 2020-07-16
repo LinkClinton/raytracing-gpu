@@ -14,6 +14,10 @@ namespace path_tracing::core {
 		~application_base();
 
 		void initialize();
+
+		void load(
+			const std::shared_ptr<camera>& camera,
+			const std::shared_ptr<scene>& scene);
 		
 		void run_loop();
 	protected:
@@ -22,6 +26,9 @@ namespace path_tracing::core {
 		virtual void initialize_graphics() = 0;
 	protected:
 		std::shared_ptr<renderer_backend> mRenderer = nullptr;
+
+		std::shared_ptr<camera> mCamera;
+		std::shared_ptr<scene> mScene;
 		
 		std::string mName;
 

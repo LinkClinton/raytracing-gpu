@@ -10,6 +10,8 @@ namespace path_tracing::core::shapes {
 
 		~sphere() = default;
 
+		mesh_data mesh() const override;
+		
 		real radius() const noexcept;
 	private:
 		real mRadius;

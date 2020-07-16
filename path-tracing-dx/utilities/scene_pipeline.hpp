@@ -22,6 +22,8 @@ namespace path_tracing::dx::utilities {
 		void set_max_depth(size_t depth);
 
 		void execute(const std::shared_ptr<command_queue>& queue);
+
+		void render(const std::shared_ptr<graphics_command_list>& command_list) const;
 	private:
 		std::shared_ptr<command_allocator> mCommandAllocator;
 		std::shared_ptr<graphics_command_list> mCommandList;

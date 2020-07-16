@@ -1,6 +1,9 @@
 #include "shader_library.hpp"
 
+#include <dxcapi.h>
 #include <cassert>
+
+#pragma comment(lib, "dxcompiler.lib")
 
 path_tracing::dx::wrapper::shader_raytracing_config::shader_raytracing_config(size_t max_attribute_size, size_t max_payload_size) :
 	max_attribute_size(max_attribute_size), max_payload_size(max_payload_size)
@@ -29,7 +32,7 @@ path_tracing::dx::wrapper::shader_raytracing_config path_tracing::dx::wrapper::s
 
 path_tracing::dx::wrapper::shader_association::shader_association(
 	const std::shared_ptr<wrapper::root_signature>& root_signature,
-	const shader_raytracing_config& config, 
+	const std::optional<shader_raytracing_config>& config, 
 	const std::wstring& name) :
 	root_signature(root_signature), config(config), name(name)
 {
@@ -56,4 +59,48 @@ path_tracing::dx::wrapper::shader_library::shader_library(const std::vector<std:
 D3D12_DXIL_LIBRARY_DESC path_tracing::dx::wrapper::shader_library::desc() const
 {
 	return mDesc;
+}
+
+std::vector<byte> path_tracing::dx::wrapper::shader_library::compile_from_file(const std::wstring& file_name)
+{
+	ComPtr<IDxcIncludeHandler> include;
+	ComPtr<IDxcCompiler> compiler;
+	ComPtr<IDxcLibrary> library;
+	
+	DxcCreateInstance(CLSID_DxcLibrary, IID_PPV_ARGS(library.GetAddressOf()));
+	DxcCreateInstance(CLSID_DxcCompiler, IID_PPV_ARGS(compiler.GetAddressOf()));
+
+	library->CreateIncludeHandler(include.GetAddressOf());
+
+	ComPtr<IDxcBlobEncoding> encoding_blob;
+
+	library->CreateBlobFromFile(file_name.c_str(), nullptr, encoding_blob.GetAddressOf());
+
+	ComPtr<IDxcOperationResult> result;
+
+	compiler->Compile(encoding_blob.Get(), file_name.c_str(), L"",
+		L"lib_6_3", nullptr, 0, nullptr, 0, include.Get(), result.GetAddressOf());
+
+	ComPtr<IDxcBlobEncoding> error_code;
+	ComPtr<IDxcBlob> result_code;
+	HRESULT result_status;
+
+	result->GetErrorBuffer(error_code.GetAddressOf());
+	result->GetResult(result_code.GetAddressOf());
+	result->GetStatus(&result_status);
+	
+	std::string error;
+
+	error.resize(error_code->GetBufferSize());
+
+	std::memcpy(error.data(), error_code->GetBufferPointer(), error_code->GetBufferSize());
+
+	if (!error.empty() && error.back() == '\n') error.pop_back();
+	if (!error.empty()) printf("%s\n", error.c_str());
+	
+	auto code = std::vector<byte>(result_code->GetBufferSize());
+
+	std::memcpy(code.data(), result_code->GetBufferPointer(), result_code->GetBufferSize());
+
+	return code;
 }

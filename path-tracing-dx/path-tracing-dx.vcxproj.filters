@@ -110,4 +110,19 @@
       <UniqueIdentifier>{8de4177e-be2c-4426-99de-756b2d9e73c4}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
+  <ItemGroup>
+    <CopyFileToFolders Include="shaders\main.hlsl" />
+    <CopyFileToFolders Include="shaders\include.hlsl" />
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="shaders\resource_scene.hlsl">
+      <Filter>shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="shaders\ray_generation.hlsl">
+      <Filter>shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="shaders\miss_shaders.hlsl">
+      <Filter>shaders</Filter>
+    </FxCompile>
+  </ItemGroup>
 </Project>

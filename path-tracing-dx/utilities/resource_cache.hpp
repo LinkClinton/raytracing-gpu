@@ -59,17 +59,14 @@ namespace path_tracing::dx::utilities {
 	};
 
 	struct shape_type_data final {
-		std::shared_ptr<root_signature> signature;
-		
-		shader_raytracing_config config;
+		shader_association association;
 
 		hit_group group;
 
 		shape_type_data() = default;
 
 		shape_type_data(
-			const std::shared_ptr<root_signature>& signature,
-			const shader_raytracing_config& config,
+			const shader_association& association,
 			const hit_group& group);
 	};
 	

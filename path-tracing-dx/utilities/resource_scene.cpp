@@ -27,21 +27,6 @@ void path_tracing::dx::utilities::resource_scene::set_render_target(const std::s
 	mRenderTarget = render_target;
 }
 
-void path_tracing::dx::utilities::resource_scene::set_instances(const std::vector<raytracing_instance>& instances)
-{
-	mInstancesData = instances;
-}
-
-void path_tracing::dx::utilities::resource_scene::set_materials(const std::vector<material_gpu_buffer>& materials)
-{
-	mMaterialsData = materials;
-}
-
-void path_tracing::dx::utilities::resource_scene::set_emitters(const std::vector<emitter_gpu_buffer>& emitters)
-{
-	mEmittersData = emitters;
-}
-
 void path_tracing::dx::utilities::resource_scene::set_entities(
 	const std::vector<std::shared_ptr<entity>>& entities, const std::shared_ptr<resource_cache>& cache)
 {
@@ -127,13 +112,23 @@ void path_tracing::dx::utilities::resource_scene::execute(const std::shared_ptr<
 	const auto render_target_index = mDescriptorTable->index("render_target");
 
 	(*mDevice)->CreateConstantBufferView(&scene_info_desc, mDescriptorHeap->cpu_handle(scene_info_index));
-	(*mDevice)->CreateShaderResourceView(mAcceleration->data()->get(), &acceleration_desc, mDescriptorHeap->cpu_handle(acceleration_index));
+	(*mDevice)->CreateShaderResourceView(nullptr, &acceleration_desc, mDescriptorHeap->cpu_handle(acceleration_index));
 	(*mDevice)->CreateShaderResourceView(mMaterials->get(), &materials_desc, mDescriptorHeap->cpu_handle(materials_index));
 	(*mDevice)->CreateShaderResourceView(mEmitters->get(), &materials_desc, mDescriptorHeap->cpu_handle(emitters_index));
 	(*mDevice)->CreateUnorderedAccessView(mRenderTarget->get(), nullptr, 
 		&render_target_desc, mDescriptorHeap->cpu_handle(render_target_index));
 
 	queue->wait();
+}
+
+void path_tracing::dx::utilities::resource_scene::render(const std::shared_ptr<graphics_command_list>& command_list) const
+{
+	(*command_list)->SetDescriptorHeaps(1, { mDescriptorHeap->get_address_of() });
+}
+
+std::shared_ptr<path_tracing::dx::wrapper::texture2d> path_tracing::dx::utilities::resource_scene::render_target() const noexcept
+{
+	return mRenderTarget;
 }
 
 std::shared_ptr<path_tracing::dx::wrapper::root_signature> path_tracing::dx::utilities::resource_scene::signature() const noexcept

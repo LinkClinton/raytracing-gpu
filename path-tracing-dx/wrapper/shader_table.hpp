@@ -51,6 +51,8 @@ namespace path_tracing::dx::wrapper {
 		
 		byte* shader_record_address(const std::wstring& name) const;
 
+		D3D12_GPU_VIRTUAL_ADDRESS address() const noexcept;
+		
 		shader_record ray_generation_shader() const noexcept;
 
 		shader_record hit_group_shaders() const noexcept;

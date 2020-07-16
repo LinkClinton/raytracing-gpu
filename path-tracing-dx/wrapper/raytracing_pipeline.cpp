@@ -81,8 +81,11 @@ void path_tracing::dx::wrapper::raytracing_pipeline::build(const std::shared_ptr
 {
 	// cache the functions that have same root signature or have same shader config
 	for (const auto& association : mShaderAssociations) {
-		mShaderSignatureAssociations[association.root_signature].functions.push_back(association.name);
-		mShaderConfigAssociations[association.config.hash()].functions.push_back(association.name);
+		if (association.root_signature != nullptr)
+			mShaderSignatureAssociations[association.root_signature].functions.push_back(association.name);
+
+		if (association.config.has_value())
+			mShaderConfigAssociations[association.config->hash()].functions.push_back(association.name);
 	}
 
 	// rebuild the shader functions(because we need the pointer of shaders)
@@ -134,7 +137,7 @@ void path_tracing::dx::wrapper::raytracing_pipeline::build(const std::shared_ptr
 		auto& subobject_signature = subobjects[subobject_count++];
 		auto& subobject_export = subobjects[subobject_count++];
 
-		local_signatures[index].pLocalRootSignature = signature_association->first->get();
+		local_signatures[index].pLocalRootSignature = signature_association->first == nullptr ? nullptr : signature_association->first->get();
 
 		subobject_signature.Type = D3D12_STATE_SUBOBJECT_TYPE_LOCAL_ROOT_SIGNATURE;
 		subobject_signature.pDesc = &local_signatures[index];
@@ -191,7 +194,7 @@ void path_tracing::dx::wrapper::raytracing_pipeline::build(const std::shared_ptr
 
 	D3D12_RAYTRACING_PIPELINE_CONFIG config;
 	{
-		auto& subobject = subobjects[subobject_count];
+		auto& subobject = subobjects[subobject_count++];
 
 		config.MaxTraceRecursionDepth = static_cast<UINT>(mMaxDepth);
 		
@@ -199,8 +202,8 @@ void path_tracing::dx::wrapper::raytracing_pipeline::build(const std::shared_ptr
 		subobject.pDesc = &config;
 	}
 
-	assert(association_count + 1 == associations.size());
-	assert(subobject_count + 1 == subobjects.size());
+	assert(association_count == associations.size());
+	assert(subobject_count == subobjects.size());
 	
 	D3D12_STATE_OBJECT_DESC desc;
 
@@ -246,7 +249,7 @@ size_t path_tracing::dx::wrapper::raytracing_pipeline::compute_subobject_count()
 	return
 		mShaderSignatureAssociations.size() * 2 +
 		mShaderConfigAssociations.size() * 2 +
-		mShaderLibraries.size() * 2 +
+		mShaderLibraries.size() +
 		mHitGroupShaders.size() + 1 +
 		(mRootSignature == nullptr ? 0 : 1);
 }

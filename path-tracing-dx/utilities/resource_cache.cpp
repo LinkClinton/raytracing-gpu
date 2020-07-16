@@ -20,9 +20,8 @@ path_tracing::dx::utilities::entity_cache_data::entity_cache_data(
 {
 }
 
-path_tracing::dx::utilities::shape_type_data::shape_type_data(const std::shared_ptr<root_signature>& signature, 
-	const shader_raytracing_config& config, const hit_group& group) :
-	signature(signature), config(config), group(group)
+path_tracing::dx::utilities::shape_type_data::shape_type_data(const shader_association& association, const hit_group& group) :
+	association(association), group(group)
 {
 }
 
@@ -36,15 +35,15 @@ path_tracing::dx::utilities::resource_cache::resource_cache(const std::shared_pt
 
 	shape_type_data triangles_type;
 
-	triangles_type.config = shader_raytracing_config();
-	triangles_type.signature = std::make_shared<root_signature>();
+	triangles_type.association.root_signature = std::make_shared<root_signature>();
+	triangles_type.association.config = std::nullopt;
 	triangles_type.group = hit_group(D3D12_HIT_GROUP_TYPE_TRIANGLES, L"", L"closest_hit_shader",
 		L"", L"");
 
-	triangles_type.signature->add_cbv("positions", 0, 100);
-	triangles_type.signature->add_cbv("normals", 1, 100);
-	triangles_type.signature->add_cbv("indices", 2, 100);
-	triangles_type.signature->add_cbv("uvs", 3, 100);
+	triangles_type.association.root_signature->add_cbv("positions", 0, 100);
+	triangles_type.association.root_signature->add_cbv("normals", 1, 100);
+	triangles_type.association.root_signature->add_cbv("indices", 2, 100);
+	triangles_type.association.root_signature->add_cbv("uvs", 3, 100);
 	
 	mTypeCache.insert({ "triangles", triangles_type });
 }
@@ -71,9 +70,9 @@ void path_tracing::dx::utilities::resource_cache::cache_entity(const std::shared
 		data.group->name = L"entity" + std::to_wstring(mEntitiesCache.size());
 		
 		data.instance = raytracing_instance(shape_data.geometry, entity->transform().matrix);
-		data.association = shader_association(type_data.signature, type_data.config, data.group->name);
+		data.association = shader_association(type_data.association.root_signature, type_data.association.config, data.group->name);
 
-		data.shader_table_data = std::vector<byte>(type_data.signature->size());
+		data.shader_table_data = std::vector<byte>(type_data.association.root_signature->size());
 
 		// copy the shader table data for this hit group
 		const std::vector<D3D12_GPU_VIRTUAL_ADDRESS> gpu_handles = {
@@ -88,7 +87,7 @@ void path_tracing::dx::utilities::resource_cache::cache_entity(const std::shared
 		};
 
 		for (size_t index = 0; index < gpu_handles.size(); index++) {
-			const auto offset = type_data.signature->base(signature_name[index]);
+			const auto offset = type_data.association.root_signature->base(signature_name[index]);
 
 			std::memcpy(data.shader_table_data.data() + offset,
 				&gpu_handles[index], sizeof(D3D12_GPU_VIRTUAL_ADDRESS));
