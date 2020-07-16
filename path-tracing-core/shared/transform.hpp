@@ -22,8 +22,21 @@ namespace path_tracing::core::shared {
 
 		transform() = default;
 
+		transform(const matrix4x4& matrix, const matrix4x4& inverse);
+		
 		transform(const matrix4x4& matrix);
+
+		transform& operator*=(const transform& right);
+		transform operator*(const transform& right) const;
 	};
 
 	vector3 transform_point(const transform& transform, const vector3& point);
+
+	transform perspective_left_hand(real fov, real width, real height, real near = 0.01, real far = 1000);
+
+	transform translate(const vector3& value);
+	
+	transform scale(const vector3& value);
+
+	transform inverse(const transform& transform);
 }

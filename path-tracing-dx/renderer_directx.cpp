@@ -58,6 +58,15 @@ void path_tracing::dx::renderer_directx::render(const std::shared_ptr<core::came
 {
 	(*mCommandAllocator)->Reset();
 
+	const auto camera_gpu_buffer = camera->gpu_buffer(mRenderTarget->width(), mRenderTarget->height());
+	
+	scene_info info = {};
+
+	info.raster_to_camera = glm::transpose(camera_gpu_buffer.raster_to_camera);
+	info.camera_to_world = glm::transpose(camera_gpu_buffer.camera_to_world);
+	
+	mResourceScene->set_scene_info(info);
+	
 	render_scene();
 	render_imgui();
 

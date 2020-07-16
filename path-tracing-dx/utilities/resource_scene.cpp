@@ -124,6 +124,8 @@ void path_tracing::dx::utilities::resource_scene::execute(const std::shared_ptr<
 void path_tracing::dx::utilities::resource_scene::render(const std::shared_ptr<graphics_command_list>& command_list) const
 {
 	(*command_list)->SetDescriptorHeaps(1, { mDescriptorHeap->get_address_of() });
+	(*command_list)->SetComputeRootSignature(mRootSignature->get());
+	(*command_list)->SetComputeRootDescriptorTable(0, mDescriptorHeap->gpu_handle());
 }
 
 std::shared_ptr<path_tracing::dx::wrapper::texture2d> path_tracing::dx::utilities::resource_scene::render_target() const noexcept

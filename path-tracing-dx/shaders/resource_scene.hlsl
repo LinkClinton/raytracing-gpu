@@ -1,5 +1,8 @@
 struct scene_info {
-	float4x4 inv_view_projection;
+	float4x4 raster_to_camera;
+	float4x4 camera_to_world;
+	float4x4 unused1;
+	float4x4 unused2;
 };
 
 enum material_type {

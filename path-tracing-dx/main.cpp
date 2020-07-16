@@ -15,7 +15,7 @@ int main() {
 	auto app = std::make_shared<application>("application-dx", 1280, 720);
 
 	const auto camera = std::make_shared<cameras::camera>(
-		glm::perspectiveFovLH(glm::radians(45.f), 1280.f, 720.f, 0.f, 1000.f),
+		perspective_left_hand(glm::radians(45.f), 1280.f, 720.f),
 		inverse(lookAtLH(
 			vector3(0, 0, 20.f),
 			vector3(0, 0, 0), 

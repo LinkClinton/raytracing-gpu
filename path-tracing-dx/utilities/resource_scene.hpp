@@ -9,8 +9,8 @@
 namespace path_tracing::dx::utilities {
 
 	struct scene_info final {
-		matrix4x4 inv_view_projection = matrix4x4(1);
-		matrix4x4 unused0 = matrix4x4(1);
+		matrix4x4 raster_to_camera = matrix4x4(1);
+		matrix4x4 camera_to_world = matrix4x4(1);
 		matrix4x4 unused1 = matrix4x4(1);
 		matrix4x4 unused2 = matrix4x4(1);
 

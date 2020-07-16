@@ -8,19 +8,14 @@ namespace path_tracing::core::cameras {
 	using namespace shared;
 
 	struct camera_gpu_buffer {
-		transform projective;
-		transform transform;
-
-		real focus = 0, lens = 0;
-
-		real unused0 = 0, unused1 = 0;
-
+		matrix4x4 raster_to_camera;
+		matrix4x4 camera_to_world;
+		
 		camera_gpu_buffer() = default;
 
 		camera_gpu_buffer(
-			const shared::transform& projective,
-			const shared::transform& transform,
-			real focus, real lens);
+			const matrix4x4& raster_to_camera,
+			const matrix4x4& camera_to_world);
 	};
 	
 	class camera final : public interfaces::noncopyable {
@@ -32,14 +27,10 @@ namespace path_tracing::core::cameras {
 
 		~camera() = default;
 
-		transform projective() const noexcept;
-
-		transform transform() const noexcept;
-
-		camera_gpu_buffer gpu_buffer() const noexcept;
+		camera_gpu_buffer gpu_buffer(size_t width, size_t height) const noexcept;
 	private:
-		shared::transform mProjective;
-		shared::transform mTransform;
+		transform mCameraToScreen;
+		transform mCameraToWorld;
 
 		real mFocus, mLens;
 	};
