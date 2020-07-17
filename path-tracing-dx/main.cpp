@@ -32,7 +32,7 @@ int main() {
 
 	scene->add_entity(std::make_shared<entity>(
 		nullptr,
-		std::make_shared<point_emitter>(vector3(100.0f)),
+		std::make_shared<point_emitter>(vector3(1000.0f)),
 		nullptr,
 		translate(vector3(0, 0, 25))
 		));

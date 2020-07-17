@@ -114,7 +114,7 @@ void path_tracing::dx::utilities::resource_scene::execute(const std::shared_ptr<
 	(*mDevice)->CreateConstantBufferView(&scene_info_desc, mDescriptorHeap->cpu_handle(scene_info_index));
 	(*mDevice)->CreateShaderResourceView(nullptr, &acceleration_desc, mDescriptorHeap->cpu_handle(acceleration_index));
 	(*mDevice)->CreateShaderResourceView(mMaterials->get(), &materials_desc, mDescriptorHeap->cpu_handle(materials_index));
-	(*mDevice)->CreateShaderResourceView(mEmitters->get(), &materials_desc, mDescriptorHeap->cpu_handle(emitters_index));
+	(*mDevice)->CreateShaderResourceView(mEmitters->get(), &emitters_desc, mDescriptorHeap->cpu_handle(emitters_index));
 	(*mDevice)->CreateUnorderedAccessView(mRenderTarget->get(), nullptr, 
 		&render_target_desc, mDescriptorHeap->cpu_handle(render_target_index));
 

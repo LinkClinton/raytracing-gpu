@@ -36,6 +36,11 @@ interaction base_type(surface_interaction input)
 	return base;
 }
 
+float3 face_forward(float3 v, float3 forward)
+{
+	return dot(v, forward) > 0 ? v : -v;
+}
+
 float3 local_to_world(coordinate_system system, float3 value) 
 {
 	return float3(
@@ -47,6 +52,23 @@ float3 local_to_world(coordinate_system system, float3 value)
 float3 world_to_local(coordinate_system system, float3 value)
 {
 	return float3(dot(value, system.x()), dot(value, system.y()), dot(value, system.z()));
+}
+
+coordinate_system build_coordinate_system(float3 normal)
+{
+	coordinate_system system;
+
+	system.axes[2] = normalize(normal);
+
+	float3 z = system.z();
+
+	system.axes[0] = abs(z.x) > abs(z.y) ? 
+		float3(-z.z, 0, z.x) / sqrt(z.x * z.x + z.z * z.z): 
+		float3(0, z.z, -z.y) / sqrt(z.y * z.y + z.z * z.z);
+
+	system.axes[1] = cross(z, system.x());
+
+	return system;
 }
 
 #endif

@@ -15,8 +15,8 @@ emitter_sample sample_point_emitter(emitter_gpu_buffer emitter, interaction refe
 	sample.interaction.position = emitter.position;
 	sample.interaction.normal = float3(0, 0, 0);
 	sample.interaction.wo = float3(0, 0, 0);
-	
-	sample.intensity = emitter.intensity / dot(emitter.position, reference.position);
+
+	sample.intensity = emitter.intensity / distance_squared(emitter.position, reference.position);
 	sample.wi = normalize(emitter.position - reference.position);
 	sample.pdf = 1;
 

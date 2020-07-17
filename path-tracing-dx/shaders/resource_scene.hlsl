@@ -2,6 +2,7 @@
 #define __RESOURCE_SCENE_HLSL__
 
 #include "samplers/random_sampler.hlsl"
+#include "materials/material.hlsl"
 #include "emitters/emitter.hlsl"
 
 typedef uint64_t uint64;
@@ -22,22 +23,12 @@ struct scene_info {
 	float4 unused3;
 };
 
-enum material_type {
-	material_unknown = 0,
-	material_diffuse = 1
-};
-
-struct material_gpu_buffer {
-	material_type type;
-	float3 diffuse;
-};
-
 struct ray_payload {
 	surface_interaction interaction;
 
-	random_sampler sampler;
+	bool missed;
 
-	float3 radiance;
+	uint index;
 };
 
 typedef BuiltInTriangleIntersectionAttributes HitAttributes;

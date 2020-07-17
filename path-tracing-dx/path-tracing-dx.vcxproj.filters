@@ -118,14 +118,14 @@
     <Filter Include="shaders\shared">
       <UniqueIdentifier>{1893ebbf-8766-4e6f-8cea-2a1543a863cf}</UniqueIdentifier>
     </Filter>
+    <Filter Include="shaders\materials">
+      <UniqueIdentifier>{92ea0e86-796a-4d1d-a645-9243e2e4cb0d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="shaders\scatterings">
+      <UniqueIdentifier>{1ee27d2e-6221-401f-a3de-ee4765d93d4b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <CopyFileToFolders Include="shaders\samplers\random_generator.hlsl" />
-    <CopyFileToFolders Include="shaders\samplers\random_sampler.hlsl" />
-    <CopyFileToFolders Include="shaders\emitters\emitter.hlsl" />
-    <CopyFileToFolders Include="shaders\emitters\emitter_include.hlsl" />
-    <CopyFileToFolders Include="shaders\emitters\emitter_point.hlsl" />
-    <CopyFileToFolders Include="shaders\shared\interaction.hlsl" />
     <CopyFileToFolders Include="shaders\miss_shaders.hlsl">
       <Filter>shaders</Filter>
     </CopyFileToFolders>
@@ -135,10 +135,44 @@
     <CopyFileToFolders Include="shaders\resource_scene.hlsl">
       <Filter>shaders</Filter>
     </CopyFileToFolders>
+    <CopyFileToFolders Include="shaders\closest_hit.hlsl" />
+    <CopyFileToFolders Include="shaders\emitters\emitter.hlsl">
+      <Filter>shaders\emitters</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="shaders\emitters\emitter_include.hlsl">
+      <Filter>shaders\emitters</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="shaders\emitters\emitter_point.hlsl">
+      <Filter>shaders\emitters</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="shaders\shared\interaction.hlsl">
+      <Filter>shaders\shared</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="shaders\samplers\random_sampler.hlsl">
+      <Filter>shaders\samplers</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="shaders\samplers\random_generator.hlsl">
+      <Filter>shaders\samplers</Filter>
+    </CopyFileToFolders>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="shaders\closest_hit.hlsl">
+    <FxCompile Include="shaders\materials\material.hlsl">
+      <Filter>shaders\materials</Filter>
+    </FxCompile>
+    <FxCompile Include="shaders\materials\material_include.hlsl">
+      <Filter>shaders\materials</Filter>
+    </FxCompile>
+    <FxCompile Include="shaders\scatterings\scattering_include.hlsl">
+      <Filter>shaders\scatterings</Filter>
+    </FxCompile>
+    <FxCompile Include="shaders\scatterings\scattering_lambertian.hlsl">
+      <Filter>shaders\scatterings</Filter>
+    </FxCompile>
+    <FxCompile Include="shaders\utility.hlsl">
       <Filter>shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="shaders\materials\material_diffuse.hlsl">
+      <Filter>shaders\materials</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>
