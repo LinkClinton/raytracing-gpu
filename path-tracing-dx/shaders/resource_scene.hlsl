@@ -1,8 +1,23 @@
+#ifndef __RESOURCE_SCENE_HLSL__
+#define __RESOURCE_SCENE_HLSL__
+
+#include "samplers/random_sampler.hlsl"
+#include "emitters/emitter.hlsl"
+
 struct scene_info {
 	float4x4 raster_to_camera;
 	float4x4 camera_to_world;
-	float4x4 unused1;
-	float4x4 unused2;
+
+	uint camera_focus;
+	uint camera_lens;
+
+	uint sample_index;
+	uint emitters;
+
+	float4x4 unused0;
+	float4 unused1;
+	float4 unused2;
+	float4 unused3;
 };
 
 enum material_type {
@@ -10,26 +25,15 @@ enum material_type {
 	material_diffuse = 1
 };
 
-enum emitter_type {
-	emitter_unknown = 0,
-	emitter_point = 1
-};
-
 struct material_gpu_buffer {
 	material_type type;
 	float3 diffuse;
 };
 
-struct emitter_gpu_buffer {
-	emitter_type type;
-	float3 intensity;
-
-	float3 position;
-	float unused;
-};
-
 struct ray_payload {
-	float3 spectrum;
+	random_sampler sampler;
+
+	float3 radiance;
 };
 
 typedef BuiltInTriangleIntersectionAttributes HitAttributes;
@@ -40,3 +44,5 @@ StructuredBuffer<material_gpu_buffer> global_materials : register(t1, space1);
 StructuredBuffer<emitter_gpu_buffer> global_emitters : register(t2, space1);
 
 RWTexture2D<float4> global_render_target : register(u0, space2);
+
+#endif

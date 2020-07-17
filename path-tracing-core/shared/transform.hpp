@@ -6,6 +6,7 @@
 namespace path_tracing::core {
 
 	using uint32 = unsigned int;
+	using uint64 = unsigned long long;
 	using real = float;
 
 }

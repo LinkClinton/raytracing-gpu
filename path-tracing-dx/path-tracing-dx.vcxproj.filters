@@ -109,20 +109,39 @@
     <Filter Include="wrapper">
       <UniqueIdentifier>{8de4177e-be2c-4426-99de-756b2d9e73c4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="shaders\samplers">
+      <UniqueIdentifier>{0953c034-9a37-44bb-a370-6fd648beef3f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="shaders\emitters">
+      <UniqueIdentifier>{38a6f9b0-5a70-44c2-9bca-badc1fbdf344}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="shaders\shared">
+      <UniqueIdentifier>{1893ebbf-8766-4e6f-8cea-2a1543a863cf}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <CopyFileToFolders Include="shaders\main.hlsl" />
-    <CopyFileToFolders Include="shaders\include.hlsl" />
+    <CopyFileToFolders Include="shaders\resource_scene.hlsl" />
+    <CopyFileToFolders Include="shaders\ray_generation.hlsl" />
+    <CopyFileToFolders Include="shaders\miss_shaders.hlsl" />
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="shaders\resource_scene.hlsl">
-      <Filter>shaders</Filter>
+    <FxCompile Include="shaders\samplers\random_generator.hlsl">
+      <Filter>shaders\samplers</Filter>
     </FxCompile>
-    <FxCompile Include="shaders\ray_generation.hlsl">
-      <Filter>shaders</Filter>
+    <FxCompile Include="shaders\samplers\random_sampler.hlsl">
+      <Filter>shaders\samplers</Filter>
     </FxCompile>
-    <FxCompile Include="shaders\miss_shaders.hlsl">
-      <Filter>shaders</Filter>
+    <FxCompile Include="shaders\emitters\emitter.hlsl">
+      <Filter>shaders\emitters</Filter>
+    </FxCompile>
+    <FxCompile Include="shaders\emitters\emitter_include.hlsl">
+      <Filter>shaders\emitters</Filter>
+    </FxCompile>
+    <FxCompile Include="shaders\emitters\emitter_point.hlsl">
+      <Filter>shaders\emitters</Filter>
+    </FxCompile>
+    <FxCompile Include="shaders\shared\interaction.hlsl">
+      <Filter>shaders\shared</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

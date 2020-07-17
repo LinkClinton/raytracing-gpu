@@ -47,6 +47,8 @@ namespace path_tracing::dx {
 		std::shared_ptr<resource_cache> mResourceCache;
 		std::shared_ptr<resource_scene> mResourceScene;
 		std::shared_ptr<scene_pipeline> mScenePipeline;
+
+		scene_info mSceneInfo;
 	};
 	
 }

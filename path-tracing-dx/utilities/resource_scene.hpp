@@ -8,11 +8,22 @@
 
 namespace path_tracing::dx::utilities {
 
+	using namespace core;
+
 	struct scene_info final {
 		matrix4x4 raster_to_camera = matrix4x4(1);
 		matrix4x4 camera_to_world = matrix4x4(1);
-		matrix4x4 unused1 = matrix4x4(1);
-		matrix4x4 unused2 = matrix4x4(1);
+
+		real camera_focus = 0;
+		real camera_lens = 0;
+		
+		uint32 sample_index = 0;
+		uint32 emitters = 0;
+		
+		matrix4x4 unused0 = matrix4x4(1);
+		vector4 unused1 = vector4(1);
+		vector4 unused2 = vector4(1);
+		vector4 unused3 = vector4(1);
 
 		scene_info() = default;
 	};
@@ -58,6 +69,7 @@ namespace path_tracing::dx::utilities {
 		std::vector<raytracing_instance> mInstancesData;
 		std::vector<material_gpu_buffer> mMaterialsData;
 		std::vector<emitter_gpu_buffer> mEmittersData;
+		
 		scene_info mSceneInfoData;
 	};
 	

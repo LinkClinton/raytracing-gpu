@@ -60,12 +60,11 @@ void path_tracing::dx::renderer_directx::render(const std::shared_ptr<core::came
 
 	const auto camera_gpu_buffer = camera->gpu_buffer(mRenderTarget->width(), mRenderTarget->height());
 	
-	scene_info info = {};
-
-	info.raster_to_camera = glm::transpose(camera_gpu_buffer.raster_to_camera);
-	info.camera_to_world = glm::transpose(camera_gpu_buffer.camera_to_world);
+	mSceneInfo.raster_to_camera = glm::transpose(camera_gpu_buffer.raster_to_camera);
+	mSceneInfo.camera_to_world = glm::transpose(camera_gpu_buffer.camera_to_world);
+	mSceneInfo.sample_index++;
 	
-	mResourceScene->set_scene_info(info);
+	mResourceScene->set_scene_info(mSceneInfo);
 	
 	render_scene();
 	render_imgui();
@@ -85,6 +84,8 @@ void path_tracing::dx::renderer_directx::build(const std::shared_ptr<core::scene
 
 	for (const auto& entity : scene->entities()) mResourceCache->cache_entity(entity);
 
+	mSceneInfo.emitters = static_cast<uint32>(scene->emitters().size());
+	
 	mResourceCache->execute(mCommandQueue);
 	
 	mResourceScene->set_entities(scene->entities(), mResourceCache);

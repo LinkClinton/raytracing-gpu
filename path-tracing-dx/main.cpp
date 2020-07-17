@@ -25,10 +25,17 @@ int main() {
 	const auto scene = std::make_shared<scenes::scene>();
 
 	scene->add_entity(std::make_shared<entity>(
-		std::make_shared<diffuse_material>(vector3(1.f)),
-		std::make_shared<point_emitter>(vector3(1)),
-		std::make_shared<sphere>(1.f),
+		std::make_shared<diffuse_material>(vector3(1.f, 0.f, 0.f)),
+		nullptr,
+		std::make_shared<sphere>(2.f),
 		transform()));
+
+	scene->add_entity(std::make_shared<entity>(
+		nullptr,
+		std::make_shared<point_emitter>(vector3(100.0f)),
+		nullptr,
+		translate(vector3(0, 0, 25))
+		));
 	
 	app->initialize();
 	app->load(camera, scene);
