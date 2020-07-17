@@ -40,10 +40,12 @@ path_tracing::dx::utilities::resource_cache::resource_cache(const std::shared_pt
 	triangles_type.group = hit_group(D3D12_HIT_GROUP_TYPE_TRIANGLES, L"", L"closest_hit_shader",
 		L"", L"");
 
-	triangles_type.association.root_signature->add_cbv("positions", 0, 100);
-	triangles_type.association.root_signature->add_cbv("normals", 1, 100);
-	triangles_type.association.root_signature->add_cbv("indices", 2, 100);
-	triangles_type.association.root_signature->add_cbv("uvs", 3, 100);
+	triangles_type.association.root_signature->add_srv("positions", 0, 100);
+	triangles_type.association.root_signature->add_srv("normals", 1, 100);
+	triangles_type.association.root_signature->add_srv("indices", 2, 100);
+	triangles_type.association.root_signature->add_srv("uvs", 3, 100);
+
+	triangles_type.association.root_signature->serialize(mDevice, true);
 	
 	mTypeCache.insert({ "triangles", triangles_type });
 }

@@ -120,28 +120,25 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <CopyFileToFolders Include="shaders\resource_scene.hlsl" />
-    <CopyFileToFolders Include="shaders\ray_generation.hlsl" />
-    <CopyFileToFolders Include="shaders\miss_shaders.hlsl" />
+    <CopyFileToFolders Include="shaders\samplers\random_generator.hlsl" />
+    <CopyFileToFolders Include="shaders\samplers\random_sampler.hlsl" />
+    <CopyFileToFolders Include="shaders\emitters\emitter.hlsl" />
+    <CopyFileToFolders Include="shaders\emitters\emitter_include.hlsl" />
+    <CopyFileToFolders Include="shaders\emitters\emitter_point.hlsl" />
+    <CopyFileToFolders Include="shaders\shared\interaction.hlsl" />
+    <CopyFileToFolders Include="shaders\miss_shaders.hlsl">
+      <Filter>shaders</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="shaders\ray_generation.hlsl">
+      <Filter>shaders</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="shaders\resource_scene.hlsl">
+      <Filter>shaders</Filter>
+    </CopyFileToFolders>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="shaders\samplers\random_generator.hlsl">
-      <Filter>shaders\samplers</Filter>
-    </FxCompile>
-    <FxCompile Include="shaders\samplers\random_sampler.hlsl">
-      <Filter>shaders\samplers</Filter>
-    </FxCompile>
-    <FxCompile Include="shaders\emitters\emitter.hlsl">
-      <Filter>shaders\emitters</Filter>
-    </FxCompile>
-    <FxCompile Include="shaders\emitters\emitter_include.hlsl">
-      <Filter>shaders\emitters</Filter>
-    </FxCompile>
-    <FxCompile Include="shaders\emitters\emitter_point.hlsl">
-      <Filter>shaders\emitters</Filter>
-    </FxCompile>
-    <FxCompile Include="shaders\shared\interaction.hlsl">
-      <Filter>shaders\shared</Filter>
+    <FxCompile Include="shaders\closest_hit.hlsl">
+      <Filter>shaders</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

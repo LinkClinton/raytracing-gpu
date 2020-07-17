@@ -31,15 +31,17 @@ void path_tracing::dx::utilities::scene_pipeline::execute(const std::shared_ptr<
 {
 	const std::wstring ray_generation_shader = L"ray_generation_shader";
 	const std::vector<std::wstring> miss_shaders = { L"miss_shader" };
-	const shader_raytracing_config config = { 8, 32 };
+	const shader_raytracing_config config = { 8, shader_raytracing_config::default_payload_size };
 
 	std::unordered_map<std::wstring, std::vector<std::wstring>> shaders_map;
 
 	shaders_map.insert({ L"./shaders/ray_generation.hlsl", {
-		ray_generation_shader,
-		L"closest_hit_shader"
+		ray_generation_shader
 	} });
 
+	shaders_map.insert({ L"./shaders/closest_hit.hlsl", {
+		L"closest_hit_shader"
+	} });
 	shaders_map.insert({ L"./shaders/miss_shaders.hlsl", miss_shaders });
 	
 	mPipeline = std::make_shared<raytracing_pipeline>();

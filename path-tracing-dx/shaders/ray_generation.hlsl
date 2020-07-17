@@ -31,8 +31,3 @@ void ray_generation_shader() {
 
 	global_render_target[DispatchRaysIndex().xy] = float4(lerp(new_value, old_value, factor), 1);
 }
-
-[shader("closesthit")]
-void closest_hit_shader(inout ray_payload payload, HitAttributes attribute) {
-	payload.radiance = float3(1, 0, 0);
-}

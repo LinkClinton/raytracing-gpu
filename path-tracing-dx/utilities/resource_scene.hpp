@@ -24,7 +24,7 @@ namespace path_tracing::dx::utilities {
 		vector4 unused1 = vector4(1);
 		vector4 unused2 = vector4(1);
 		vector4 unused3 = vector4(1);
-
+		
 		scene_info() = default;
 	};
 	

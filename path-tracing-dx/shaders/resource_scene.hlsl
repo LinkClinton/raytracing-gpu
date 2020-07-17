@@ -4,12 +4,14 @@
 #include "samplers/random_sampler.hlsl"
 #include "emitters/emitter.hlsl"
 
+typedef uint64_t uint64;
+
 struct scene_info {
 	float4x4 raster_to_camera;
 	float4x4 camera_to_world;
 
-	uint camera_focus;
-	uint camera_lens;
+	float camera_focus;
+	float camera_lens;
 
 	uint sample_index;
 	uint emitters;
@@ -31,6 +33,8 @@ struct material_gpu_buffer {
 };
 
 struct ray_payload {
+	surface_interaction interaction;
+
 	random_sampler sampler;
 
 	float3 radiance;

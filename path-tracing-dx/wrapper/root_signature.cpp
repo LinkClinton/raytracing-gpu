@@ -62,11 +62,11 @@ void path_tracing::dx::wrapper::root_signature::add_cbv(const std::string& name,
 	add_descriptor(name, D3D12_ROOT_PARAMETER_TYPE_CBV, base, space);
 }
 
-void path_tracing::dx::wrapper::root_signature::serialize(const std::shared_ptr<device>& device)
+void path_tracing::dx::wrapper::root_signature::serialize(const std::shared_ptr<device>& device, bool is_local)
 {
 	D3D12_ROOT_SIGNATURE_DESC desc = {};
 
-	desc.Flags = D3D12_ROOT_SIGNATURE_FLAG_NONE;
+	desc.Flags = is_local ? D3D12_ROOT_SIGNATURE_FLAG_LOCAL_ROOT_SIGNATURE : D3D12_ROOT_SIGNATURE_FLAG_NONE;
 	desc.pParameters = mRootParameters.data();
 	desc.NumParameters = static_cast<UINT>(mRootParameters.size());
 
