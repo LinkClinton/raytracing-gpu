@@ -32,7 +32,7 @@ ray_desc spawn_ray_to(float3 position, float3 to)
 
 	ray.Direction = direction;
 	ray.Origin = position;
-	ray.TMin = RAY_EPSILON * (1 + max_component(abs(position)));
+	ray.TMin = RAY_EPSILON* (1 + max_component(abs(position)));
 	ray.TMax = dist * (1 - SHADOW_EPSILON);
 
 	return ray;

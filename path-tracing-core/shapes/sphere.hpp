@@ -11,6 +11,8 @@ namespace path_tracing::core::shapes {
 		~sphere() = default;
 
 		mesh_data mesh() const override;
+
+		shape_gpu_buffer gpu_buffer() const noexcept override;
 		
 		real radius() const noexcept;
 	private:

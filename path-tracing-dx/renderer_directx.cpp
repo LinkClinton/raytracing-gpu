@@ -83,22 +83,17 @@ void path_tracing::dx::renderer_directx::build(const std::shared_ptr<core::scene
 	mResourceScene = std::make_shared<resource_scene>(mDevice);
 	mScenePipeline = std::make_shared<scene_pipeline>(mDevice);
 
-	for (const auto& entity : scene->entities()) mResourceCache->cache_entity(entity);
-
 	mSceneInfo.emitters = static_cast<uint32>(scene->emitters().size());
 	
-	mResourceCache->execute(mCommandQueue);
+	mResourceCache->execute(scene->entities(), mCommandQueue);
 	
-	mResourceScene->set_entities(scene->entities(), mResourceCache);
 	mResourceScene->set_render_target(mRenderTarget);
 
-	mResourceScene->execute(mCommandQueue);
+	mResourceScene->execute(mResourceCache, mCommandQueue);
 	
 	mScenePipeline->set_resource_cache(mResourceCache);
 	mScenePipeline->set_resource_scene(mResourceScene);
-	mScenePipeline->set_entities(scene->entities());
-	mScenePipeline->set_max_depth(5);
-
+	
 	mScenePipeline->execute(mCommandQueue);
 }
 

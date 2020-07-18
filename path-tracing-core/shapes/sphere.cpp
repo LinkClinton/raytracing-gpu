@@ -80,6 +80,17 @@ path_tracing::core::shapes::mesh_data path_tracing::core::shapes::sphere::mesh()
 	return data;
 }
 
+path_tracing::core::shapes::shape_gpu_buffer path_tracing::core::shapes::sphere::gpu_buffer() const noexcept
+{
+	const auto mesh_data = mesh();
+
+	return shape_gpu_buffer(
+		static_cast<uint32>(mesh_data.positions.size()), 
+		static_cast<uint32>(mesh_data.normals.size()),
+		static_cast<uint32>(mesh_data.indices.size()),
+		static_cast<uint32>(mesh_data.uvs.size()));
+}
+
 path_tracing::core::real path_tracing::core::shapes::sphere::radius() const noexcept
 {
 	return mRadius;

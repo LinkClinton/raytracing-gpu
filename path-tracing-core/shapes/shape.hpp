@@ -24,6 +24,17 @@ namespace path_tracing::core::shapes {
 			const std::vector<vector3>& uvs,
 			const std::vector<unsigned>& indices);
 	};
+
+	struct shape_gpu_buffer {
+		uint32 positions = 0;
+		uint32 normals = 0;
+		uint32 indices = 0;
+		uint32 uvs = 0;
+
+		shape_gpu_buffer() = default;
+
+		shape_gpu_buffer(uint32 positions, uint32 normals, uint32 indices, uint32 uvs);
+	};
 	
 	class shape : public interfaces::noncopyable {
 	public:
@@ -32,6 +43,8 @@ namespace path_tracing::core::shapes {
 		~shape() = default;
 
 		virtual mesh_data mesh() const = 0;
+
+		virtual shape_gpu_buffer gpu_buffer() const noexcept = 0;
 		
 		bool reverse_orientation() const noexcept;
 	private:

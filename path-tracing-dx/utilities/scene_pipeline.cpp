@@ -17,16 +17,6 @@ void path_tracing::dx::utilities::scene_pipeline::set_resource_scene(const std::
 	mResourceScene = scene;
 }
 
-void path_tracing::dx::utilities::scene_pipeline::set_entities(const std::vector<std::shared_ptr<entity>>& entities)
-{
-	mEntities = entities;
-}
-
-void path_tracing::dx::utilities::scene_pipeline::set_max_depth(size_t depth)
-{
-	mMaxDepth = depth;
-}
-
 void path_tracing::dx::utilities::scene_pipeline::execute(const std::shared_ptr<command_queue>& queue)
 {
 	const std::wstring ray_generation_shader = L"ray_generation_shader";
@@ -49,13 +39,9 @@ void path_tracing::dx::utilities::scene_pipeline::execute(const std::shared_ptr<
 	std::vector<shader_association> associations;
 	std::vector<hit_group> groups;
 
-	for (const auto& entity : mEntities) {
-		const auto entity_cache = mResourceCache->cache(entity);
-
-		if (!entity_cache.group.has_value()) continue;
-
-		associations.push_back(entity_cache.association.value());
-		groups.push_back(entity_cache.group.value());
+	for (const auto& entity_cache : mResourceCache->entities_cache_data()) {
+		associations.push_back(entity_cache.association);
+		groups.push_back(entity_cache.group);
 	}
 
 	for (const auto& shaders : shaders_map) {
@@ -85,12 +71,8 @@ void path_tracing::dx::utilities::scene_pipeline::execute(const std::shared_ptr<
 
 	shader_table->begin_mapping();
 
-	for (const auto& entity : mEntities) {
-		const auto entity_cache = mResourceCache->cache(entity);
-
-		if (!entity_cache.group.has_value()) continue;
-
-		std::memcpy(shader_table->shader_record_address(entity_cache.group->name) +
+	for (const auto& entity_cache : mResourceCache->entities_cache_data()) {
+		std::memcpy(shader_table->shader_record_address(entity_cache.group.name) +
 			D3D12_SHADER_IDENTIFIER_SIZE_IN_BYTES,
 			entity_cache.shader_table_data.data(),
 			entity_cache.shader_table_data.size());

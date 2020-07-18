@@ -17,10 +17,6 @@ namespace path_tracing::dx::utilities {
 		
 		void set_resource_scene(const std::shared_ptr<resource_scene>& scene);
 
-		void set_entities(const std::vector<std::shared_ptr<entity>>& entities);
-
-		void set_max_depth(size_t depth);
-
 		void execute(const std::shared_ptr<command_queue>& queue);
 
 		void render(const std::shared_ptr<graphics_command_list>& command_list) const;
@@ -35,8 +31,6 @@ namespace path_tracing::dx::utilities {
 
 		std::shared_ptr<device> mDevice;
 		
-		std::vector<std::shared_ptr<entity>> mEntities;
-
 		size_t mMaxDepth = 5;
 	};
 	

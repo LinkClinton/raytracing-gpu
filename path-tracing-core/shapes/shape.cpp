@@ -9,6 +9,11 @@ path_tracing::core::shapes::mesh_data::mesh_data(
 {
 }
 
+path_tracing::core::shapes::shape_gpu_buffer::shape_gpu_buffer(uint32 positions, uint32 normals, uint32 indices, uint32 uvs) :
+	positions(positions), normals(normals), indices(indices), uvs(uvs)
+{
+}
+
 path_tracing::core::shapes::shape::shape(bool reverse_orientation) :
 	mReverseOrientation(reverse_orientation)
 {

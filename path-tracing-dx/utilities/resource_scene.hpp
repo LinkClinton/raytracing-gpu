@@ -37,12 +37,9 @@ namespace path_tracing::dx::utilities {
 
 		void set_render_target(const std::shared_ptr<texture2d>& render_target);
 
-		void set_entities(const std::vector<std::shared_ptr<entity>>& entities,
-			const std::shared_ptr<resource_cache>& cache);
-		
 		void set_scene_info(const scene_info& info);
 
-		void execute(const std::shared_ptr<command_queue>& queue);
+		void execute(const std::shared_ptr<resource_cache>& cache, const std::shared_ptr<command_queue>& queue);
 
 		void render(const std::shared_ptr<graphics_command_list>& command_list) const;
 
@@ -62,15 +59,13 @@ namespace path_tracing::dx::utilities {
 		std::shared_ptr<texture2d> mRenderTarget;
 		
 		std::shared_ptr<buffer> mSceneInfo;
+		std::shared_ptr<buffer> mEntities;
 		std::shared_ptr<buffer> mMaterials;
 		std::shared_ptr<buffer> mEmitters;
+		std::shared_ptr<buffer> mShapes;
 		
 		std::shared_ptr<device> mDevice;
 
-		std::vector<raytracing_instance> mInstancesData;
-		std::vector<material_gpu_buffer> mMaterialsData;
-		std::vector<emitter_gpu_buffer> mEmittersData;
-		
 		scene_info mSceneInfoData;
 	};
 	

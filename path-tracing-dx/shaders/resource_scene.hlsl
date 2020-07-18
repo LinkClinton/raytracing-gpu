@@ -24,6 +24,22 @@ struct scene_info {
 	float3 unused3;
 };
 
+struct entity_gpu_buffer {
+	float4x4 local_to_world;
+
+	uint material;
+	uint emitter;
+	uint shape;
+	uint unused;
+};
+
+struct shape_gpu_buffer {
+	uint positions;
+	uint normals;
+	uint indices;
+	uint uvs;
+};
+
 struct ray_payload {
 	surface_interaction interaction;
 
@@ -36,8 +52,10 @@ typedef BuiltInTriangleIntersectionAttributes HitAttributes;
 
 ConstantBuffer<scene_info> global_scene_info : register(b0, space0);
 RaytracingAccelerationStructure global_acceleration : register(t0, space1);
-StructuredBuffer<material_gpu_buffer> global_materials : register(t1, space1);
-StructuredBuffer<emitter_gpu_buffer> global_emitters : register(t2, space1);
+StructuredBuffer<entity_gpu_buffer> global_entities : register(t1, space1);
+StructuredBuffer<material_gpu_buffer> global_materials : register(t2, space1);
+StructuredBuffer<emitter_gpu_buffer> global_emitters : register(t3, space1);
+StructuredBuffer<shape_gpu_buffer> global_shapes : register(t4, space1);
 
 RWTexture2D<float4> global_render_target : register(u0, space2);
 

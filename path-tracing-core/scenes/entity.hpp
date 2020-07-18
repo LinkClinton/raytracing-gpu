@@ -13,6 +13,21 @@ namespace path_tracing::core::scenes {
 	using namespace emitters;
 	using namespace shapes;
 
+	struct entity_gpu_buffer {
+		constexpr static inline uint32 null = std::numeric_limits<uint32>::max();
+		
+		matrix4x4 local_to_world = matrix4x4(1);
+
+		uint32 material = null;
+		uint32 emitter = null;
+		uint32 shape = null;
+		uint32 unused = null;
+
+		entity_gpu_buffer() = default;
+
+		entity_gpu_buffer(const matrix4x4& transform, uint32 material, uint32 emitter, uint32 shape);
+	};
+	
 	class entity final : public interfaces::noncopyable {
 	public:
 		explicit entity(
@@ -30,6 +45,8 @@ namespace path_tracing::core::scenes {
 		bool has_component() const noexcept;
 
 		transform transform() const noexcept;
+
+		entity_gpu_buffer gpu_buffer(uint32 material, uint32 emitter, uint32 shape) const noexcept;
 	private:
 		std::shared_ptr<material> mMaterial;
 		std::shared_ptr<emitter> mEmitter;

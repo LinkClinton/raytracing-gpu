@@ -21,6 +21,7 @@ namespace path_tracing::dx::utilities {
 	using namespace core::emitters;
 	using namespace core::scenes;
 	using namespace core::shapes;
+	using namespace core;
 
 	struct shape_cache_data final {
 		std::shared_ptr<raytracing_geometry> geometry;
@@ -40,22 +41,16 @@ namespace path_tracing::dx::utilities {
 	};
 
 	struct entity_cache_data final {
-		std::optional<shader_association> association;
-		std::optional<raytracing_instance> instance;
-		std::optional<material_gpu_buffer> material;
-		std::optional<emitter_gpu_buffer> emitter;
-		std::optional<hit_group> group;
+		shader_association association;
+		hit_group group;
 
 		std::vector<byte> shader_table_data;
-		
+
 		entity_cache_data() = default;
 
 		entity_cache_data(
-			const std::optional<shader_association>& association,
-			const std::optional<raytracing_instance>& instance,
-			const std::optional<material_gpu_buffer>& material,
-			const std::optional<emitter_gpu_buffer>& emitter,
-			const std::optional<hit_group>& group);
+			const shader_association& association,
+			const hit_group& group);
 	};
 
 	struct shape_type_data final {
@@ -76,26 +71,31 @@ namespace path_tracing::dx::utilities {
 
 		~resource_cache() = default;
 
-		void cache_entity(const std::shared_ptr<entity>& entity);
-		
-		void cache_shape(const std::shared_ptr<shape>& shape);
+		void execute(
+			const std::vector<std::shared_ptr<entity>>& entities, 
+			const std::shared_ptr<command_queue>& queue);
 
-		void execute(const std::shared_ptr<command_queue>& queue);
+		const std::vector<entity_cache_data>& entities_cache_data() const noexcept;
 
-		entity_cache_data cache(const std::shared_ptr<entity>& entity) const;
-		
-		shape_cache_data cache(const std::shared_ptr<shape>& shape) const;
+		const std::vector<shape_cache_data>& shapes_cache_data() const noexcept;
 
-		bool has_cache(const std::shared_ptr<entity>& entity) const noexcept;
+		const std::vector<raytracing_instance>& instances() const noexcept;
 		
-		bool has_cache(const std::shared_ptr<shape>& shape) const noexcept;
+		const std::vector<entity_gpu_buffer>& entities() const noexcept;
+		
+		const std::vector<material_gpu_buffer>& materials() const noexcept;
+
+		const std::vector<emitter_gpu_buffer>& emitters() const noexcept;
+
+		const std::vector<shape_gpu_buffer>& shapes() const noexcept;
 	private:
 		std::shared_ptr<buffer>& cpu_buffer();
 
-		std::unordered_map<std::shared_ptr<entity>, entity_cache_data> mEntitiesCache;
-		std::unordered_map<std::shared_ptr<shape>, shape_cache_data> mShapesCache;
-
+		std::unordered_map<std::shared_ptr<shape>, size_t> mShapesIndex;
 		std::unordered_map<std::string, shape_type_data> mTypeCache;
+
+		std::vector<shape_cache_data> mShapesCache;
+		std::vector<entity_cache_data> mEntitiesCache;
 		
 		std::shared_ptr<command_allocator> mCommandAllocator;
 		std::shared_ptr<graphics_command_list> mCommandList;
@@ -103,6 +103,14 @@ namespace path_tracing::dx::utilities {
 		std::shared_ptr<device> mDevice;
 		
 		std::vector<std::shared_ptr<buffer>> mCpuBuffers;
+
+		std::vector<raytracing_instance> mInstances;
+		
+		std::vector<material_gpu_buffer> mMaterials;
+		std::vector<emitter_gpu_buffer> mEmitters;
+		std::vector<shape_gpu_buffer> mShapes;
+
+		std::vector<entity_gpu_buffer> mEntities;
 	};
 	
 }

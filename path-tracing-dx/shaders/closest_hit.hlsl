@@ -27,11 +27,11 @@ void closest_hit_shader(inout ray_payload payload, HitAttributes attribute) {
 	float3 local_position = position0 * b0 + position1 * b1 + position2 * b2;
 	float3 local_normal = cross(e1, e2);
 
-	float3x4 local_to_world = ObjectToWorld3x4();
+	float4x3 local_to_world = ObjectToWorld4x3();
 	float3x3 inv_transpose = float3x3(WorldToObject4x3()[0], WorldToObject4x3()[1], WorldToObject4x3()[2]);
 
-	payload.interaction.position = mul(local_position, local_to_world).xyz;
-	payload.interaction.normal = normalize(mul(local_normal, inv_transpose).xyz);
+	payload.interaction.position = mul(float4(local_position, 1), local_to_world).xyz;
+	payload.interaction.normal = normalize(mul(inv_transpose, local_normal).xyz);
 	payload.interaction.uv = (uvs[index.x] * b0 + uvs[index.y] * b1 + uvs[index.z] * b2).xy;
 	payload.interaction.wo = -WorldRayDirection();
 

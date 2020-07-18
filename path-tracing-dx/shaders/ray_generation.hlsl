@@ -15,7 +15,7 @@ float3 uniform_sample_one_emitter(random_sampler sampler, path_tracing_info trac
 {
 	float3 wo = world_to_local(payload.interaction.shading_space, payload.interaction.wo);
 	float3 L = 0;
-
+	
 	scattering_type type = scattering_all ^ scattering_specular;
 
 	{
@@ -70,7 +70,7 @@ float3 trace(ray_desc first_ray, random_sampler sampler)
 		TraceRay(global_acceleration, RAY_FLAG_FORCE_OPAQUE, 0xFF, 0, 1, 0, tracing_info.ray, payload);
 
 		if (payload.missed == true) break;
-
+		
 		tracing_info.value += tracing_info.beta * uniform_sample_one_emitter(sampler, tracing_info, payload);
 
 		float3 wo = world_to_local(payload.interaction.shading_space, payload.interaction.wo);
@@ -115,7 +115,7 @@ void ray_generation_shader() {
 	float factor = global_scene_info.sample_index / (global_scene_info.sample_index + 1.0f);
 
 	float3 old_value = global_render_target[DispatchRaysIndex().xy].xyz;
-	float3 new_value = L;
+	float3 new_value = gamma_correct(L);
 
 	global_render_target[DispatchRaysIndex().xy] = float4(lerp(new_value, old_value, factor), 1);
 }

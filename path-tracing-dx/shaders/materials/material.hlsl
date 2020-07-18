@@ -25,7 +25,7 @@ scattering_sample sample_material(material_gpu_buffer material, float3 wo, float
 	if (material.type == material_diffuse)
 		return sample_diffuse_material(material, wo, value, include);
 
-	scattering_sample sample; sample.pdf = 0;
+	scattering_sample sample; sample.pdf = 0; sample.type = scattering_unknown;
 
 	return sample;
 }
