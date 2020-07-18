@@ -15,19 +15,20 @@ struct scene_info {
 	float camera_lens;
 
 	uint sample_index;
+	uint max_depth;
 	uint emitters;
 
 	float4x4 unused0;
 	float4 unused1;
 	float4 unused2;
-	float4 unused3;
+	float3 unused3;
 };
 
 struct ray_payload {
 	surface_interaction interaction;
 
 	bool missed;
-
+	
 	uint index;
 };
 

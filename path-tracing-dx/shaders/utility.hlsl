@@ -5,6 +5,14 @@
 #define QUARTER_PI 0.785398163397448309615660845819875721
 #define HALF_PI 1.57079632679489661923132169163975144
 
+#define RAY_INFINITY 1e20
+#define RAY_EPSILON 8.940697e-05
+
+#define SHADOW_EPSILON 0.0008940697
+#define SHADOW_FLAG RAY_FLAG_FORCE_OPAQUE | RAY_FLAG_ACCEPT_FIRST_HIT_AND_END_SEARCH | RAY_FLAG_SKIP_CLOSEST_HIT_SHADER
+
+typedef RayDesc ray_desc;
+
 float2 concentric_sample_disk(float2 sample)
 {
 	const float2 sample_remapped = 2 * sample - 1;
@@ -52,6 +60,13 @@ float3 gamma_correct(float3 value)
 		gamma_correct(value.x),
 		gamma_correct(value.y),
 		gamma_correct(value.z));
+}
+
+float max_component(float3 value)
+{
+	if (value.x > value.y && value.x > value.z) return value.x;
+	if (value.y > value.z) return value.y;
+	return value.z;
 }
 
 float distance_squared(float3 v0, float3 v1)

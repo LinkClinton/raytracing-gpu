@@ -18,8 +18,8 @@ path_tracing::dx::renderer_directx::renderer_directx(void* handle, int width, in
 	mRenderTarget = std::make_shared<texture2d>(mDevice, D3D12_RESOURCE_STATE_GENERIC_READ,
 		D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS, D3D12_HEAP_TYPE_DEFAULT,
 		DXGI_FORMAT_R32G32B32A32_FLOAT,
-		static_cast<size_t>(width * 0.75),
-		static_cast<size_t>(height * 0.75));
+		static_cast<size_t>(width),
+		static_cast<size_t>(height));
 
 	mRenderTargetViewHeap = std::make_shared<descriptor_heap>(mDevice, D3D12_DESCRIPTOR_HEAP_TYPE_RTV, mSwapChain->count());
 	mImGuiDescriptorHeap = std::make_shared<descriptor_heap>(mDevice, D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, 16);
@@ -63,6 +63,7 @@ void path_tracing::dx::renderer_directx::render(const std::shared_ptr<core::came
 	mSceneInfo.raster_to_camera = glm::transpose(camera_gpu_buffer.raster_to_camera);
 	mSceneInfo.camera_to_world = glm::transpose(camera_gpu_buffer.camera_to_world);
 	mSceneInfo.sample_index++;
+	mSceneInfo.max_depth = 5;
 	
 	mResourceScene->set_scene_info(mSceneInfo);
 	
@@ -137,13 +138,10 @@ void path_tracing::dx::renderer_directx::render_imgui() const
 	ImGui_ImplDX12_NewFrame();
 	ImGui::NewFrame();
 
-	ImGui::Begin("Window");
-	
-	ImGui::Image(reinterpret_cast<ImTextureID>(mImGuiDescriptorHeap->gpu_handle(1).ptr), ImVec2(
-		static_cast<float>(mRenderTarget->width()), 
-		static_cast<float>(mRenderTarget->height())));
-
-	ImGui::End();
+	ImGui::GetBackgroundDrawList()->AddImage(
+		reinterpret_cast<ImTextureID>(mImGuiDescriptorHeap->gpu_handle(1).ptr),
+		ImVec2(0, 0),
+		ImVec2(static_cast<float>(mRenderTarget->width()), static_cast<float>(mRenderTarget->height())));
 	
 	const auto current_frame_index = mSwapChain->current_frame_index();
 

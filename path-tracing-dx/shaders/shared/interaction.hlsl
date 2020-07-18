@@ -9,10 +9,49 @@ struct coordinate_system {
 	float3 z() { return axes[2]; }
 };
 
+ray_desc spawn_ray(float3 position, float3 direction)
+{
+	ray_desc ray;
+
+	ray.Direction = direction;
+	ray.Origin = position;
+	ray.TMin = RAY_EPSILON * (1 + max_component(abs(position)));
+	ray.TMax = RAY_INFINITY;
+
+	return ray;
+}
+
+ray_desc spawn_ray_to(float3 position, float3 to)
+{
+	float3 direction = to - position;
+	float dist = length(direction);
+
+	direction /= dist;
+
+	ray_desc ray;
+
+	ray.Direction = direction;
+	ray.Origin = position;
+	ray.TMin = RAY_EPSILON * (1 + max_component(abs(position)));
+	ray.TMax = dist * (1 - SHADOW_EPSILON);
+
+	return ray;
+}
+
 struct interaction {
 	float3 position;
 	float3 normal; 
 	float3 wo;
+
+	ray_desc spawn_ray_to(interaction interaction)
+	{
+		return ::spawn_ray_to(position, interaction.position);
+	}
+
+	ray_desc spawn_ray(float3 direction)
+	{
+		return ::spawn_ray(position, direction);
+	}
 };
 
 struct surface_interaction {
@@ -23,18 +62,28 @@ struct surface_interaction {
 	float3 wo;
 
 	float2 uv;
+
+	ray_desc spawn_ray_to(interaction interaction)
+	{
+		return ::spawn_ray_to(position, interaction.position);
+	}
+
+	ray_desc spawn_ray(float3 direction)
+	{
+		return ::spawn_ray(position, direction);
+	}
+
+	interaction base_type()
+	{
+		interaction base;
+
+		base.position = position;
+		base.normal = normal;
+		base.wo = wo;
+
+		return base;
+	}
 };
-
-interaction base_type(surface_interaction input) 
-{
-	interaction base;
-
-	base.position = input.position;
-	base.normal = input.normal;
-	base.wo = input.wo;
-
-	return base;
-}
 
 float3 face_forward(float3 v, float3 forward)
 {

@@ -12,7 +12,10 @@ using namespace path_tracing::core;
 using namespace path_tracing::dx;
 
 int main() {
-	auto app = std::make_shared<application>("application-dx", 1280, 720);
+	const auto width = static_cast<int>(1280 * 0.75f);
+	const auto height = static_cast<int>(720 * 0.75f);
+	
+	auto app = std::make_shared<application>("application-dx", width, height);
 
 	const auto camera = std::make_shared<cameras::camera>(
 		perspective_left_hand(glm::radians(45.f), 1280.f, 720.f),

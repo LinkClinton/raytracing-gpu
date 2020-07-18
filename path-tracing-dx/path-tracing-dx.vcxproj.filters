@@ -135,7 +135,6 @@
     <CopyFileToFolders Include="shaders\resource_scene.hlsl">
       <Filter>shaders</Filter>
     </CopyFileToFolders>
-    <CopyFileToFolders Include="shaders\closest_hit.hlsl" />
     <CopyFileToFolders Include="shaders\emitters\emitter.hlsl">
       <Filter>shaders\emitters</Filter>
     </CopyFileToFolders>
@@ -154,25 +153,14 @@
     <CopyFileToFolders Include="shaders\samplers\random_generator.hlsl">
       <Filter>shaders\samplers</Filter>
     </CopyFileToFolders>
-  </ItemGroup>
-  <ItemGroup>
-    <FxCompile Include="shaders\materials\material.hlsl">
-      <Filter>shaders\materials</Filter>
-    </FxCompile>
-    <FxCompile Include="shaders\materials\material_include.hlsl">
-      <Filter>shaders\materials</Filter>
-    </FxCompile>
-    <FxCompile Include="shaders\scatterings\scattering_include.hlsl">
-      <Filter>shaders\scatterings</Filter>
-    </FxCompile>
-    <FxCompile Include="shaders\scatterings\scattering_lambertian.hlsl">
-      <Filter>shaders\scatterings</Filter>
-    </FxCompile>
-    <FxCompile Include="shaders\utility.hlsl">
+    <CopyFileToFolders Include="shaders\materials\material.hlsl" />
+    <CopyFileToFolders Include="shaders\materials\material_include.hlsl" />
+    <CopyFileToFolders Include="shaders\scatterings\scattering_include.hlsl" />
+    <CopyFileToFolders Include="shaders\scatterings\scattering_lambertian.hlsl" />
+    <CopyFileToFolders Include="shaders\utility.hlsl" />
+    <CopyFileToFolders Include="shaders\materials\material_diffuse.hlsl" />
+    <CopyFileToFolders Include="shaders\closest_hit.hlsl">
       <Filter>shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="shaders\materials\material_diffuse.hlsl">
-      <Filter>shaders\materials</Filter>
-    </FxCompile>
+    </CopyFileToFolders>
   </ItemGroup>
 </Project>

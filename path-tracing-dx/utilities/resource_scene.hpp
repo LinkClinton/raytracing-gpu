@@ -18,12 +18,13 @@ namespace path_tracing::dx::utilities {
 		real camera_lens = 0;
 		
 		uint32 sample_index = 0;
+		uint32 max_depth = 5;
 		uint32 emitters = 0;
 		
 		matrix4x4 unused0 = matrix4x4(1);
 		vector4 unused1 = vector4(1);
 		vector4 unused2 = vector4(1);
-		vector4 unused3 = vector4(1);
+		vector3 unused3 = vector4(1);
 		
 		scene_info() = default;
 	};
