@@ -2,8 +2,8 @@
 #define __RESOURCE_SCENE_HLSL__
 
 #include "samplers/random_sampler.hlsl"
-#include "materials/material.hlsl"
-#include "emitters/emitter.hlsl"
+#include "materials/material_include.hlsl"
+#include "emitters/emitter_include.hlsl"
 
 struct scene_info {
 	float4x4 raster_to_camera;
@@ -24,11 +24,12 @@ struct scene_info {
 
 struct entity_gpu_buffer {
 	float4x4 local_to_world;
+	float4x4 world_to_local;
 
 	uint material;
 	uint emitter;
 	uint shape;
-	uint unused;
+	float area;
 };
 
 struct shape_gpu_buffer {
@@ -42,7 +43,7 @@ struct ray_payload {
 	surface_interaction interaction;
 
 	bool missed;
-	
+
 	uint index;
 };
 
@@ -56,5 +57,11 @@ SHADER_STRUCTURED_BUFFER_DEFINE(emitter_gpu_buffer, global_emitters, t3, space1)
 SHADER_STRUCTURED_BUFFER_DEFINE(shape_gpu_buffer, global_shapes, t4, space1);
 
 SHADER_RESOURCE_DEFINE(RWTexture2D<float4>, global_render_target, u0, space2);
+
+SHADER_STRUCTURED_BUFFER_DEFINE(float3, global_positions[], t0, space3);
+SHADER_STRUCTURED_BUFFER_DEFINE(float3, global_normals[], t0, space4);
+SHADER_STRUCTURED_BUFFER_DEFINE(float3, global_uvs[], t0, space6);
+
+SHADER_STRUCTURED_BUFFER_DEFINE(uint3, global_indices[], t0, space5);
 
 #endif

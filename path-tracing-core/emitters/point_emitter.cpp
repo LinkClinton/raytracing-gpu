@@ -6,13 +6,15 @@ path_tracing::core::emitters::point_emitter::point_emitter(const vector3& intens
 }
 
 path_tracing::core::emitters::emitter_gpu_buffer path_tracing::core::emitters::point_emitter::gpu_buffer(
-	const transform& transform) const noexcept
+	const transform& transform, size_t index) const noexcept
 {
 	emitter_gpu_buffer buffer;
 
 	buffer.intensity = mIntensity;
 	buffer.position = transform_point(transform, vector3(0));
 	buffer.type = type();
-
+	buffer.delta = 1;
+	buffer.index = static_cast<uint32>(index);
+	
 	return buffer;
 }

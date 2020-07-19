@@ -37,6 +37,9 @@
     </ClInclude>
     <ClInclude Include="renderer_backend.hpp" />
     <ClInclude Include="imgui_impl_win32.hpp" />
+    <ClInclude Include="emitters\surface_emitter.hpp">
+      <Filter>emitters</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="interfaces">
@@ -98,5 +101,8 @@
     </ClCompile>
     <ClCompile Include="renderer_backend.cpp" />
     <ClCompile Include="imgui_impl_win32.cpp" />
+    <ClCompile Include="emitters\surface_emitter.cpp">
+      <Filter>emitters</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

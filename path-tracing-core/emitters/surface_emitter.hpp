@@ -4,15 +4,15 @@
 
 namespace path_tracing::core::emitters {
 
-	class point_emitter final : public emitter {
+	class surface_emitter final : public emitter {
 	public:
-		explicit point_emitter(const vector3& intensity);
+		explicit surface_emitter(const vector3& radiance);
 
-		~point_emitter() = default;
+		~surface_emitter() = default;
 
 		emitter_gpu_buffer gpu_buffer(const transform& transform, size_t index) const noexcept override;
 	private:
-		vector3 mIntensity;
+		vector3 mRadiance;
 	};
 	
 }

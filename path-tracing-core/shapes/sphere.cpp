@@ -87,8 +87,17 @@ path_tracing::core::shapes::shape_gpu_buffer path_tracing::core::shapes::sphere:
 	return shape_gpu_buffer(
 		static_cast<uint32>(mesh_data.positions.size()), 
 		static_cast<uint32>(mesh_data.normals.size()),
-		static_cast<uint32>(mesh_data.indices.size()),
+		static_cast<uint32>(mesh_data.indices.size() / 3),
 		static_cast<uint32>(mesh_data.uvs.size()));
+}
+
+path_tracing::core::real path_tracing::core::shapes::sphere::area(const transform& transform)
+{
+	const auto center = transform_point(transform, vector3(0));
+	const auto point = transform_point(transform, vector3(0, 0, mRadius));
+	const auto radius = length(point - center);
+
+	return 4 * glm::pi<real>() * radius * radius;
 }
 
 path_tracing::core::real path_tracing::core::shapes::sphere::radius() const noexcept

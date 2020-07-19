@@ -5,7 +5,8 @@
 
 enum emitter_type {
 	emitter_unknown = 0,
-	emitter_point = 1
+	emitter_point = 1,
+	emitter_surface = 2
 };
 
 struct emitter_gpu_buffer {
@@ -13,7 +14,10 @@ struct emitter_gpu_buffer {
 	float3 intensity;
 
 	float3 position;
-	float unused;
+	uint delta;
+
+	uint index;
+	float3 unused0;
 };
 
 struct emitter_sample {

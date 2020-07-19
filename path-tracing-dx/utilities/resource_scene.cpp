@@ -31,6 +31,23 @@ void path_tracing::dx::utilities::resource_scene::set_scene_info(const scene_inf
 
 void path_tracing::dx::utilities::resource_scene::execute(const std::shared_ptr<resource_cache>& cache, const std::shared_ptr<command_queue>& queue)
 {
+	std::vector<std::string> meshes_positions_name;
+	std::vector<std::string> meshes_normals_name;
+	std::vector<std::string> meshes_indices_name;
+	std::vector<std::string> meshes_uvs_name;
+
+	for (size_t index = 0; index < cache->shapes_cache_data().size(); index++) {
+		meshes_positions_name.push_back("shape" + std::to_string(index) + "positions");
+		meshes_normals_name.push_back("shape" + std::to_string(index) + "normals");
+		meshes_indices_name.push_back("shape" + std::to_string(index) + "indices");
+		meshes_uvs_name.push_back("shape" + std::to_string(index) + "uvs");
+	}
+
+	mDescriptorTable->add_srv_range(meshes_positions_name, 0, 3);
+	mDescriptorTable->add_srv_range(meshes_normals_name, 0, 4);
+	mDescriptorTable->add_srv_range(meshes_indices_name, 0, 5);
+	mDescriptorTable->add_srv_range(meshes_uvs_name, 0, 6);
+	
 	mDescriptorHeap = std::make_shared<descriptor_heap>(mDevice, mDescriptorTable);
 
 	mRootSignature = std::make_shared<root_signature>();
@@ -135,6 +152,46 @@ void path_tracing::dx::utilities::resource_scene::execute(const std::shared_ptr<
 	(*mDevice)->CreateUnorderedAccessView(mRenderTarget->get(), nullptr, 
 		&render_target_desc, mDescriptorHeap->cpu_handle(render_target_index));
 
+	size_t shape_index = 0;
+	
+	for (const auto& shape_cache : cache->shapes_cache_data()) {
+		const auto& shape = cache->shapes()[shape_index];
+
+		const auto position_index = mDescriptorTable->index(meshes_positions_name[shape_index]);
+		const auto normals_index = mDescriptorTable->index(meshes_normals_name[shape_index]);
+		const auto indices_index = mDescriptorTable->index(meshes_indices_name[shape_index]);
+		const auto uvs_index = mDescriptorTable->index(meshes_uvs_name[shape_index]);
+		
+		D3D12_SHADER_RESOURCE_VIEW_DESC desc = {};
+		
+		desc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+		desc.ViewDimension = D3D12_SRV_DIMENSION_BUFFER;
+		desc.Format = DXGI_FORMAT_UNKNOWN;
+		desc.Buffer.Flags = D3D12_BUFFER_SRV_FLAG_NONE;
+		desc.Buffer.FirstElement = 0;
+		desc.Buffer.NumElements = static_cast<UINT>(shape.positions);
+		desc.Buffer.StructureByteStride = sizeof(vector3);
+
+		(*mDevice)->CreateShaderResourceView(shape_cache.positions->get(), &desc, mDescriptorHeap->cpu_handle(position_index));
+
+		desc.Buffer.NumElements = static_cast<UINT>(shape.normals);
+		desc.Buffer.StructureByteStride = sizeof(vector3);
+
+		(*mDevice)->CreateShaderResourceView(shape_cache.normals->get(), &desc, mDescriptorHeap->cpu_handle(normals_index));
+
+		desc.Buffer.NumElements = static_cast<UINT>(shape.indices);
+		desc.Buffer.StructureByteStride = sizeof(uint32) * 3;
+
+		(*mDevice)->CreateShaderResourceView(shape_cache.indices->get(), &desc, mDescriptorHeap->cpu_handle(indices_index));
+
+		desc.Buffer.NumElements = static_cast<UINT>(shape.uvs);
+		desc.Buffer.StructureByteStride = sizeof(vector3);
+
+		(*mDevice)->CreateShaderResourceView(shape_cache.uvs->get(), &desc, mDescriptorHeap->cpu_handle(uvs_index));
+
+		shape_index++;
+	}
+	
 	queue->wait();
 }
 

@@ -94,7 +94,7 @@ void path_tracing::dx::utilities::resource_cache::execute(
 		if (entity->has_component<emitter>()) {
 			buffer.emitter = static_cast<uint32>(mEmitters.size());
 
-			mEmitters.push_back(entity->component<emitter>()->gpu_buffer(entity->transform()));
+			mEmitters.push_back(entity->component<emitter>()->gpu_buffer(entity->transform(), mEntities.size()));
 		}
 
 		if (entity->has_component<shape>()) {

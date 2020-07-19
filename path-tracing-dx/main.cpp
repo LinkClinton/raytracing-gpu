@@ -1,6 +1,7 @@
 #include "application.hpp"
 
 #include "../path-tracing-core/materials/diffuse_material.hpp"
+#include "../path-tracing-core/emitters/surface_emitter.hpp"
 #include "../path-tracing-core/emitters/point_emitter.hpp"
 #include "../path-tracing-core/shapes/sphere.hpp"
 
@@ -12,13 +13,13 @@ using namespace path_tracing::core;
 using namespace path_tracing::dx;
 
 int main() {
-	const auto width = static_cast<int>(1280 * 0.75f);
-	const auto height = static_cast<int>(720 * 0.75f);
+	const auto width = static_cast<int>(800);
+	const auto height = static_cast<int>(800);
 	
 	auto app = std::make_shared<application>("application-dx", width, height);
 
 	const auto camera = std::make_shared<cameras::camera>(
-		perspective_left_hand(glm::radians(45.f), 1280.f, 720.f),
+		perspective_left_hand(glm::radians(45.f), width, height),
 		inverse(lookAtLH(
 			vector3(0, 0, 20.f),
 			vector3(0, 0, 0), 
@@ -41,24 +42,25 @@ int main() {
 				translate(vector3(position_x, position_y, 0))));
 		}
 	}*/
+
+	const auto sphere = std::make_shared<class sphere>(1.f);
 	
 	scene->add_entity(std::make_shared<entity>(
 		std::make_shared<diffuse_material>(vector3(1.f, 0.f, 0.f)),
 		nullptr,
-		std::make_shared<sphere>(1.f),
-		translate(vector3(1, 0, 0))));
+		sphere,
+		translate(vector3(5, 0, 0))));
 
 	scene->add_entity(std::make_shared<entity>(
 		std::make_shared<diffuse_material>(vector3(0.f, 1.f, 0.f)),
 		nullptr,
-		std::make_shared<sphere>(1.f),
-		translate(vector3(-1, 0, 0))));
-	
+		sphere,
+		translate(vector3(0, 5, 0))));
 	
 	scene->add_entity(std::make_shared<entity>(
-		nullptr,
-		std::make_shared<point_emitter>(vector3(200.0f)),
-		nullptr,
+		std::make_shared<diffuse_material>(vector3(1)),
+		std::make_shared<surface_emitter>(vector3(100)),
+		sphere,
 		translate(vector3(0, 0, 25))
 		));
 	

@@ -1,3 +1,5 @@
+#include "materials/material.hlsl"
+#include "emitters/emitter.hlsl"
 #include "resource_scene.hlsl"
 
 struct path_tracing_info {
@@ -11,6 +13,38 @@ struct path_tracing_info {
 	ray_desc ray;
 };
 
+struct emitter_search_result {
+	surface_interaction interaction;
+
+	uint index;
+	
+	float pdf;
+};
+
+emitter_search_result search_emitter(random_sampler sampler, interaction interaction, float3 wi)
+{
+	emitter_search_result result;
+
+	result.pdf = 0;
+	
+	ray_desc emitter_ray = interaction.spawn_ray(wi);
+	ray_payload emitter_payload;
+
+	emitter_payload.missed = false;
+
+	TraceRay(global_acceleration, RAY_FLAG_FORCE_OPAQUE, 0xFF, 0,
+		1, 0, emitter_ray, emitter_payload);
+
+	if (emitter_payload.missed == true || global_entities[emitter_payload.index].emitter == ENTITY_NUll)
+		return result;
+
+	result.interaction = emitter_payload.interaction;
+	result.index = global_entities[emitter_payload.index].emitter;
+	result.pdf = 1 / global_scene_info.emitters;
+
+	return result;
+}
+
 float3 uniform_sample_one_emitter(random_sampler sampler, path_tracing_info tracing_info, ray_payload payload)
 {
 	float3 wo = world_to_local(payload.interaction.shading_space, payload.interaction.wo);
@@ -18,6 +52,8 @@ float3 uniform_sample_one_emitter(random_sampler sampler, path_tracing_info trac
 	
 	scattering_type type = scattering_type(scattering_all ^ scattering_specular);
 
+	material_gpu_buffer material = global_materials[global_entities[payload.index].material];
+	
 	{
 		uint which = 0; float pdf = 0;
 		
@@ -30,8 +66,8 @@ float3 uniform_sample_one_emitter(random_sampler sampler, path_tracing_info trac
 		if (!is_black(emitter_sample.intensity) && emitter_sample.pdf > 0) {
 			float3 wi = world_to_local(payload.interaction.shading_space, emitter_sample.wi);
 
-			float3 function_value = evaluate_material(global_materials[payload.index], wo, wi, type);
-			float function_pdf = pdf_material(global_materials[payload.index], wo, wi, type);
+			float3 function_value = evaluate_material(material, wo, wi, type);
+			float function_pdf = pdf_material(material, wo, wi, type);
 
 			function_value = function_value * abs(dot(emitter_sample.wi, payload.interaction.shading_space.z()));
 
@@ -44,10 +80,37 @@ float3 uniform_sample_one_emitter(random_sampler sampler, path_tracing_info trac
 				TraceRay(global_acceleration, SHADOW_FLAG, 0xFF, 0,
 					1, 0, shadow_ray, shadow_payload);
 
-				float weight = 1;
+				float weight = global_emitters[which].delta == 1 ? 1 : power_heuristic(emitter_sample.pdf, function_pdf);
 
 				if (shadow_payload.missed == true)
 					L += function_value * emitter_sample.intensity * weight / emitter_sample.pdf;
+			}
+		}
+	}
+
+	{
+		scattering_sample function_sample = sample_material(material, wo, next_sample2d(sampler), type);
+
+		function_sample.wi = local_to_world(payload.interaction.shading_space, function_sample.wi);
+		function_sample.value = function_sample.value * abs(dot(function_sample.wi, payload.interaction.shading_space.z()));
+
+		if (!is_black(function_sample.value) && function_sample.pdf > 0) {
+			emitter_search_result search_result = search_emitter(sampler, payload.interaction.base_type(), function_sample.wi);
+
+			if (search_result.pdf > 0) {
+
+				emitter_gpu_buffer emitter = global_emitters[search_result.index];
+				
+				float3 emitter_value = evaluate_emitter(emitter, search_result.interaction.base_type(), -function_sample.wi);
+				float emitter_pdf = pdf_emitter(emitter, payload.interaction.base_type(), function_sample.wi) * search_result.pdf;
+
+				if (!is_black(emitter_value) && emitter_pdf > 0) {
+
+					float weight = has(function_sample.type, scattering_specular) ? 1 :
+						power_heuristic(function_sample.pdf, emitter_pdf);
+
+					L += function_sample.value * emitter_value * weight / function_sample.pdf;
+				}
 			}
 		}
 	}
@@ -72,12 +135,26 @@ float3 trace(ray_desc first_ray, random_sampler sampler)
 			1, 0, tracing_info.ray, payload);
 
 		if (payload.missed == true) break;
+
+		if ((bounces == 0 || tracing_info.specular) && global_entities[payload.index].emitter != ENTITY_NUll)
+			tracing_info.value += tracing_info.beta * evaluate_emitter(global_emitters[global_entities[payload.index].emitter],
+				payload.interaction.base_type(), -tracing_info.ray.Direction);
+
+		if (global_entities[payload.index].material == ENTITY_NUll) {
+			tracing_info.ray = payload.interaction.spawn_ray(tracing_info.ray.Direction);
+
+			bounces--;
+
+			continue;
+		}
 		
 		tracing_info.value += tracing_info.beta * uniform_sample_one_emitter(sampler, tracing_info, payload);
 
 		float3 wo = world_to_local(payload.interaction.shading_space, payload.interaction.wo);
 
-		scattering_sample function_sample = sample_material(global_materials[payload.index], wo, next_sample2d(sampler));
+		uint material = global_entities[payload.index].material;
+		
+		scattering_sample function_sample = sample_material(global_materials[material], wo, next_sample2d(sampler));
 
 		if (is_black(function_sample.value) || function_sample.pdf == 0) break;
 

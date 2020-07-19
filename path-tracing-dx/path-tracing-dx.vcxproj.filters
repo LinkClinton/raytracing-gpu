@@ -124,6 +124,9 @@
     <Filter Include="shaders\scatterings">
       <UniqueIdentifier>{1ee27d2e-6221-401f-a3de-ee4765d93d4b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="shaders\shapes">
+      <UniqueIdentifier>{90aeab45-33b9-43af-8ed6-44eb7f51d5b2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <CopyFileToFolders Include="shaders\miss_shaders.hlsl">
@@ -174,10 +177,17 @@
     <CopyFileToFolders Include="shaders\utility.hlsl">
       <Filter>shaders</Filter>
     </CopyFileToFolders>
+    <CopyFileToFolders Include="shaders\fix_resharper_error.hlsl" />
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="shaders\fix_resharper_error.hlsl">
-      <Filter>shaders</Filter>
+    <FxCompile Include="shaders\emitters\emitter_surface.hlsl">
+      <Filter>shaders\emitters</Filter>
+    </FxCompile>
+    <FxCompile Include="shaders\shapes\shape_include.hlsl">
+      <Filter>shaders\shapes</Filter>
+    </FxCompile>
+    <FxCompile Include="shaders\shapes\shape_sampling.hlsl">
+      <Filter>shaders\shapes</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

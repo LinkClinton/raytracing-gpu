@@ -44,6 +44,8 @@ namespace path_tracing::core::shapes {
 
 		virtual mesh_data mesh() const = 0;
 
+		virtual real area(const transform& transform) = 0;
+
 		virtual shape_gpu_buffer gpu_buffer() const noexcept = 0;
 		
 		bool reverse_orientation() const noexcept;

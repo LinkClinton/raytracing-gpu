@@ -13,6 +13,8 @@
 #define SHADOW_EPSILON 0.0008940697
 #define SHADOW_FLAG RAY_FLAG_FORCE_OPAQUE | RAY_FLAG_ACCEPT_FIRST_HIT_AND_END_SEARCH | RAY_FLAG_SKIP_CLOSEST_HIT_SHADER
 
+#define EPSILON 1.192092896e-07F
+
 #define ENTITY_NUll 0xffffffff
 
 typedef RayDesc ray_desc;
@@ -51,6 +53,13 @@ float cosine_sample_hemisphere_pdf(float cos_theta)
 	return cos_theta * ONE_OVER_PI;
 }
 
+float2 uniform_sample_triangle(float2 value)
+{
+	float u = sqrt(value.x);
+
+	return float2(1 - u, value.y * u);
+}
+
 float gamma_correct(float value)
 {
 	if (value <= 0.0031308f) return 12.92f * value;
@@ -78,9 +87,19 @@ float distance_squared(float3 v0, float3 v1)
 	return dot(v0 - v1, v0 - v1);
 }
 
+float length_squared(float3 v)
+{
+	return distance_squared(v, float3(0, 0, 0));
+}
+
 bool is_black(float3 value)
 {
 	return value.x == 0 && value.y == 0 && value.z == 0;
+}
+
+float power_heuristic(float f_pdf, float g_pdf)
+{
+	return (f_pdf * f_pdf) / (f_pdf * f_pdf + g_pdf * g_pdf);
 }
 
 #endif

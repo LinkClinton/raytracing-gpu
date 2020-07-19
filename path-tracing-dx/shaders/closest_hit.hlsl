@@ -3,15 +3,20 @@
 
 #include "resource_scene.hlsl"
 
+struct hit_group_info {
+	uint index; 
+};
+
 SHADER_STRUCTURED_BUFFER_DEFINE(float3, positions, t0, space100);
 SHADER_STRUCTURED_BUFFER_DEFINE(float3, normals, t1, space100);
 SHADER_STRUCTURED_BUFFER_DEFINE(float3, uvs, t3, space100);
 SHADER_STRUCTURED_BUFFER_DEFINE(uint3, indices, t2, space100);
+SHADER_CONSTANT_BUFFER_DEFINE(hit_group_info, local_group_info, b4, space100);
 
 [shader("closesthit")]
 void closest_hit_shader(inout ray_payload payload, HitAttributes attribute) {
 	uint3 index = indices[PrimitiveIndex()];
-
+	
 	float3 position0 = positions[index.x];
 	float3 position1 = positions[index.y];
 	float3 position2 = positions[index.z];
@@ -37,7 +42,7 @@ void closest_hit_shader(inout ray_payload payload, HitAttributes attribute) {
 	float3 shading_normal = normals[index.x] * b0 + normals[index.y] * b1 + normals[index.z] * b2;
 
 	payload.interaction.shading_space = build_coordinate_system(mul(inv_transpose, shading_normal).xyz);
-	payload.index = InstanceID();
+	payload.index = local_group_info.index;
 	payload.missed = false;
 }
 

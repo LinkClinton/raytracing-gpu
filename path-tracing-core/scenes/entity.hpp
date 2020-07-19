@@ -17,15 +17,17 @@ namespace path_tracing::core::scenes {
 		constexpr static inline uint32 null = std::numeric_limits<uint32>::max();
 		
 		matrix4x4 local_to_world = matrix4x4(1);
+		matrix4x4 world_to_local = matrix4x4(1);
 
 		uint32 material = null;
 		uint32 emitter = null;
 		uint32 shape = null;
-		uint32 unused = null;
+		real area = 0;
 
 		entity_gpu_buffer() = default;
 
-		entity_gpu_buffer(const matrix4x4& transform, uint32 material, uint32 emitter, uint32 shape);
+		entity_gpu_buffer(const matrix4x4& local_to_world, const matrix4x4& world_to_local,
+			uint32 material, uint32 emitter, uint32 shape, real area);
 	};
 	
 	class entity final : public interfaces::noncopyable {

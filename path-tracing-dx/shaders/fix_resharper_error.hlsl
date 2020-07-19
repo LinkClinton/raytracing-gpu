@@ -19,18 +19,45 @@
 
 #define SYSTEM_VALUE(type, name, value) type name
 
+#define OPERATOR_DEFINE(type, op, argument) type operator op (argument) { return type(); }
+
+#define ANY_OPERATOR_DEFINE() \
+	OPERATOR_DEFINE(this_type, +, this_type); \
+	OPERATOR_DEFINE(this_type, -, this_type); \
+	OPERATOR_DEFINE(this_type, *, this_type); \
+	OPERATOR_DEFINE(this_type, +, T); \
+	OPERATOR_DEFINE(this_type, *, T); \
+	OPERATOR_DEFINE(this_type, -, T); \
+	OPERATOR_DEFINE(this_type, / , T); \
+	OPERATOR_DEFINE(this_type, +, ); \
+	OPERATOR_DEFINE(this_type, -, ); \
+	OPERATOR_DEFINE(this_type, +=, this_type); \
+	OPERATOR_DEFINE(this_type, -=, this_type); \
+	OPERATOR_DEFINE(this_type, *=, this_type); \
+	OPERATOR_DEFINE(this_type, +=, T); \
+	OPERATOR_DEFINE(this_type, *=, T); \
+	OPERATOR_DEFINE(this_type, -=, T); \
+	OPERATOR_DEFINE(this_type, /=, T); 
+
+
 using uint = unsigned;
 
 template <typename T>
 struct any1 {
+	using this_type = any1;
+	
 	T x;
 
 	any1() = default;
 	any1(T x) {}
+
+	ANY_OPERATOR_DEFINE();
 };
 
 template <typename T>
 struct any2 {
+	using this_type = any2;
+	
 	T x, y;
 
 	T xy;
@@ -40,10 +67,14 @@ struct any2 {
 	any2(T v) {}
 
 	operator any1<T>() { return any1<T>(); }
+
+	ANY_OPERATOR_DEFINE();
 };
 
 template <typename T>
 struct any3 {
+	using this_type = any3;
+	
 	T x, y, z;
 
 	T xyz;
@@ -56,10 +87,14 @@ struct any3 {
 
 	operator any2<T>() { return any2<T>(); }
 	operator any1<T>() { return any1<T>(); }
+
+	ANY_OPERATOR_DEFINE();
 };
 
 template <typename T>
 struct any4 {
+	using this_type = any4;
+	
 	T x, y, z, w;
 
 	T xyzw;
@@ -75,6 +110,8 @@ struct any4 {
 	operator any3<T>() { return any3<T>(); }
 	operator any2<T>() { return any2<T>(); }
 	operator any1<T>() { return any1<T>(); }
+
+	ANY_OPERATOR_DEFINE();
 };
 
 using uint1 = any1<uint>;
@@ -140,6 +177,8 @@ uint2 DispatchRaysIndex() { return 0; }
 
 uint PrimitiveIndex() { return 0; }
 
+uint InstanceID() { return 0; }
+
 float4x3 ObjectToWorld4x3() { return float4x3(); }
 
 float4x3 WorldToObject4x3() { return float4x3(); }
@@ -178,6 +217,15 @@ T cross(T x, T y) { return x; }
 
 template <typename T>
 T lerp(T x, T y, float s) { return x * (1 - s) + y * s; }
+
+template <typename T>
+bool isnan(T x) { return true; }
+
+template <typename T>
+bool isinf(T x) { return true; }
+
+template <typename T>
+T transpose(T x) { return x; }
 
 float4 mul(float4 x, float4x4 y) { return 0; }
 float4 mul(float4 x, float4x3 y) { return 0; }
