@@ -21,7 +21,7 @@ scattering_sample sample_lambertian_reflection(float3 reflectance, float3 wo, fl
 
 	scattering_sample sample;
 
-	sample.type = scattering_reflection | scattering_diffuse;
+	sample.type = scattering_type(scattering_reflection | scattering_diffuse);
 	sample.value = evaluate_lambertian_reflection(reflectance, wo, wi);
 	sample.wi = wi;
 	sample.pdf = 1;

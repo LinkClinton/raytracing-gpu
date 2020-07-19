@@ -5,8 +5,6 @@
 #include "materials/material.hlsl"
 #include "emitters/emitter.hlsl"
 
-typedef uint64_t uint64;
-
 struct scene_info {
 	float4x4 raster_to_camera;
 	float4x4 camera_to_world;
@@ -50,13 +48,13 @@ struct ray_payload {
 
 typedef BuiltInTriangleIntersectionAttributes HitAttributes;
 
-ConstantBuffer<scene_info> global_scene_info : register(b0, space0);
-RaytracingAccelerationStructure global_acceleration : register(t0, space1);
-StructuredBuffer<entity_gpu_buffer> global_entities : register(t1, space1);
-StructuredBuffer<material_gpu_buffer> global_materials : register(t2, space1);
-StructuredBuffer<emitter_gpu_buffer> global_emitters : register(t3, space1);
-StructuredBuffer<shape_gpu_buffer> global_shapes : register(t4, space1);
+SHADER_CONSTANT_BUFFER_DEFINE(scene_info, global_scene_info, b0, space0);
+SHADER_RESOURCE_DEFINE(RaytracingAccelerationStructure, global_acceleration, t0, space1);
+SHADER_STRUCTURED_BUFFER_DEFINE(entity_gpu_buffer, global_entities, t1, space1);
+SHADER_STRUCTURED_BUFFER_DEFINE(material_gpu_buffer, global_materials, t2, space1);
+SHADER_STRUCTURED_BUFFER_DEFINE(emitter_gpu_buffer, global_emitters, t3, space1);
+SHADER_STRUCTURED_BUFFER_DEFINE(shape_gpu_buffer, global_shapes, t4, space1);
 
-RWTexture2D<float4> global_render_target : register(u0, space2);
+SHADER_RESOURCE_DEFINE(RWTexture2D<float4>, global_render_target, u0, space2);
 
 #endif

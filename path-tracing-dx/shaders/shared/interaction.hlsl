@@ -1,6 +1,8 @@
 #ifndef __INTERACTION_HLSL__
 #define __INTERACTION_HLSL__
 
+#include "../utility.hlsl"
+
 struct coordinate_system {
 	float3 axes[3];
 

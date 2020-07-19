@@ -1,6 +1,8 @@
 #ifndef __RANDOM_GENERATOR_HLSL__
 #define __RANDOM_GENERATOR_HLSL__
 
+#include "../utility.hlsl"
+
 // lcg random number generator from https://github.com/Twinklebear/ChameleonRT/blob/master/dxr/lcg_rng.hlsl
 struct random_generator {
 	uint state;

@@ -16,11 +16,11 @@ float3 uniform_sample_one_emitter(random_sampler sampler, path_tracing_info trac
 	float3 wo = world_to_local(payload.interaction.shading_space, payload.interaction.wo);
 	float3 L = 0;
 	
-	scattering_type type = scattering_all ^ scattering_specular;
+	scattering_type type = scattering_type(scattering_all ^ scattering_specular);
 
 	{
 		uint which = 0; float pdf = 0;
-
+		
 		uniform_sample_one_emitter(sampler, global_scene_info.emitters, which, pdf);
 
 		emitter_sample emitter_sample = sample_emitter(global_emitters[which], payload.interaction.base_type(), next_sample2d(sampler));
@@ -41,7 +41,8 @@ float3 uniform_sample_one_emitter(random_sampler sampler, path_tracing_info trac
 
 				shadow_payload.missed = false;
 
-				TraceRay(global_acceleration, SHADOW_FLAG, 0xFF, 0, 1, 0, shadow_ray, shadow_payload);
+				TraceRay(global_acceleration, SHADOW_FLAG, 0xFF, 0,
+					1, 0, shadow_ray, shadow_payload);
 
 				float weight = 1;
 
@@ -67,7 +68,8 @@ float3 trace(ray_desc first_ray, random_sampler sampler)
 	ray_payload payload;
 
 	for (int bounces = 0; bounces < global_scene_info.max_depth; bounces++) {
-		TraceRay(global_acceleration, RAY_FLAG_FORCE_OPAQUE, 0xFF, 0, 1, 0, tracing_info.ray, payload);
+		TraceRay(global_acceleration, RAY_FLAG_FORCE_OPAQUE, 0xFF, 0,
+			1, 0, tracing_info.ray, payload);
 
 		if (payload.missed == true) break;
 		

@@ -3,11 +3,10 @@
 
 #include "resource_scene.hlsl"
 
-StructuredBuffer<float3> positions : register(t0, space100);
-StructuredBuffer<float3> normals : register(t1, space100);
-StructuredBuffer<float3> uvs : register(t3, space100);
-
-StructuredBuffer<uint3> indices : register(t2, space100);
+SHADER_STRUCTURED_BUFFER_DEFINE(float3, positions, t0, space100);
+SHADER_STRUCTURED_BUFFER_DEFINE(float3, normals, t1, space100);
+SHADER_STRUCTURED_BUFFER_DEFINE(float3, uvs, t3, space100);
+SHADER_STRUCTURED_BUFFER_DEFINE(uint3, indices, t2, space100);
 
 [shader("closesthit")]
 void closest_hit_shader(inout ray_payload payload, HitAttributes attribute) {
@@ -29,7 +28,7 @@ void closest_hit_shader(inout ray_payload payload, HitAttributes attribute) {
 
 	float4x3 local_to_world = ObjectToWorld4x3();
 	float3x3 inv_transpose = float3x3(WorldToObject4x3()[0], WorldToObject4x3()[1], WorldToObject4x3()[2]);
-
+	
 	payload.interaction.position = mul(float4(local_position, 1), local_to_world).xyz;
 	payload.interaction.normal = normalize(mul(inv_transpose, local_normal).xyz);
 	payload.interaction.uv = (uvs[index.x] * b0 + uvs[index.y] * b1 + uvs[index.z] * b2).xy;
@@ -37,7 +36,7 @@ void closest_hit_shader(inout ray_payload payload, HitAttributes attribute) {
 
 	float3 shading_normal = normals[index.x] * b0 + normals[index.y] * b1 + normals[index.z] * b2;
 
-	payload.interaction.shading_space = build_coordinate_system(mul(shading_normal, inv_transpose).xyz);
+	payload.interaction.shading_space = build_coordinate_system(mul(inv_transpose, shading_normal).xyz);
 	payload.index = InstanceID();
 	payload.missed = false;
 }
