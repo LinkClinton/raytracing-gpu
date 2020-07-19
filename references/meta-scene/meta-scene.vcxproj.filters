@@ -1,0 +1,477 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="math">
+      <UniqueIdentifier>{046151a7-3417-481c-8d77-b6156fe0cbec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="integrators">
+      <UniqueIdentifier>{a57ebb07-082d-4602-b978-855a3fc68746}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="cameras">
+      <UniqueIdentifier>{6258f8b0-d5d1-42d0-bc10-89e1027cd8a6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="samplers">
+      <UniqueIdentifier>{7a637d28-3f47-4582-9311-593b0e9937ba}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="spectrums">
+      <UniqueIdentifier>{e01c35d2-deef-40d5-8356-0b0b80c122a3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="materials">
+      <UniqueIdentifier>{04fa6088-88a3-43e8-9ce1-a48ebeb2bcb1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="shapes">
+      <UniqueIdentifier>{e469cdf9-bd0a-4cf1-895d-2f9e67a66250}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="emitters">
+      <UniqueIdentifier>{cab640a1-deb3-450f-99bb-44058cfd1016}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="importers">
+      <UniqueIdentifier>{6e9bef8a-7983-458b-bc4f-2de2e5eeb33e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="importers\mitsuba">
+      <UniqueIdentifier>{2ac1fb7f-d1ca-44e9-a318-b1a1b748e7c1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="interfaces">
+      <UniqueIdentifier>{8308a8d1-c826-470b-9ea8-a7c01c876355}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="importers\pbrt">
+      <UniqueIdentifier>{fa9dd048-b2a5-4620-8fa9-35a6d363bd20}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="textures">
+      <UniqueIdentifier>{908e3601-ed43-4936-9f90-8bd30f957a5d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="filters">
+      <UniqueIdentifier>{58774d09-6db7-403e-9382-e2df18fbdfb5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="media">
+      <UniqueIdentifier>{76b9b7c6-68df-40a3-a72f-0f1b51917c12}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="math\vector3.hpp">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="math\matrix4x4.hpp">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="integrators\integrator.hpp">
+      <Filter>integrators</Filter>
+    </ClInclude>
+    <ClInclude Include="utilities.hpp" />
+    <ClInclude Include="integrators\path_integrator.hpp">
+      <Filter>integrators</Filter>
+    </ClInclude>
+    <ClInclude Include="cameras\camera.hpp">
+      <Filter>cameras</Filter>
+    </ClInclude>
+    <ClInclude Include="cameras\perspective_camera.hpp">
+      <Filter>cameras</Filter>
+    </ClInclude>
+    <ClInclude Include="cameras\film.hpp">
+      <Filter>cameras</Filter>
+    </ClInclude>
+    <ClInclude Include="filters\filter.hpp">
+      <Filter>filters</Filter>
+    </ClInclude>
+    <ClInclude Include="filters\box_filter.hpp">
+      <Filter>filters</Filter>
+    </ClInclude>
+    <ClInclude Include="filters\gaussian_filter.hpp">
+      <Filter>filters</Filter>
+    </ClInclude>
+    <ClInclude Include="samplers\sampler.hpp">
+      <Filter>samplers</Filter>
+    </ClInclude>
+    <ClInclude Include="samplers\random_sampler.hpp">
+      <Filter>samplers</Filter>
+    </ClInclude>
+    <ClInclude Include="spectrums\spectrum.hpp">
+      <Filter>spectrums</Filter>
+    </ClInclude>
+    <ClInclude Include="spectrums\color_spectrum.hpp">
+      <Filter>spectrums</Filter>
+    </ClInclude>
+    <ClInclude Include="spectrums\sampled_spectrum.hpp">
+      <Filter>spectrums</Filter>
+    </ClInclude>
+    <ClInclude Include="materials\material.hpp">
+      <Filter>materials</Filter>
+    </ClInclude>
+    <ClInclude Include="materials\diffuse_material.hpp">
+      <Filter>materials</Filter>
+    </ClInclude>
+    <ClInclude Include="shapes\shape.hpp">
+      <Filter>shapes</Filter>
+    </ClInclude>
+    <ClInclude Include="shapes\mesh.hpp">
+      <Filter>shapes</Filter>
+    </ClInclude>
+    <ClInclude Include="emitters\emitter.hpp">
+      <Filter>emitters</Filter>
+    </ClInclude>
+    <ClInclude Include="emitters\surface_emitter.hpp">
+      <Filter>emitters</Filter>
+    </ClInclude>
+    <ClInclude Include="entity.hpp" />
+    <ClInclude Include="scene.hpp" />
+    <ClInclude Include="importers\mitsuba\mitsuba_importer.hpp">
+      <Filter>importers\mitsuba</Filter>
+    </ClInclude>
+    <ClInclude Include="shapes\sphere.hpp">
+      <Filter>shapes</Filter>
+    </ClInclude>
+    <ClInclude Include="materials\plastic_material.hpp">
+      <Filter>materials</Filter>
+    </ClInclude>
+    <ClInclude Include="interfaces\string_property.hpp">
+      <Filter>interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="integrators\direct_integrator.hpp">
+      <Filter>integrators</Filter>
+    </ClInclude>
+    <ClInclude Include="importers\pbrt\pbrt_importer.hpp">
+      <Filter>importers\pbrt</Filter>
+    </ClInclude>
+    <ClInclude Include="importers\pbrt\import_pbrt_include.hpp">
+      <Filter>importers\pbrt</Filter>
+    </ClInclude>
+    <ClInclude Include="importers\mitsuba\import_mitsuba_bsdf.hpp">
+      <Filter>importers\mitsuba</Filter>
+    </ClInclude>
+    <ClInclude Include="importers\mitsuba\import_mitsuba_emitter.hpp">
+      <Filter>importers\mitsuba</Filter>
+    </ClInclude>
+    <ClInclude Include="importers\mitsuba\import_mitsuba_include.hpp">
+      <Filter>importers\mitsuba</Filter>
+    </ClInclude>
+    <ClInclude Include="importers\mitsuba\import_mitsuba_integrator.hpp">
+      <Filter>importers\mitsuba</Filter>
+    </ClInclude>
+    <ClInclude Include="importers\mitsuba\import_mitsuba_sensor.hpp">
+      <Filter>importers\mitsuba</Filter>
+    </ClInclude>
+    <ClInclude Include="importers\mitsuba\import_mitsuba_shape.hpp">
+      <Filter>importers\mitsuba</Filter>
+    </ClInclude>
+    <ClInclude Include="importers\mitsuba\import_mitsuba_transform.hpp">
+      <Filter>importers\mitsuba</Filter>
+    </ClInclude>
+    <ClInclude Include="importers\pbrt\import_pbrt_camera.hpp">
+      <Filter>importers\pbrt</Filter>
+    </ClInclude>
+    <ClInclude Include="importers\pbrt\import_pbrt_integrator.hpp">
+      <Filter>importers\pbrt</Filter>
+    </ClInclude>
+    <ClInclude Include="importers\pbrt\import_pbrt_attribute.hpp">
+      <Filter>importers\pbrt</Filter>
+    </ClInclude>
+    <ClInclude Include="importers\pbrt\import_pbrt_transform.hpp">
+      <Filter>importers\pbrt</Filter>
+    </ClInclude>
+    <ClInclude Include="importers\pbrt\import_pbrt_light_source.hpp">
+      <Filter>importers\pbrt</Filter>
+    </ClInclude>
+    <ClInclude Include="emitters\environment_emitter.hpp">
+      <Filter>emitters</Filter>
+    </ClInclude>
+    <ClInclude Include="importers\pbrt\import_pbrt_spectrum.hpp">
+      <Filter>importers\pbrt</Filter>
+    </ClInclude>
+    <ClInclude Include="importers\pbrt\import_pbrt_material.hpp">
+      <Filter>importers\pbrt</Filter>
+    </ClInclude>
+    <ClInclude Include="importers\pbrt\import_pbrt_shape.hpp">
+      <Filter>importers\pbrt</Filter>
+    </ClInclude>
+    <ClInclude Include="shapes\triangles.hpp">
+      <Filter>shapes</Filter>
+    </ClInclude>
+    <ClInclude Include="materials\glass_material.hpp">
+      <Filter>materials</Filter>
+    </ClInclude>
+    <ClInclude Include="materials\metal_material.hpp">
+      <Filter>materials</Filter>
+    </ClInclude>
+    <ClInclude Include="textures\texture.hpp">
+      <Filter>textures</Filter>
+    </ClInclude>
+    <ClInclude Include="textures\image_texture.hpp">
+      <Filter>textures</Filter>
+    </ClInclude>
+    <ClInclude Include="textures\scale_texture.hpp">
+      <Filter>textures</Filter>
+    </ClInclude>
+    <ClInclude Include="importers\pbrt\import_pbrt_texture.hpp">
+      <Filter>importers\pbrt</Filter>
+    </ClInclude>
+    <ClInclude Include="importers\mitsuba\import_mitsuba_texture.hpp">
+      <Filter>importers\mitsuba</Filter>
+    </ClInclude>
+    <ClInclude Include="textures\constant_texture.hpp">
+      <Filter>textures</Filter>
+    </ClInclude>
+    <ClInclude Include="importers\mitsuba\import_mitsuba_spectrum.hpp">
+      <Filter>importers\mitsuba</Filter>
+    </ClInclude>
+    <ClInclude Include="materials\uber_material.hpp">
+      <Filter>materials</Filter>
+    </ClInclude>
+    <ClInclude Include="materials\mirror_material.hpp">
+      <Filter>materials</Filter>
+    </ClInclude>
+    <ClInclude Include="materials\substrate_material.hpp">
+      <Filter>materials</Filter>
+    </ClInclude>
+    <ClInclude Include="shapes\disk.hpp">
+      <Filter>shapes</Filter>
+    </ClInclude>
+    <ClInclude Include="logs.hpp" />
+    <ClInclude Include="spectrums\cie_samples.hpp">
+      <Filter>spectrums</Filter>
+    </ClInclude>
+    <ClInclude Include="materials\translucent_material.hpp">
+      <Filter>materials</Filter>
+    </ClInclude>
+    <ClInclude Include="emitters\directional_emitter.hpp">
+      <Filter>emitters</Filter>
+    </ClInclude>
+    <ClInclude Include="materials\mixture_material.hpp">
+      <Filter>materials</Filter>
+    </ClInclude>
+    <ClInclude Include="textures\mixture_texture.hpp">
+      <Filter>textures</Filter>
+    </ClInclude>
+    <ClInclude Include="materials\subsurface_material.hpp">
+      <Filter>materials</Filter>
+    </ClInclude>
+    <ClInclude Include="integrators\volume_path_integrator.hpp">
+      <Filter>integrators</Filter>
+    </ClInclude>
+    <ClInclude Include="media\medium.hpp">
+      <Filter>media</Filter>
+    </ClInclude>
+    <ClInclude Include="media\homogeneous_medium.hpp">
+      <Filter>media</Filter>
+    </ClInclude>
+    <ClInclude Include="importers\pbrt\import_pbrt_medium.hpp">
+      <Filter>importers\pbrt</Filter>
+    </ClInclude>
+    <ClInclude Include="media\heterogeneous_medium.hpp">
+      <Filter>media</Filter>
+    </ClInclude>
+    <ClInclude Include="shapes\curve.hpp">
+      <Filter>shapes</Filter>
+    </ClInclude>
+    <ClInclude Include="integrators\photon_mapping_integrator.hpp">
+      <Filter>integrators</Filter>
+    </ClInclude>
+    <ClInclude Include="integrators\bidirectional_path_integrator.hpp">
+      <Filter>integrators</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="integrators\integrator.cpp">
+      <Filter>integrators</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="integrators\path_integrator.cpp">
+      <Filter>integrators</Filter>
+    </ClCompile>
+    <ClCompile Include="cameras\camera.cpp">
+      <Filter>cameras</Filter>
+    </ClCompile>
+    <ClCompile Include="cameras\perspective_camera.cpp">
+      <Filter>cameras</Filter>
+    </ClCompile>
+    <ClCompile Include="filters\filter.cpp">
+      <Filter>filters</Filter>
+    </ClCompile>
+    <ClCompile Include="filters\box_filter.cpp">
+      <Filter>filters</Filter>
+    </ClCompile>
+    <ClCompile Include="filters\gaussian_filter.cpp">
+      <Filter>filters</Filter>
+    </ClCompile>
+    <ClCompile Include="samplers\sampler.cpp">
+      <Filter>samplers</Filter>
+    </ClCompile>
+    <ClCompile Include="samplers\random_sampler.cpp">
+      <Filter>samplers</Filter>
+    </ClCompile>
+    <ClCompile Include="spectrums\spectrum.cpp">
+      <Filter>spectrums</Filter>
+    </ClCompile>
+    <ClCompile Include="spectrums\color_spectrum.cpp">
+      <Filter>spectrums</Filter>
+    </ClCompile>
+    <ClCompile Include="spectrums\sampled_spectrum.cpp">
+      <Filter>spectrums</Filter>
+    </ClCompile>
+    <ClCompile Include="materials\material.cpp">
+      <Filter>materials</Filter>
+    </ClCompile>
+    <ClCompile Include="materials\diffuse_material.cpp">
+      <Filter>materials</Filter>
+    </ClCompile>
+    <ClCompile Include="shapes\shape.cpp">
+      <Filter>shapes</Filter>
+    </ClCompile>
+    <ClCompile Include="shapes\mesh.cpp">
+      <Filter>shapes</Filter>
+    </ClCompile>
+    <ClCompile Include="emitters\emitter.cpp">
+      <Filter>emitters</Filter>
+    </ClCompile>
+    <ClCompile Include="emitters\surface_emitter.cpp">
+      <Filter>emitters</Filter>
+    </ClCompile>
+    <ClCompile Include="importers\mitsuba\mitsuba_importer.cpp">
+      <Filter>importers\mitsuba</Filter>
+    </ClCompile>
+    <ClCompile Include="shapes\sphere.cpp">
+      <Filter>shapes</Filter>
+    </ClCompile>
+    <ClCompile Include="materials\plastic_material.cpp">
+      <Filter>materials</Filter>
+    </ClCompile>
+    <ClCompile Include="integrators\direct_integrator.cpp">
+      <Filter>integrators</Filter>
+    </ClCompile>
+    <ClCompile Include="importers\pbrt\pbrt_importer.cpp">
+      <Filter>importers\pbrt</Filter>
+    </ClCompile>
+    <ClCompile Include="importers\pbrt\import_pbrt_include.cpp">
+      <Filter>importers\pbrt</Filter>
+    </ClCompile>
+    <ClCompile Include="importers\mitsuba\import_mitsuba_bsdf.cpp">
+      <Filter>importers\mitsuba</Filter>
+    </ClCompile>
+    <ClCompile Include="importers\mitsuba\import_mitsuba_emitter.cpp">
+      <Filter>importers\mitsuba</Filter>
+    </ClCompile>
+    <ClCompile Include="importers\mitsuba\import_mitsuba_include.cpp">
+      <Filter>importers\mitsuba</Filter>
+    </ClCompile>
+    <ClCompile Include="importers\mitsuba\import_mitsuba_integrator.cpp">
+      <Filter>importers\mitsuba</Filter>
+    </ClCompile>
+    <ClCompile Include="importers\mitsuba\import_mitsuba_sensor.cpp">
+      <Filter>importers\mitsuba</Filter>
+    </ClCompile>
+    <ClCompile Include="importers\mitsuba\import_mitsuba_shape.cpp">
+      <Filter>importers\mitsuba</Filter>
+    </ClCompile>
+    <ClCompile Include="importers\mitsuba\import_mitsuba_spectrum.cpp">
+      <Filter>importers\mitsuba</Filter>
+    </ClCompile>
+    <ClCompile Include="importers\mitsuba\import_mitsuba_transform.cpp">
+      <Filter>importers\mitsuba</Filter>
+    </ClCompile>
+    <ClCompile Include="importers\pbrt\import_pbrt_camera.cpp">
+      <Filter>importers\pbrt</Filter>
+    </ClCompile>
+    <ClCompile Include="importers\pbrt\import_pbrt_integrator.cpp">
+      <Filter>importers\pbrt</Filter>
+    </ClCompile>
+    <ClCompile Include="importers\pbrt\import_pbrt_attribute.cpp">
+      <Filter>importers\pbrt</Filter>
+    </ClCompile>
+    <ClCompile Include="importers\pbrt\import_pbrt_transform.cpp">
+      <Filter>importers\pbrt</Filter>
+    </ClCompile>
+    <ClCompile Include="importers\pbrt\import_pbrt_light_source.cpp">
+      <Filter>importers\pbrt</Filter>
+    </ClCompile>
+    <ClCompile Include="emitters\environment_emitter.cpp">
+      <Filter>emitters</Filter>
+    </ClCompile>
+    <ClCompile Include="importers\pbrt\import_pbrt_spectrum.cpp">
+      <Filter>importers\pbrt</Filter>
+    </ClCompile>
+    <ClCompile Include="importers\pbrt\import_pbrt_material.cpp">
+      <Filter>importers\pbrt</Filter>
+    </ClCompile>
+    <ClCompile Include="importers\pbrt\import_pbrt_shape.cpp">
+      <Filter>importers\pbrt</Filter>
+    </ClCompile>
+    <ClCompile Include="shapes\triangles.cpp">
+      <Filter>shapes</Filter>
+    </ClCompile>
+    <ClCompile Include="entity.cpp" />
+    <ClCompile Include="materials\glass_material.cpp">
+      <Filter>materials</Filter>
+    </ClCompile>
+    <ClCompile Include="materials\metal_material.cpp">
+      <Filter>materials</Filter>
+    </ClCompile>
+    <ClCompile Include="importers\pbrt\import_pbrt_texture.cpp">
+      <Filter>importers\pbrt</Filter>
+    </ClCompile>
+    <ClCompile Include="importers\mitsuba\import_mitsuba_texture.cpp">
+      <Filter>importers\mitsuba</Filter>
+    </ClCompile>
+    <ClCompile Include="textures\texture.cpp">
+      <Filter>textures</Filter>
+    </ClCompile>
+    <ClCompile Include="textures\scale_texture.cpp">
+      <Filter>textures</Filter>
+    </ClCompile>
+    <ClCompile Include="textures\image_texture.cpp">
+      <Filter>textures</Filter>
+    </ClCompile>
+    <ClCompile Include="textures\constant_texture.cpp">
+      <Filter>textures</Filter>
+    </ClCompile>
+    <ClCompile Include="materials\uber_material.cpp">
+      <Filter>materials</Filter>
+    </ClCompile>
+    <ClCompile Include="materials\mirror_material.cpp">
+      <Filter>materials</Filter>
+    </ClCompile>
+    <ClCompile Include="materials\substrate_material.cpp">
+      <Filter>materials</Filter>
+    </ClCompile>
+    <ClCompile Include="shapes\disk.cpp">
+      <Filter>shapes</Filter>
+    </ClCompile>
+    <ClCompile Include="materials\translucent_material.cpp">
+      <Filter>materials</Filter>
+    </ClCompile>
+    <ClCompile Include="emitters\directional_emitter.cpp">
+      <Filter>emitters</Filter>
+    </ClCompile>
+    <ClCompile Include="materials\mixture_material.cpp">
+      <Filter>materials</Filter>
+    </ClCompile>
+    <ClCompile Include="textures\mixture_texture.cpp">
+      <Filter>textures</Filter>
+    </ClCompile>
+    <ClCompile Include="materials\subsurface_material.cpp">
+      <Filter>materials</Filter>
+    </ClCompile>
+    <ClCompile Include="integrators\volume_path_integrator.cpp">
+      <Filter>integrators</Filter>
+    </ClCompile>
+    <ClCompile Include="media\medium.cpp">
+      <Filter>media</Filter>
+    </ClCompile>
+    <ClCompile Include="media\homogeneous_medium.cpp">
+      <Filter>media</Filter>
+    </ClCompile>
+    <ClCompile Include="importers\pbrt\import_pbrt_medium.cpp">
+      <Filter>importers\pbrt</Filter>
+    </ClCompile>
+    <ClCompile Include="media\heterogeneous_medium.cpp">
+      <Filter>media</Filter>
+    </ClCompile>
+    <ClCompile Include="shapes\curve.cpp">
+      <Filter>shapes</Filter>
+    </ClCompile>
+    <ClCompile Include="integrators\photon_mapping_integrator.cpp">
+      <Filter>integrators</Filter>
+    </ClCompile>
+    <ClCompile Include="integrators\bidirectional_path_integrator.cpp">
+      <Filter>integrators</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

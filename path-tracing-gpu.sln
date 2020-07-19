@@ -11,6 +11,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "path-tracing-vk", "path-tra
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "references", "references", "{30B7399E-8E4E-46AA-BD41-A78D8FC1C027}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "meta-scene", "references\meta-scene\meta-scene.vcxproj", "{00DFDEC4-336E-4501-8980-C5D6354796BE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -43,9 +45,20 @@ Global
 		{CACDCC1A-3D2D-460A-8D85-B481320BBFA2}.Release|x64.Build.0 = Release|x64
 		{CACDCC1A-3D2D-460A-8D85-B481320BBFA2}.Release|x86.ActiveCfg = Release|Win32
 		{CACDCC1A-3D2D-460A-8D85-B481320BBFA2}.Release|x86.Build.0 = Release|Win32
+		{00DFDEC4-336E-4501-8980-C5D6354796BE}.Debug|x64.ActiveCfg = Debug|x64
+		{00DFDEC4-336E-4501-8980-C5D6354796BE}.Debug|x64.Build.0 = Debug|x64
+		{00DFDEC4-336E-4501-8980-C5D6354796BE}.Debug|x86.ActiveCfg = Debug|Win32
+		{00DFDEC4-336E-4501-8980-C5D6354796BE}.Debug|x86.Build.0 = Debug|Win32
+		{00DFDEC4-336E-4501-8980-C5D6354796BE}.Release|x64.ActiveCfg = Release|x64
+		{00DFDEC4-336E-4501-8980-C5D6354796BE}.Release|x64.Build.0 = Release|x64
+		{00DFDEC4-336E-4501-8980-C5D6354796BE}.Release|x86.ActiveCfg = Release|Win32
+		{00DFDEC4-336E-4501-8980-C5D6354796BE}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{00DFDEC4-336E-4501-8980-C5D6354796BE} = {30B7399E-8E4E-46AA-BD41-A78D8FC1C027}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {37A540BB-AA5A-4FB4-9830-0BF05142A1B5}

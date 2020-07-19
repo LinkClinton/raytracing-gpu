@@ -177,17 +177,17 @@
     <CopyFileToFolders Include="shaders\utility.hlsl">
       <Filter>shaders</Filter>
     </CopyFileToFolders>
-    <CopyFileToFolders Include="shaders\fix_resharper_error.hlsl" />
-  </ItemGroup>
-  <ItemGroup>
-    <FxCompile Include="shaders\emitters\emitter_surface.hlsl">
+    <CopyFileToFolders Include="shaders\fix_resharper_error.hlsl">
+      <Filter>shaders</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="shaders\emitters\emitter_surface.hlsl">
       <Filter>shaders\emitters</Filter>
-    </FxCompile>
-    <FxCompile Include="shaders\shapes\shape_include.hlsl">
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="shaders\shapes\shape_sampling.hlsl">
       <Filter>shaders\shapes</Filter>
-    </FxCompile>
-    <FxCompile Include="shaders\shapes\shape_sampling.hlsl">
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="shaders\shapes\shape_include.hlsl">
       <Filter>shaders\shapes</Filter>
-    </FxCompile>
+    </CopyFileToFolders>
   </ItemGroup>
 </Project>

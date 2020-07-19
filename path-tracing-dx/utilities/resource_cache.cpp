@@ -57,19 +57,22 @@ void path_tracing::dx::utilities::resource_cache::execute(
 		// when the entity has not shape or the shape was cached we will continue
 		if (!entity->has_component<shape>() || mShapesIndex.find(entity->component<shape>()) != mShapesIndex.end()) continue;
 
-		auto mesh_data = entity->component<shape>()->mesh();
+		auto positions = entity->component<shape>()->positions();
+		auto normals = entity->component<shape>()->normals();
+		auto indices = entity->component<shape>()->indices();
+		auto uvs = entity->component<shape>()->uvs();
 
 		shape_cache_data data;
 
 		// the shape may not have normals or uvs, so we will create a empty array to avoid empty buffer
-		if (mesh_data.normals.empty()) mesh_data.normals = std::vector<vector3>(mesh_data.positions.size());
-		if (mesh_data.uvs.empty()) mesh_data.uvs = std::vector<vector3>(mesh_data.positions.size());
+		if (normals.empty()) normals = std::vector<vector3>(positions.size());
+		if (uvs.empty()) uvs = std::vector<vector3>(positions.size());
 
 		// copy the data to gpu buffer
-		copy_data_to_gpu_buffer(mCommandList, mDevice, mesh_data.positions, cpu_buffer(), data.positions);
-		copy_data_to_gpu_buffer(mCommandList, mDevice, mesh_data.normals, cpu_buffer(), data.normals);
-		copy_data_to_gpu_buffer(mCommandList, mDevice, mesh_data.indices, cpu_buffer(), data.indices);
-		copy_data_to_gpu_buffer(mCommandList, mDevice, mesh_data.uvs, cpu_buffer(), data.uvs);
+		copy_data_to_gpu_buffer(mCommandList, mDevice, positions, cpu_buffer(), data.positions);
+		copy_data_to_gpu_buffer(mCommandList, mDevice, normals, cpu_buffer(), data.normals);
+		copy_data_to_gpu_buffer(mCommandList, mDevice, indices, cpu_buffer(), data.indices);
+		copy_data_to_gpu_buffer(mCommandList, mDevice, uvs, cpu_buffer(), data.uvs);
 
 		data.geometry = std::make_shared<raytracing_geometry>(data.positions, data.indices);
 		

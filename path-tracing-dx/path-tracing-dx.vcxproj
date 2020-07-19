@@ -182,6 +182,9 @@
     <ProjectReference Include="..\path-tracing-core\path-tracing-core.vcxproj">
       <Project>{1b511c32-e787-4070-8ce3-bcf7027c926f}</Project>
     </ProjectReference>
+    <ProjectReference Include="..\references\meta-scene\meta-scene.vcxproj">
+      <Project>{00dfdec4-336e-4501-8980-c5d6354796be}</Project>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="application.hpp" />

@@ -8,22 +8,6 @@
 namespace path_tracing::core::shapes {
 
 	using namespace shared;
-	
-	struct mesh_data {
-		std::vector<vector3> positions;
-		std::vector<vector3> normals;
-		std::vector<vector3> uvs;
-
-		std::vector<unsigned> indices;
-
-		mesh_data() = default;
-
-		mesh_data(
-			const std::vector<vector3>& positions,
-			const std::vector<vector3>& normals,
-			const std::vector<vector3>& uvs,
-			const std::vector<unsigned>& indices);
-	};
 
 	struct shape_gpu_buffer {
 		uint32 positions = 0;
@@ -41,15 +25,27 @@ namespace path_tracing::core::shapes {
 		explicit shape(bool reverse_orientation);
 
 		~shape() = default;
-
-		virtual mesh_data mesh() const = 0;
-
+		
 		virtual real area(const transform& transform) = 0;
 
-		virtual shape_gpu_buffer gpu_buffer() const noexcept = 0;
-		
+		virtual shape_gpu_buffer gpu_buffer() const noexcept;
+
+		const std::vector<vector3>& positions() const noexcept;
+
+		const std::vector<vector3>& normals() const noexcept;
+
+		const std::vector<vector3>& uvs() const noexcept;
+
+		const std::vector<unsigned>& indices() const noexcept;
+
 		bool reverse_orientation() const noexcept;
-	private:
+	protected:
 		bool mReverseOrientation = false;
+
+		std::vector<vector3> mPositions;
+		std::vector<vector3> mNormals;
+		std::vector<vector3> mUvs;
+
+		std::vector<unsigned> mIndices;
 	};	
 }

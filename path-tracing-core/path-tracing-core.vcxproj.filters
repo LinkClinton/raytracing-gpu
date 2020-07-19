@@ -40,6 +40,38 @@
     <ClInclude Include="emitters\surface_emitter.hpp">
       <Filter>emitters</Filter>
     </ClInclude>
+    <ClInclude Include="converter\convert_camera.hpp">
+      <Filter>converter</Filter>
+    </ClInclude>
+    <ClInclude Include="converter\convert_spectrum.hpp">
+      <Filter>converter</Filter>
+    </ClInclude>
+    <ClInclude Include="converter\convert_emitter.hpp">
+      <Filter>converter</Filter>
+    </ClInclude>
+    <ClInclude Include="converter\convert_material.hpp">
+      <Filter>converter</Filter>
+    </ClInclude>
+    <ClInclude Include="converter\convert_texture.hpp">
+      <Filter>converter</Filter>
+    </ClInclude>
+    <ClInclude Include="converter\convert_shape.hpp">
+      <Filter>converter</Filter>
+    </ClInclude>
+    <ClInclude Include="shapes\mesh.hpp">
+      <Filter>shapes</Filter>
+    </ClInclude>
+    <ClInclude Include="importers\ply_importer.hpp">
+      <Filter>importers</Filter>
+    </ClInclude>
+    <ClInclude Include="resource_manager.hpp" />
+    <ClInclude Include="converter\convert_scene.hpp">
+      <Filter>converter</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer_scene.hpp" />
+    <ClInclude Include="importers\pbrt_importer.hpp">
+      <Filter>importers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="interfaces">
@@ -65,6 +97,9 @@
     </Filter>
     <Filter Include="converter">
       <UniqueIdentifier>{b38041d2-c618-413a-97a6-ae82c7d609f2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="importers">
+      <UniqueIdentifier>{c9b721e5-f54e-4e49-b920-12ac6701f014}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -103,6 +138,38 @@
     <ClCompile Include="imgui_impl_win32.cpp" />
     <ClCompile Include="emitters\surface_emitter.cpp">
       <Filter>emitters</Filter>
+    </ClCompile>
+    <ClCompile Include="converter\convert_camera.cpp">
+      <Filter>converter</Filter>
+    </ClCompile>
+    <ClCompile Include="converter\convert_spectrum.cpp">
+      <Filter>converter</Filter>
+    </ClCompile>
+    <ClCompile Include="converter\convert_emitter.cpp">
+      <Filter>converter</Filter>
+    </ClCompile>
+    <ClCompile Include="converter\convert_material.cpp">
+      <Filter>converter</Filter>
+    </ClCompile>
+    <ClCompile Include="converter\convert_texture.cpp">
+      <Filter>converter</Filter>
+    </ClCompile>
+    <ClCompile Include="converter\convert_shape.cpp">
+      <Filter>converter</Filter>
+    </ClCompile>
+    <ClCompile Include="shapes\mesh.cpp">
+      <Filter>shapes</Filter>
+    </ClCompile>
+    <ClCompile Include="importers\ply_importer.cpp">
+      <Filter>importers</Filter>
+    </ClCompile>
+    <ClCompile Include="resource_manager.cpp" />
+    <ClCompile Include="converter\convert_scene.cpp">
+      <Filter>converter</Filter>
+    </ClCompile>
+    <ClCompile Include="renderer_scene.cpp" />
+    <ClCompile Include="importers\pbrt_importer.cpp">
+      <Filter>importers</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

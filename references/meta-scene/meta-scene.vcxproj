@@ -1,0 +1,308 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>16.0</VCProjectVersion>
+    <ProjectGuid>{00DFDEC4-336E-4501-8980-C5D6354796BE}</ProjectGuid>
+    <RootNamespace>metascene</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+    <OutDir>$(ProjectDir)bin\$(PlatformTarget)\$(Configuration)\</OutDir>
+    <IntDir>$(ProjectDir)bin\$(PlatformTarget)\$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LinkIncremental>true</LinkIncremental>
+    <OutDir>$(ProjectDir)bin\$(PlatformTarget)\$(Configuration)\</OutDir>
+    <IntDir>$(ProjectDir)bin\$(PlatformTarget)\$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+    <OutDir>$(ProjectDir)bin\$(PlatformTarget)\$(Configuration)\</OutDir>
+    <IntDir>$(ProjectDir)bin\$(PlatformTarget)\$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LinkIncremental>false</LinkIncremental>
+    <OutDir>$(ProjectDir)bin\$(PlatformTarget)\$(Configuration)\</OutDir>
+    <IntDir>$(ProjectDir)bin\$(PlatformTarget)\$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="cameras\camera.hpp" />
+    <ClInclude Include="cameras\film.hpp" />
+    <ClInclude Include="cameras\perspective_camera.hpp" />
+    <ClInclude Include="emitters\directional_emitter.hpp" />
+    <ClInclude Include="emitters\emitter.hpp" />
+    <ClInclude Include="emitters\environment_emitter.hpp" />
+    <ClInclude Include="emitters\surface_emitter.hpp" />
+    <ClInclude Include="entity.hpp" />
+    <ClInclude Include="filters\box_filter.hpp" />
+    <ClInclude Include="filters\filter.hpp" />
+    <ClInclude Include="filters\gaussian_filter.hpp" />
+    <ClInclude Include="importers\mitsuba\import_mitsuba_bsdf.hpp" />
+    <ClInclude Include="importers\mitsuba\import_mitsuba_emitter.hpp" />
+    <ClInclude Include="importers\mitsuba\import_mitsuba_include.hpp" />
+    <ClInclude Include="importers\mitsuba\import_mitsuba_integrator.hpp" />
+    <ClInclude Include="importers\mitsuba\import_mitsuba_sensor.hpp" />
+    <ClInclude Include="importers\mitsuba\import_mitsuba_shape.hpp" />
+    <ClInclude Include="importers\mitsuba\import_mitsuba_spectrum.hpp" />
+    <ClInclude Include="importers\mitsuba\import_mitsuba_texture.hpp" />
+    <ClInclude Include="importers\mitsuba\import_mitsuba_transform.hpp" />
+    <ClInclude Include="importers\mitsuba\mitsuba_importer.hpp" />
+    <ClInclude Include="importers\pbrt\import_pbrt_attribute.hpp" />
+    <ClInclude Include="importers\pbrt\import_pbrt_camera.hpp" />
+    <ClInclude Include="importers\pbrt\import_pbrt_include.hpp" />
+    <ClInclude Include="importers\pbrt\import_pbrt_integrator.hpp" />
+    <ClInclude Include="importers\pbrt\import_pbrt_light_source.hpp" />
+    <ClInclude Include="importers\pbrt\import_pbrt_material.hpp" />
+    <ClInclude Include="importers\pbrt\import_pbrt_medium.hpp" />
+    <ClInclude Include="importers\pbrt\import_pbrt_shape.hpp" />
+    <ClInclude Include="importers\pbrt\import_pbrt_spectrum.hpp" />
+    <ClInclude Include="importers\pbrt\import_pbrt_texture.hpp" />
+    <ClInclude Include="importers\pbrt\import_pbrt_transform.hpp" />
+    <ClInclude Include="importers\pbrt\pbrt_importer.hpp" />
+    <ClInclude Include="integrators\bidirectional_path_integrator.hpp" />
+    <ClInclude Include="integrators\direct_integrator.hpp" />
+    <ClInclude Include="integrators\integrator.hpp" />
+    <ClInclude Include="integrators\path_integrator.hpp" />
+    <ClInclude Include="integrators\photon_mapping_integrator.hpp" />
+    <ClInclude Include="integrators\volume_path_integrator.hpp" />
+    <ClInclude Include="interfaces\string_property.hpp" />
+    <ClInclude Include="logs.hpp" />
+    <ClInclude Include="materials\diffuse_material.hpp" />
+    <ClInclude Include="materials\glass_material.hpp" />
+    <ClInclude Include="materials\material.hpp" />
+    <ClInclude Include="materials\metal_material.hpp" />
+    <ClInclude Include="materials\mirror_material.hpp" />
+    <ClInclude Include="materials\mixture_material.hpp" />
+    <ClInclude Include="materials\plastic_material.hpp" />
+    <ClInclude Include="materials\substrate_material.hpp" />
+    <ClInclude Include="materials\subsurface_material.hpp" />
+    <ClInclude Include="materials\translucent_material.hpp" />
+    <ClInclude Include="materials\uber_material.hpp" />
+    <ClInclude Include="math\matrix4x4.hpp" />
+    <ClInclude Include="math\vector3.hpp" />
+    <ClInclude Include="media\heterogeneous_medium.hpp" />
+    <ClInclude Include="media\homogeneous_medium.hpp" />
+    <ClInclude Include="media\medium.hpp" />
+    <ClInclude Include="samplers\random_sampler.hpp" />
+    <ClInclude Include="samplers\sampler.hpp" />
+    <ClInclude Include="scene.hpp" />
+    <ClInclude Include="shapes\curve.hpp" />
+    <ClInclude Include="shapes\disk.hpp" />
+    <ClInclude Include="shapes\mesh.hpp" />
+    <ClInclude Include="shapes\shape.hpp" />
+    <ClInclude Include="shapes\sphere.hpp" />
+    <ClInclude Include="shapes\triangles.hpp" />
+    <ClInclude Include="spectrums\cie_samples.hpp" />
+    <ClInclude Include="spectrums\color_spectrum.hpp" />
+    <ClInclude Include="spectrums\sampled_spectrum.hpp" />
+    <ClInclude Include="spectrums\spectrum.hpp" />
+    <ClInclude Include="textures\constant_texture.hpp" />
+    <ClInclude Include="textures\image_texture.hpp" />
+    <ClInclude Include="textures\mixture_texture.hpp" />
+    <ClInclude Include="textures\scale_texture.hpp" />
+    <ClInclude Include="textures\texture.hpp" />
+    <ClInclude Include="utilities.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="cameras\camera.cpp" />
+    <ClCompile Include="cameras\perspective_camera.cpp" />
+    <ClCompile Include="emitters\directional_emitter.cpp" />
+    <ClCompile Include="emitters\emitter.cpp" />
+    <ClCompile Include="emitters\environment_emitter.cpp" />
+    <ClCompile Include="emitters\surface_emitter.cpp" />
+    <ClCompile Include="entity.cpp" />
+    <ClCompile Include="filters\box_filter.cpp" />
+    <ClCompile Include="filters\filter.cpp" />
+    <ClCompile Include="filters\gaussian_filter.cpp" />
+    <ClCompile Include="importers\mitsuba\import_mitsuba_bsdf.cpp" />
+    <ClCompile Include="importers\mitsuba\import_mitsuba_emitter.cpp" />
+    <ClCompile Include="importers\mitsuba\import_mitsuba_include.cpp" />
+    <ClCompile Include="importers\mitsuba\import_mitsuba_integrator.cpp" />
+    <ClCompile Include="importers\mitsuba\import_mitsuba_sensor.cpp" />
+    <ClCompile Include="importers\mitsuba\import_mitsuba_shape.cpp" />
+    <ClCompile Include="importers\mitsuba\import_mitsuba_spectrum.cpp" />
+    <ClCompile Include="importers\mitsuba\import_mitsuba_texture.cpp" />
+    <ClCompile Include="importers\mitsuba\import_mitsuba_transform.cpp" />
+    <ClCompile Include="importers\mitsuba\mitsuba_importer.cpp" />
+    <ClCompile Include="importers\pbrt\import_pbrt_attribute.cpp" />
+    <ClCompile Include="importers\pbrt\import_pbrt_camera.cpp" />
+    <ClCompile Include="importers\pbrt\import_pbrt_include.cpp" />
+    <ClCompile Include="importers\pbrt\import_pbrt_integrator.cpp" />
+    <ClCompile Include="importers\pbrt\import_pbrt_light_source.cpp" />
+    <ClCompile Include="importers\pbrt\import_pbrt_material.cpp" />
+    <ClCompile Include="importers\pbrt\import_pbrt_medium.cpp" />
+    <ClCompile Include="importers\pbrt\import_pbrt_shape.cpp" />
+    <ClCompile Include="importers\pbrt\import_pbrt_spectrum.cpp" />
+    <ClCompile Include="importers\pbrt\import_pbrt_texture.cpp" />
+    <ClCompile Include="importers\pbrt\import_pbrt_transform.cpp" />
+    <ClCompile Include="importers\pbrt\pbrt_importer.cpp" />
+    <ClCompile Include="integrators\bidirectional_path_integrator.cpp" />
+    <ClCompile Include="integrators\direct_integrator.cpp" />
+    <ClCompile Include="integrators\integrator.cpp" />
+    <ClCompile Include="integrators\path_integrator.cpp" />
+    <ClCompile Include="integrators\photon_mapping_integrator.cpp" />
+    <ClCompile Include="integrators\volume_path_integrator.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="materials\diffuse_material.cpp" />
+    <ClCompile Include="materials\glass_material.cpp" />
+    <ClCompile Include="materials\material.cpp" />
+    <ClCompile Include="materials\metal_material.cpp" />
+    <ClCompile Include="materials\mirror_material.cpp" />
+    <ClCompile Include="materials\mixture_material.cpp" />
+    <ClCompile Include="materials\plastic_material.cpp" />
+    <ClCompile Include="materials\substrate_material.cpp" />
+    <ClCompile Include="materials\subsurface_material.cpp" />
+    <ClCompile Include="materials\translucent_material.cpp" />
+    <ClCompile Include="materials\uber_material.cpp" />
+    <ClCompile Include="media\heterogeneous_medium.cpp" />
+    <ClCompile Include="media\homogeneous_medium.cpp" />
+    <ClCompile Include="media\medium.cpp" />
+    <ClCompile Include="samplers\random_sampler.cpp" />
+    <ClCompile Include="samplers\sampler.cpp" />
+    <ClCompile Include="shapes\curve.cpp" />
+    <ClCompile Include="shapes\disk.cpp" />
+    <ClCompile Include="shapes\mesh.cpp" />
+    <ClCompile Include="shapes\shape.cpp" />
+    <ClCompile Include="shapes\sphere.cpp" />
+    <ClCompile Include="shapes\triangles.cpp" />
+    <ClCompile Include="spectrums\color_spectrum.cpp" />
+    <ClCompile Include="spectrums\sampled_spectrum.cpp" />
+    <ClCompile Include="spectrums\spectrum.cpp" />
+    <ClCompile Include="textures\constant_texture.cpp" />
+    <ClCompile Include="textures\image_texture.cpp" />
+    <ClCompile Include="textures\mixture_texture.cpp" />
+    <ClCompile Include="textures\scale_texture.cpp" />
+    <ClCompile Include="textures\texture.cpp" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
