@@ -7,6 +7,15 @@ namespace path_tracing::core {
 
 	using namespace cameras;
 	using namespace scenes;
+
+	struct render_config {
+		size_t width = 0;
+		size_t height = 0;
+
+		render_config() = default;
+
+		render_config(size_t width, size_t height);
+	};
 	
 	class renderer_backend : interfaces::noncopyable {
 	public:
@@ -16,7 +25,7 @@ namespace path_tracing::core {
 
 		virtual void render(const std::shared_ptr<camera>& camera) = 0;
 
-		virtual void build(const std::shared_ptr<scene>& scene) = 0;
+		virtual void build(const std::shared_ptr<scene>& scene, const render_config& config) = 0;
 
 		virtual void resize(int new_width, int new_height) = 0;
 

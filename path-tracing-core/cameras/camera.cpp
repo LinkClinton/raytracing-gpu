@@ -16,6 +16,11 @@ path_tracing::core::cameras::camera::camera(
 {
 }
 
+void path_tracing::core::cameras::camera::set_transform(const shared::transform& transform)
+{
+	mCameraToWorld = transform;
+}
+
 path_tracing::core::cameras::camera_gpu_buffer path_tracing::core::cameras::camera::gpu_buffer(size_t width, size_t height) const noexcept
 {
 	const auto screen_window_max = vector3(1);
@@ -45,4 +50,9 @@ path_tracing::core::cameras::camera_gpu_buffer path_tracing::core::cameras::came
 	const auto raster_to_camera = inverse(mCameraToScreen) * raster_to_screen;
 
 	return camera_gpu_buffer(raster_to_camera.matrix, mCameraToWorld.matrix);
+}
+
+path_tracing::core::shared::transform path_tracing::core::cameras::camera::camera_to_world() const noexcept
+{
+	return mCameraToWorld;
 }

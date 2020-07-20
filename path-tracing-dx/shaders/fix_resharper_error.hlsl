@@ -185,6 +185,10 @@ float4x3 WorldToObject4x3() { return float4x3(); }
 
 float3 WorldRayDirection() { return float3(); }
 
+float3 WorldRayOrigin() { return float3(); }
+
+float RayTCurrent() { return 0; }
+
 template <typename T>
 T normalize(T value) { return value; }
 

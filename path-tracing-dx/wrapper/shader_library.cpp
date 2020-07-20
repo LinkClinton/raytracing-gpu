@@ -81,11 +81,21 @@ std::vector<byte> path_tracing::dx::wrapper::shader_library::compile_from_file(c
 	std::vector<DxcDefine> defines;
 
 	defines.push_back({ L"__HLSL_SHADER__", L"1" });
-	
+
+	const wchar_t* arguments[] = {
+		L"-O3",
+	};
+
+#ifndef _DEBUG
+	compiler->Compile(encoding_blob.Get(), file_name.c_str(), L"",
+		L"lib_6_3", arguments, 1, defines.data(), static_cast<UINT32>(defines.size()),
+		include.Get(), result.GetAddressOf());
+#else
 	compiler->Compile(encoding_blob.Get(), file_name.c_str(), L"",
 		L"lib_6_3", nullptr, 0, defines.data(), static_cast<UINT32>(defines.size()),
 		include.Get(), result.GetAddressOf());
-
+#endif
+	
 	ComPtr<IDxcBlobEncoding> error_code;
 	ComPtr<IDxcBlob> result_code;
 	HRESULT result_status;

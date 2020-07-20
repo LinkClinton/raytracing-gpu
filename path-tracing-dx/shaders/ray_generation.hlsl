@@ -165,6 +165,16 @@ float3 trace(ray_desc first_ray, random_sampler sampler)
 		tracing_info.specular = has(function_sample.type, scattering_specular);
 
 		tracing_info.ray = payload.interaction.spawn_ray(function_sample.wi);
+
+		float component = max_component(tracing_info.beta);
+
+		if (component < 1 && bounces > 3) {
+			float q = max(0.05, 1 - component);
+
+			if (next_sample1d(sampler) < q) break;
+
+			tracing_info.beta /= (1 - q);
+		}
 	}
 
 	return tracing_info.value;
@@ -193,7 +203,7 @@ void ray_generation_shader() {
 	
 	float factor = global_scene_info.sample_index / (global_scene_info.sample_index + 1.0f);
 
-	float3 old_value = global_render_target[DispatchRaysIndex().xy].xyz;
+	float3 old_value = global_scene_info.sample_index == 0 ? 0 : global_render_target[DispatchRaysIndex().xy].xyz;
 	float3 new_value = gamma_correct(L);
 
 	global_render_target[DispatchRaysIndex().xy] = float4(lerp(new_value, old_value, factor), 1);

@@ -27,7 +27,11 @@ namespace path_tracing::core::cameras {
 
 		~camera() = default;
 
+		void set_transform(const shared::transform& transform);
+		
 		camera_gpu_buffer gpu_buffer(size_t width, size_t height) const noexcept;
+		
+		transform camera_to_world() const noexcept;
 	private:
 		transform mCameraToScreen;
 		transform mCameraToWorld;

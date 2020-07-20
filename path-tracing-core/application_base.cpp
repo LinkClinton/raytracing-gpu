@@ -1,9 +1,10 @@
 #include "application_base.hpp"
 #include "imgui_impl_win32.hpp"
 
-#include <Windows.h>
-
 #include <chrono>
+
+#define KEYDOWN(vk_code) ((GetAsyncKeyState(vk_code) & 0x8000) ? 1 : 0)
+#define KEYUP(vk_code) ((GetAsyncKeyState(vk_code) & 0x8000) ? 0 : 1)
 
 using time_point = std::chrono::high_resolution_clock;
 
@@ -25,6 +26,8 @@ LRESULT DefaultWindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 	return DefWindowProc(hWnd, message, wParam, lParam);
 }
+
+bool is_key_down(int keycode) { return KEYDOWN(static_cast<int>(keycode)); }
 
 path_tracing::core::application_base::application_base(const std::string& name, int width, int height) :
 	mName(name), mWidth(width), mHeight(height), mHandle(nullptr), mExisted(false)
@@ -52,6 +55,8 @@ void path_tracing::core::application_base::run_loop()
 			TranslateMessage(&message);
 			DispatchMessage(&message);
 
+			process_message(message);
+			
 			if (message.message == WM_QUIT) mExisted = false;
 		}
 
@@ -61,11 +66,61 @@ void path_tracing::core::application_base::run_loop()
 			std::chrono::duration<float>>(time_point::now() - current);
 
 		ImGui_ImplWin32_NewFrame();
-		
+
+		update(duration.count());
 		mRenderer->render(mCamera);
 		
 		current = time_point::now();
 	}
+}
+
+void path_tracing::core::application_base::update(real delta)
+{
+	const real speed = 200;
+	
+	if (is_key_down(2)) {
+
+		const auto offset = (mMousePosition - mLastMousePosition) * 0.001f;
+
+		quaternion rotation;
+		vector3 position;
+		vector3 scale;
+		vector3 skew;
+		vector4 perspective;
+
+		decompose(mCamera->camera_to_world().matrix, scale, rotation,
+			position, skew, perspective);
+
+		auto yaw = glm::yaw(rotation) + offset.x;
+		auto pitch = glm::pitch(rotation) + offset.y;
+		auto roll = glm::roll(rotation);
+
+		if (pitch > glm::radians(89.8f)) pitch = glm::radians(89.8f);
+		if (pitch < glm::radians(-89.8f)) pitch = glm::radians(-89.8f);
+
+		const auto rotation_matrix = glm::mat4_cast(quaternion(vector3(pitch, yaw, roll)));
+
+		const auto axis_x = glm::normalize(vector3(rotation_matrix * vector4(1, 0, 0, 0)));
+		const auto axis_z = glm::normalize(vector3(rotation_matrix * vector4(0, 0, 1, 0)));
+
+		auto translate = vector3();
+
+		if (is_key_down('D')) translate = translate - axis_x * delta * speed;
+		if (is_key_down('A')) translate = translate + axis_x * delta * speed;
+		if (is_key_down('W')) translate = translate - axis_z * delta * speed;
+		if (is_key_down('S')) translate = translate + axis_z * delta * speed;
+
+		translate.y = 0;
+		
+		const auto matrix =
+			glm::translate(matrix4x4(1), position + translate) *
+			glm::mat4_cast(quaternion(vector3(pitch, yaw, roll))) *
+			glm::scale(matrix4x4(1), scale);
+
+		mCamera->set_transform(transform(matrix));
+	}
+	
+	mLastMousePosition = mMousePosition;
 }
 
 void path_tracing::core::application_base::initialize_windows()
@@ -109,16 +164,31 @@ void path_tracing::core::application_base::initialize_windows()
 	ImGui_ImplWin32_Init(mHandle);
 }
 
+void path_tracing::core::application_base::process_message(const MSG& message)
+{
+	switch (message.message) {
+	case WM_MOUSEMOVE:
+	{
+		mMousePosition.x = static_cast<float>(LOWORD(message.lParam));
+		mMousePosition.y = static_cast<float>(HIWORD(message.lParam));
+		break;
+	}
+	default:
+		break;
+	}
+}
+
 void path_tracing::core::application_base::initialize()
 {
 	initialize_windows();
 	initialize_graphics();
 }
 
-void path_tracing::core::application_base::load(const std::shared_ptr<camera>& camera, const std::shared_ptr<scene>& scene)
+void path_tracing::core::application_base::load(const std::shared_ptr<camera>& camera, const std::shared_ptr<scene>& scene,
+	const render_config& config)
 {
 	mCamera = camera;
 	mScene = scene;
 
-	mRenderer->build(scene);
+	mRenderer->build(scene, config);
 }

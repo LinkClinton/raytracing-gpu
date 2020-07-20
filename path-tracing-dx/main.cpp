@@ -10,12 +10,12 @@ using namespace path_tracing::dx;
 int main() {
 	const auto scene = importers::import_pbrt_scene("./../scenes/cornell-box/scene.pbrt");
 	
-	const auto width = static_cast<int>(scene.width);
-	const auto height = static_cast<int>(scene.height);
+	const auto width = static_cast<int>(scene.width * 1.5);
+	const auto height = static_cast<int>(scene.height * 1.5);
 	
 	auto app = std::make_shared<application>("application-dx", width, height);
-
+	
 	app->initialize();
-	app->load(scene.camera, scene.scene);
+	app->load(scene.camera, scene.scene, { scene.width, scene.height });
 	app->run_loop();
 }

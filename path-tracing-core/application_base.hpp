@@ -3,6 +3,8 @@
 #include "interfaces/noncopyable.hpp"
 #include "renderer_backend.hpp"
 
+#include <Windows.h>
+
 #include <string>
 
 namespace path_tracing::core {
@@ -17,13 +19,18 @@ namespace path_tracing::core {
 
 		void load(
 			const std::shared_ptr<camera>& camera,
-			const std::shared_ptr<scene>& scene);
+			const std::shared_ptr<scene>& scene,
+			const render_config& config);
 		
 		void run_loop();
+
+		void update(real delta);
 	protected:
 		virtual void initialize_windows();
 
 		virtual void initialize_graphics() = 0;
+
+		void process_message(const MSG& message);
 	protected:
 		std::shared_ptr<renderer_backend> mRenderer = nullptr;
 
@@ -37,6 +44,9 @@ namespace path_tracing::core {
 		bool mExisted;
 		
 		void* mHandle;
+
+		vector2 mLastMousePosition = vector2();
+		vector2 mMousePosition = vector2();
 	};
 	
 }

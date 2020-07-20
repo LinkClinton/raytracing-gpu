@@ -1,7 +1,9 @@
 #pragma once
 
 #include <glm/gtc/matrix_transform.hpp>
-#include "glm/glm.hpp"
+#include <glm/gtx/matrix_decompose.hpp>
+#include <glm/gtc/quaternion.hpp>
+#include <glm/glm.hpp>
 
 namespace path_tracing::core {
 
@@ -13,9 +15,12 @@ namespace path_tracing::core {
 
 namespace path_tracing::core::shared {
 
+	using quaternion = glm::qua<real>;
+	
 	using matrix4x4 = glm::mat<4, 4, real>;
 	using vector4 = glm::vec<4, real>;
 	using vector3 = glm::vec<3, real>;
+	using vector2 = glm::vec<2, real>;
 	
 	struct transform {
 		matrix4x4 inverse = matrix4x4(1);

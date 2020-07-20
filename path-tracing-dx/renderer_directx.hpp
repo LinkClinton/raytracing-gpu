@@ -19,7 +19,7 @@ namespace path_tracing::dx {
 
 		void render(const std::shared_ptr<core::camera>& camera) override;
 
-		void build(const std::shared_ptr<core::scene>& scene) override;
+		void build(const std::shared_ptr<core::scene>& scene, const render_config& config) override;
 
 		void resize(int new_width, int new_height) override;
 
@@ -49,6 +49,7 @@ namespace path_tracing::dx {
 		std::shared_ptr<scene_pipeline> mScenePipeline;
 
 		scene_info mSceneInfo;
+		size_t mCurrentSample = 0;
 	};
 	
 }
