@@ -86,25 +86,15 @@ void path_tracing::dx::utilities::resource_cache::execute(
 
 	// second, cache the entity data
 	for (const auto& entity : entities) {
-		entity_gpu_buffer buffer;
-		
-		if (entity->has_component<material>()) {
-			buffer.material = static_cast<uint32>(mMaterials.size());
-
+		if (entity->has_component<material>()) 
 			mMaterials.push_back(entity->component<material>()->gpu_buffer());
-		}
 
-		if (entity->has_component<emitter>()) {
-			buffer.emitter = static_cast<uint32>(mEmitters.size());
-
-			mEmitters.push_back(entity->component<emitter>()->gpu_buffer(entity->transform(), mEntities.size()));
-		}
+		if (entity->has_component<emitter>()) 
+			mEmitters.push_back(entity->component<emitter>()->gpu_buffer(entity->transform(), entity->index()));
 
 		if (entity->has_component<shape>()) {
-			buffer.shape = static_cast<uint32>(mShapesIndex.at(entity->component<shape>()));
-			
 			const auto type_data = mTypeCache.at("triangles");
-			const auto shape_data = mShapesCache[buffer.shape];
+			const auto shape_data = mShapesCache[entity->component<shape>()->index()];
 
 			entity_cache_data data;
 			
@@ -134,7 +124,7 @@ void path_tracing::dx::utilities::resource_cache::execute(
 					&gpu_handles[index], sizeof(D3D12_GPU_VIRTUAL_ADDRESS));
 			}
 
-			auto index = static_cast<uint32>(mEntities.size());
+			const auto index = entity->index();
 
 			std::memcpy(data.shader_table_data.data() + type_data.association.root_signature->base("index"),
 				&index, sizeof(index));
@@ -143,7 +133,7 @@ void path_tracing::dx::utilities::resource_cache::execute(
 			mInstances.push_back(raytracing_instance(shape_data.geometry, entity->transform().matrix));
 		}
 
-		mEntities.push_back(entity->gpu_buffer(buffer.material, buffer.emitter, buffer.shape));
+		mEntities.push_back(entity->gpu_buffer());
 	}
 	
 	(*mCommandList)->Close();

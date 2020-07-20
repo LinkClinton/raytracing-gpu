@@ -6,7 +6,7 @@ path_tracing::core::shapes::shape_gpu_buffer::shape_gpu_buffer(uint32 positions,
 }
 
 path_tracing::core::shapes::shape::shape(bool reverse_orientation) :
-	mReverseOrientation(reverse_orientation)
+	indexable(mIndexCount++), mReverseOrientation(reverse_orientation)
 {
 }
 
@@ -46,4 +46,9 @@ const std::vector<unsigned>& path_tracing::core::shapes::shape::indices() const 
 bool path_tracing::core::shapes::shape::reverse_orientation() const noexcept
 {
 	return mReverseOrientation;
+}
+
+path_tracing::core::uint32 path_tracing::core::shapes::shape::count() noexcept
+{
+	return mIndexCount;
 }

@@ -10,7 +10,7 @@ namespace path_tracing::core::emitters {
 
 		~point_emitter() = default;
 
-		emitter_gpu_buffer gpu_buffer(const transform& transform, size_t index) const noexcept override;
+		emitter_gpu_buffer gpu_buffer(const transform& transform, uint32 index) const noexcept override;
 	private:
 		vector3 mIntensity;
 	};

@@ -169,11 +169,14 @@
     <ClInclude Include="converter\convert_spectrum.hpp" />
     <ClInclude Include="converter\convert_texture.hpp" />
     <ClInclude Include="emitters\emitter.hpp" />
+    <ClInclude Include="emitters\environment_emitter.hpp" />
     <ClInclude Include="emitters\point_emitter.hpp" />
     <ClInclude Include="emitters\surface_emitter.hpp" />
     <ClInclude Include="imgui_impl_win32.hpp" />
+    <ClInclude Include="importers\image_importer.hpp" />
     <ClInclude Include="importers\pbrt_importer.hpp" />
     <ClInclude Include="importers\ply_importer.hpp" />
+    <ClInclude Include="interfaces\indexable.hpp" />
     <ClInclude Include="interfaces\noncopyable.hpp" />
     <ClInclude Include="materials\diffuse_material.hpp" />
     <ClInclude Include="materials\material.hpp" />
@@ -186,6 +189,8 @@
     <ClInclude Include="shapes\shape.hpp" />
     <ClInclude Include="shapes\sphere.hpp" />
     <ClInclude Include="shared\transform.hpp" />
+    <ClInclude Include="textures\image.hpp" />
+    <ClInclude Include="textures\texture.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="application_base.cpp" />
@@ -198,9 +203,11 @@
     <ClCompile Include="converter\convert_spectrum.cpp" />
     <ClCompile Include="converter\convert_texture.cpp" />
     <ClCompile Include="emitters\emitter.cpp" />
+    <ClCompile Include="emitters\environment_emitter.cpp" />
     <ClCompile Include="emitters\point_emitter.cpp" />
     <ClCompile Include="emitters\surface_emitter.cpp" />
     <ClCompile Include="imgui_impl_win32.cpp" />
+    <ClCompile Include="importers\image_importer.cpp" />
     <ClCompile Include="importers\pbrt_importer.cpp" />
     <ClCompile Include="importers\ply_importer.cpp" />
     <ClCompile Include="materials\diffuse_material.cpp" />
@@ -214,6 +221,8 @@
     <ClCompile Include="shapes\shape.cpp" />
     <ClCompile Include="shapes\sphere.cpp" />
     <ClCompile Include="shared\transform.cpp" />
+    <ClCompile Include="textures\image.cpp" />
+    <ClCompile Include="textures\texture.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\references\meta-scene\meta-scene.vcxproj">

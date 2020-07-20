@@ -2,8 +2,15 @@
 
 void path_tracing::core::scenes::scene::add_entity(const std::shared_ptr<entity>& entity)
 {
-	if (entity->has_component<emitter>())
+	if (entity->has_component<emitter>()) {
+		if (entity->component<emitter>()->type() == emitter_type::environment) {
+			assert(mEnvironment == nullptr);
+			
+			mEnvironment = entity;
+		}
+		
 		mEmitters.push_back(entity);
+	}
 	
 	mEntities.push_back(entity);
 }

@@ -72,6 +72,21 @@
     <ClInclude Include="importers\pbrt_importer.hpp">
       <Filter>importers</Filter>
     </ClInclude>
+    <ClInclude Include="textures\texture.hpp">
+      <Filter>textures</Filter>
+    </ClInclude>
+    <ClInclude Include="textures\image.hpp">
+      <Filter>textures</Filter>
+    </ClInclude>
+    <ClInclude Include="interfaces\indexable.hpp">
+      <Filter>interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="emitters\environment_emitter.hpp">
+      <Filter>emitters</Filter>
+    </ClInclude>
+    <ClInclude Include="importers\image_importer.hpp">
+      <Filter>importers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="interfaces">
@@ -100,6 +115,9 @@
     </Filter>
     <Filter Include="importers">
       <UniqueIdentifier>{c9b721e5-f54e-4e49-b920-12ac6701f014}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="textures">
+      <UniqueIdentifier>{343964bd-8c81-450a-9804-179ddc90ce3e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -169,6 +187,18 @@
     </ClCompile>
     <ClCompile Include="renderer_scene.cpp" />
     <ClCompile Include="importers\pbrt_importer.cpp">
+      <Filter>importers</Filter>
+    </ClCompile>
+    <ClCompile Include="textures\texture.cpp">
+      <Filter>textures</Filter>
+    </ClCompile>
+    <ClCompile Include="textures\image.cpp">
+      <Filter>textures</Filter>
+    </ClCompile>
+    <ClCompile Include="emitters\environment_emitter.cpp">
+      <Filter>emitters</Filter>
+    </ClCompile>
+    <ClCompile Include="importers\image_importer.cpp">
       <Filter>importers</Filter>
     </ClCompile>
   </ItemGroup>

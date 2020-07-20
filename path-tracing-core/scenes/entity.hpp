@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../interfaces/noncopyable.hpp"
+#include "../interfaces/indexable.hpp"
 #include "../materials/material.hpp"
 #include "../emitters/emitter.hpp"
 #include "../shapes/shape.hpp"
@@ -25,12 +26,9 @@ namespace path_tracing::core::scenes {
 		real area = 0;
 
 		entity_gpu_buffer() = default;
-
-		entity_gpu_buffer(const matrix4x4& local_to_world, const matrix4x4& world_to_local,
-			uint32 material, uint32 emitter, uint32 shape, real area);
 	};
 	
-	class entity final : public interfaces::noncopyable {
+	class entity final : public interfaces::noncopyable, public interfaces::indexable {
 	public:
 		explicit entity(
 			const std::shared_ptr<material>& material,
@@ -48,8 +46,12 @@ namespace path_tracing::core::scenes {
 
 		transform transform() const noexcept;
 
-		entity_gpu_buffer gpu_buffer(uint32 material, uint32 emitter, uint32 shape) const noexcept;
+		entity_gpu_buffer gpu_buffer() const noexcept;
+
+		static uint32 count() noexcept;
 	private:
+		static inline uint32 mIndexCount = 0;
+		
 		std::shared_ptr<material> mMaterial;
 		std::shared_ptr<emitter> mEmitter;
 		std::shared_ptr<shape> mShape;

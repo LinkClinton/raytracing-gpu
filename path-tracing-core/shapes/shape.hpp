@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../interfaces/noncopyable.hpp"
+#include "../interfaces/indexable.hpp"
 #include "../shared/transform.hpp"
 
 #include <vector>
@@ -20,7 +21,7 @@ namespace path_tracing::core::shapes {
 		shape_gpu_buffer(uint32 positions, uint32 normals, uint32 indices, uint32 uvs);
 	};
 	
-	class shape : public interfaces::noncopyable {
+	class shape : public interfaces::noncopyable, public interfaces::indexable {
 	public:
 		explicit shape(bool reverse_orientation);
 
@@ -39,6 +40,8 @@ namespace path_tracing::core::shapes {
 		const std::vector<unsigned>& indices() const noexcept;
 
 		bool reverse_orientation() const noexcept;
+
+		static uint32 count() noexcept;
 	protected:
 		bool mReverseOrientation = false;
 
@@ -47,5 +50,7 @@ namespace path_tracing::core::shapes {
 		std::vector<vector3> mUvs;
 
 		std::vector<unsigned> mIndices;
+	private:
+		static inline uint32 mIndexCount = 0;
 	};	
 }
