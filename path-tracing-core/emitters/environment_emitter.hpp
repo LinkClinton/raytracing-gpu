@@ -14,6 +14,8 @@ namespace path_tracing::core::emitters {
 		explicit environment_emitter(const vector3& intensity);
 
 		emitter_gpu_buffer gpu_buffer(const transform& transform, uint32 index) const noexcept override;
+
+		std::shared_ptr<texture> map() const noexcept;
 	private:
 		std::shared_ptr<texture> mMap;
 		vector3 mIntensity;

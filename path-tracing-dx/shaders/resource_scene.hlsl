@@ -4,6 +4,7 @@
 #include "samplers/random_sampler.hlsl"
 #include "materials/material_include.hlsl"
 #include "emitters/emitter_include.hlsl"
+#include "textures/texture_include.hlsl"
 
 struct scene_info {
 	float4x4 raster_to_camera;
@@ -15,11 +16,13 @@ struct scene_info {
 	uint sample_index;
 	uint max_depth;
 	uint emitters;
-
+	uint environment;
+	uint texture;
+	
 	float4x4 unused0;
 	float4 unused1;
 	float4 unused2;
-	float3 unused3;
+	float1 unused3;
 };
 
 struct entity_gpu_buffer {
@@ -51,10 +54,11 @@ typedef BuiltInTriangleIntersectionAttributes HitAttributes;
 
 SHADER_CONSTANT_BUFFER_DEFINE(scene_info, global_scene_info, b0, space0);
 SHADER_RESOURCE_DEFINE(RaytracingAccelerationStructure, global_acceleration, t0, space1);
-SHADER_STRUCTURED_BUFFER_DEFINE(entity_gpu_buffer, global_entities, t1, space1);
-SHADER_STRUCTURED_BUFFER_DEFINE(material_gpu_buffer, global_materials, t2, space1);
+SHADER_STRUCTURED_BUFFER_DEFINE(material_gpu_buffer, global_materials, t1, space1);
+SHADER_STRUCTURED_BUFFER_DEFINE(texture_gpu_buffer, global_textures, t2, space1);
 SHADER_STRUCTURED_BUFFER_DEFINE(emitter_gpu_buffer, global_emitters, t3, space1);
-SHADER_STRUCTURED_BUFFER_DEFINE(shape_gpu_buffer, global_shapes, t4, space1);
+SHADER_STRUCTURED_BUFFER_DEFINE(entity_gpu_buffer, global_entities, t4, space1);
+SHADER_STRUCTURED_BUFFER_DEFINE(shape_gpu_buffer, global_shapes, t5, space1);
 
 SHADER_RESOURCE_DEFINE(RWTexture2D<float4>, global_render_target, u0, space2);
 
@@ -63,5 +67,9 @@ SHADER_STRUCTURED_BUFFER_DEFINE(float3, global_normals[], t0, space4);
 SHADER_STRUCTURED_BUFFER_DEFINE(float3, global_uvs[], t0, space6);
 
 SHADER_STRUCTURED_BUFFER_DEFINE(uint3, global_indices[], t0, space5);
+
+SHADER_RESOURCE_DEFINE(Texture2D, global_images[], t0, space7);
+
+SHADER_RESOURCE_DEFINE(SamplerState, global_sampler, s0, space20);
 
 #endif

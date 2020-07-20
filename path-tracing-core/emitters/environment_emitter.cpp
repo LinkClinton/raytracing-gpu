@@ -22,3 +22,8 @@ path_tracing::core::emitters::emitter_gpu_buffer path_tracing::core::emitters::e
 
 	return buffer;
 }
+
+std::shared_ptr<path_tracing::core::textures::texture> path_tracing::core::emitters::environment_emitter::map() const noexcept
+{
+	return mMap;
+}

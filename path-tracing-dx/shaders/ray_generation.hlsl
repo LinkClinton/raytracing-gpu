@@ -35,6 +35,14 @@ emitter_search_result search_emitter(random_sampler sampler, interaction interac
 	TraceRay(global_acceleration, RAY_FLAG_FORCE_OPAQUE, 0xFF, 0,
 		1, 0, emitter_ray, emitter_payload);
 
+	if (emitter_payload.missed == true && global_scene_info.environment != ENTITY_NUll) {
+		result.interaction.position = interaction.position + wi * 2 * 1000;
+		result.index = global_scene_info.environment;
+		result.pdf = result.pdf = 1 / global_scene_info.emitters;
+
+		return result;
+	}
+	
 	if (emitter_payload.missed == true || global_entities[emitter_payload.index].emitter == ENTITY_NUll)
 		return result;
 
@@ -65,10 +73,10 @@ float3 uniform_sample_one_emitter(random_sampler sampler, path_tracing_info trac
 
 		if (!is_black(emitter_sample.intensity) && emitter_sample.pdf > 0) {
 			float3 wi = world_to_local(payload.interaction.shading_space, emitter_sample.wi);
-
+			
 			float3 function_value = evaluate_material(material, wo, wi, type);
 			float function_pdf = pdf_material(material, wo, wi, type);
-
+			
 			function_value = function_value * abs(dot(emitter_sample.wi, payload.interaction.shading_space.z()));
 
 			if (!is_black(function_value) && function_pdf > 0) {
@@ -134,7 +142,16 @@ float3 trace(ray_desc first_ray, random_sampler sampler)
 		TraceRay(global_acceleration, RAY_FLAG_FORCE_OPAQUE, 0xFF, 0,
 			1, 0, tracing_info.ray, payload);
 
-		if (payload.missed == true) break;
+		if (payload.missed == true) {
+			if ((bounces != 0 && !tracing_info.specular) || global_scene_info.environment == ENTITY_NUll) break;
+
+			interaction interaction;
+			
+			tracing_info.value += tracing_info.beta * evaluate_environment_emitter(global_emitters[global_scene_info.environment],
+				interaction, -tracing_info.ray.Direction);
+			
+			break;
+		}
 
 		if ((bounces == 0 || tracing_info.specular) && global_entities[payload.index].emitter != ENTITY_NUll)
 			tracing_info.value += tracing_info.beta * evaluate_emitter(global_emitters[global_entities[payload.index].emitter],

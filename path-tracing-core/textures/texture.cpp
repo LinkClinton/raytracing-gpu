@@ -5,11 +5,11 @@ path_tracing::core::textures::texture::texture(const std::shared_ptr<textures::i
 {
 }
 
-path_tracing::core::textures::texture_gpu_buffer path_tracing::core::textures::texture::gpu_buffer(uint32 index) const noexcept
+path_tracing::core::textures::texture_gpu_buffer path_tracing::core::textures::texture::gpu_buffer() const noexcept
 {
 	texture_gpu_buffer buffer;
 
-	buffer.index = index;
+	buffer.index = mImage->index();
 	buffer.scale = mScale;
 
 	return buffer;

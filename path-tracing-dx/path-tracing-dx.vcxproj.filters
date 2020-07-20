@@ -127,6 +127,9 @@
     <Filter Include="shaders\shapes">
       <UniqueIdentifier>{90aeab45-33b9-43af-8ed6-44eb7f51d5b2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="shaders\textures">
+      <UniqueIdentifier>{3cf7cf71-b4ae-4454-9636-aba3e3e487e7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <CopyFileToFolders Include="shaders\miss_shaders.hlsl">
@@ -189,5 +192,16 @@
     <CopyFileToFolders Include="shaders\shapes\shape_include.hlsl">
       <Filter>shaders\shapes</Filter>
     </CopyFileToFolders>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="shaders\emitters\emitter_environment.hlsl">
+      <Filter>shaders\emitters</Filter>
+    </FxCompile>
+    <FxCompile Include="shaders\textures\texture_include.hlsl">
+      <Filter>shaders\textures</Filter>
+    </FxCompile>
+    <FxCompile Include="shaders\textures\texture.hlsl">
+      <Filter>shaders\textures</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

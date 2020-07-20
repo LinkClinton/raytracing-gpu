@@ -24,3 +24,8 @@ const std::vector<std::shared_ptr<path_tracing::core::scenes::entity>>& path_tra
 {
 	return mEmitters;
 }
+
+std::shared_ptr<path_tracing::core::scenes::entity> path_tracing::core::scenes::scene::environment() const noexcept
+{
+	return mEnvironment;
+}

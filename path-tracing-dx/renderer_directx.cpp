@@ -1,5 +1,7 @@
 #include "renderer_directx.hpp"
 
+#include "../path-tracing-core/emitters/environment_emitter.hpp"
+
 #include "utilities/imgui_impl_dx12.hpp"
 
 path_tracing::dx::renderer_directx::renderer_directx(void* handle, int width, int height) :
@@ -75,13 +77,20 @@ void path_tracing::dx::renderer_directx::render(const std::shared_ptr<core::came
 
 	mCommandQueue->execute({ mSceneCommandList, mImGuiCommandList });
 	
-	mSwapChain->present();
+	mSwapChain->present(false);
 
 	mCommandQueue->wait();
 }
 
 void path_tracing::dx::renderer_directx::build(const std::shared_ptr<core::scene>& scene, const render_config& config)
 {
+	mSceneInfo.environment = scene->environment() == nullptr ? entity_gpu_buffer::null : scene->environment()->index();
+	
+	if (scene->environment() != nullptr && std::static_pointer_cast<environment_emitter>(
+		scene->environment()->component<emitter>())->map() != nullptr) {
+		mSceneInfo.texture = std::static_pointer_cast<environment_emitter>(scene->environment()->component<emitter>())->map()->index();
+	}
+	
 	mRenderTarget = std::make_shared<texture2d>(mDevice, D3D12_RESOURCE_STATE_GENERIC_READ,
 		D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS, D3D12_HEAP_TYPE_DEFAULT,
 		DXGI_FORMAT_R32G32B32A32_FLOAT, config.width, config.height);

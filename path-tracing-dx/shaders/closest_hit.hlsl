@@ -39,7 +39,10 @@ void closest_hit_shader(inout ray_payload payload, HitAttributes attribute) {
 	payload.interaction.uv = (uvs[index.x] * b0 + uvs[index.y] * b1 + uvs[index.z] * b2).xy;
 	payload.interaction.wo = -WorldRayDirection();
 
-	float3 shading_normal = normals[index.x] * b0 + normals[index.y] * b1 + normals[index.z] * b2;
+	float3 shading_normal = 
+		global_shapes[global_entities[local_group_info.index].shape].normals != 0 ? 
+		normals[index.x] * b0 + normals[index.y] * b1 + normals[index.z] * b2 :
+		local_normal;
 
 	payload.interaction.shading_space = build_coordinate_system(mul(inv_transpose, shading_normal).xyz);
 	payload.index = local_group_info.index;

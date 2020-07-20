@@ -1,6 +1,7 @@
 #ifndef __EMITTER_HLSL__
 #define __EMITTER_HLSL__
 
+#include "emitter_environment.hlsl"
 #include "emitter_include.hlsl"
 #include "emitter_surface.hlsl"
 #include "emitter_point.hlsl"
@@ -20,7 +21,10 @@ float3 evaluate_emitter(emitter_gpu_buffer emitter, interaction interaction, flo
 
 	if (emitter.type == emitter_surface)
 		return evaluate_surface_emitter(emitter, interaction, wi);
-	
+
+	if (emitter.type == emitter_environment)
+		return evaluate_environment_emitter(emitter, interaction, wi);
+
 	return float3(0, 0, 0);
 }
 
@@ -31,6 +35,9 @@ emitter_sample sample_emitter(emitter_gpu_buffer emitter, interaction reference,
 
 	if (emitter.type == emitter_surface)
 		return sample_surface_emitter(emitter, reference, value);
+
+	if (emitter.type == emitter_environment)
+		return sample_environment_emitter(emitter, reference, value);
 	
 	emitter_sample sample; sample.pdf = 0;
 
@@ -44,6 +51,9 @@ float pdf_emitter(emitter_gpu_buffer emitter, interaction reference, float3 wi)
 
 	if (emitter.type == emitter_surface)
 		return pdf_surface_emitter(emitter, reference, wi);
+
+	if (emitter.type == emitter_environment)
+		return pdf_environment_emitter(emitter, reference, wi);
 
 	return 0;
 }

@@ -10,6 +10,12 @@ size_t path_tracing::dx::wrapper::size_of(const DXGI_FORMAT& format)
 		return 4;
 	case DXGI_FORMAT_R32G32B32A32_FLOAT:
 		return 16;
+	case DXGI_FORMAT_R32G32B32_FLOAT:
+		return 12;
+	case DXGI_FORMAT_R32G32_FLOAT:
+		return 8;
+	case DXGI_FORMAT_R32_FLOAT:
+		return 4;
 	default:
 		return 0;
 	}

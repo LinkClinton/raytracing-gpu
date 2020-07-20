@@ -27,6 +27,8 @@ namespace path_tracing::dx::wrapper {
 
 		void add_cbv(const std::string& name, size_t base, size_t space);
 
+		void set_static_sampler(size_t base, size_t space);
+
 		void serialize(const std::shared_ptr<device>& device, bool is_local = false);
 
 		size_t base(const std::string& name) const;
@@ -46,6 +48,9 @@ namespace path_tracing::dx::wrapper {
 		std::vector<size_t> mDescriptorBase;
 		std::vector<size_t> mDescriptorSize;
 		size_t mSize = 0;
+
+		D3D12_STATIC_SAMPLER_DESC mSamplerDesc = {};
+		bool mHasSampler = false;
 	};
 	
 }

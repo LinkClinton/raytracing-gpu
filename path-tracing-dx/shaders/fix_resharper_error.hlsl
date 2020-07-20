@@ -127,6 +127,14 @@ using float4 = any4<float>;
 template <typename T>
 struct RWTexture2D { T value; T& operator[](float2 value) { return value; } };
 
+struct SamplerState {};
+
+struct Texture2D {
+	float4 Sample(SamplerState state, float2 value) { return float4(); }
+
+	float4 SampleLevel(SamplerState state, float2 value, float level) { return float4(); }
+};
+
 struct RayDesc {
 	float3 Direction;
 	float3 Origin;
@@ -202,6 +210,12 @@ template <typename T>
 T sin(T value) { return value; }
 
 template <typename T>
+T acos(T value) { return value; }
+
+template <typename T>
+T atan2(T y, T x) { return x; }
+
+template <typename T>
 T sqrt(T value) { return value; }
 
 template <typename T>
@@ -237,6 +251,8 @@ float3 mul(float3x3 x, float3 y) { return 0; }
 
 float max(float x, float y) { return x; }
 float min(float x, float y) { return x; }
+
+float clamp(float x, float min, float max) { return x; }
 
 float ldexp(float x, float y) { return x; }
 

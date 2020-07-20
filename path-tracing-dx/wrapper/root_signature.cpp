@@ -62,14 +62,30 @@ void path_tracing::dx::wrapper::root_signature::add_cbv(const std::string& name,
 	add_descriptor(name, D3D12_ROOT_PARAMETER_TYPE_CBV, base, space);
 }
 
+void path_tracing::dx::wrapper::root_signature::set_static_sampler(size_t base, size_t space)
+{
+	mSamplerDesc.RegisterSpace = static_cast<UINT>(space);
+	mSamplerDesc.ShaderRegister = static_cast<UINT>(base);
+	mSamplerDesc.ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;
+	mSamplerDesc.AddressU = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
+	mSamplerDesc.AddressV = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
+	mSamplerDesc.AddressW = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
+	mSamplerDesc.Filter = D3D12_FILTER_MIN_MAG_MIP_LINEAR;
+	mSamplerDesc.ComparisonFunc = D3D12_COMPARISON_FUNC_LESS_EQUAL;
+
+	mHasSampler = true;
+}
+
 void path_tracing::dx::wrapper::root_signature::serialize(const std::shared_ptr<device>& device, bool is_local)
 {
 	D3D12_ROOT_SIGNATURE_DESC desc = {};
 
 	desc.Flags = is_local ? D3D12_ROOT_SIGNATURE_FLAG_LOCAL_ROOT_SIGNATURE : D3D12_ROOT_SIGNATURE_FLAG_NONE;
 	desc.pParameters = mRootParameters.data();
+	desc.pStaticSamplers = mHasSampler ? &mSamplerDesc : nullptr;
 	desc.NumParameters = static_cast<UINT>(mRootParameters.size());
-
+	desc.NumStaticSamplers = mHasSampler ? 1 : 0;
+	
 	ComPtr<ID3DBlob> signature_blob = nullptr;
 	ComPtr<ID3DBlob> error_blob = nullptr;
 

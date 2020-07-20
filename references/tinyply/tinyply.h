@@ -20,6 +20,8 @@
 //   tinyply header   //
 ////////////////////////
 
+#pragma optimize("", on)
+
 #ifndef tinyply_h
 #define tinyply_h
 

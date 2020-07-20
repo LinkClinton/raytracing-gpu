@@ -6,7 +6,8 @@
 enum emitter_type {
 	emitter_unknown = 0,
 	emitter_point = 1,
-	emitter_surface = 2
+	emitter_surface = 2,
+	emitter_environment = 3
 };
 
 struct emitter_gpu_buffer {

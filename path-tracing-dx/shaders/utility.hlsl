@@ -4,8 +4,11 @@
 #include "fix_resharper_error.hlsl"
 
 #define ONE_OVER_PI 0.318309886183790671537767526745028724
+#define ONE_OVER_TWO_PI 0.159154943091895335768883763372514362
 #define QUARTER_PI 0.785398163397448309615660845819875721
 #define HALF_PI 1.57079632679489661923132169163975144
+#define TWO_PI 6.28318530717958647692528676655900576
+#define ONE_PI 3.14159265358979323846264338327950288
 
 #define RAY_INFINITY 1e20
 #define RAY_EPSILON 8.940697e-05
@@ -59,6 +62,28 @@ float2 uniform_sample_triangle(float2 value)
 
 	return float2(1 - u, value.y * u);
 }
+
+float3 spherical_direction(float sin_theta, float cos_theta, float phi)
+{
+	return float3(
+		sin_theta * cos(phi),
+		sin_theta * sin(phi),
+		cos_theta
+	);
+}
+
+float spherical_theta(float3 v)
+{
+	return acos(clamp(v.z, -1, 1));
+}
+
+float spherical_phi(float3 v)
+{
+	float phi = atan2(v.y, v.x);
+
+	return phi < 0 ? phi + TWO_PI : phi;
+}
+
 
 float gamma_correct(float value)
 {

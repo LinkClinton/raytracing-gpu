@@ -30,6 +30,15 @@ const std::vector<path_tracing::core::real>& path_tracing::core::textures::image
 	return mRealValues;
 }
 
+const path_tracing::core::byte* path_tracing::core::textures::image::data() const noexcept
+{
+	if (!mVector3Values.empty()) return reinterpret_cast<const byte*>(mVector3Values.data());
+	if (!mVector2Values.empty()) return reinterpret_cast<const byte*>(mVector2Values.data());
+	if (!mRealValues.empty()) return reinterpret_cast<const byte*>(mRealValues.data());
+
+	return nullptr;
+}
+
 size_t path_tracing::core::textures::image::width() const noexcept
 {
 	return mWidth;

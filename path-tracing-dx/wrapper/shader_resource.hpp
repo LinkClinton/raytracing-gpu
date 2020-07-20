@@ -81,11 +81,15 @@ namespace path_tracing::dx::wrapper {
 		std::shared_ptr<buffer>& gpu_buffer)
 	{
 		cpu_buffer = std::make_shared<buffer>(device, D3D12_RESOURCE_STATE_GENERIC_READ, D3D12_RESOURCE_FLAG_NONE,
-			D3D12_HEAP_TYPE_UPLOAD, sizeof(T) * data.size());
+			D3D12_HEAP_TYPE_UPLOAD, sizeof(T) * (data.empty() ? 1 : data.size()));
 		gpu_buffer = std::make_shared<buffer>(device, D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_FLAG_NONE,
-			D3D12_HEAP_TYPE_DEFAULT, sizeof(T) * data.size());
+			D3D12_HEAP_TYPE_DEFAULT, sizeof(T) * (data.empty() ? 1 : data.size()));
 
-		std::memcpy(cpu_buffer->map(), data.data(), sizeof(T) * data.size()); cpu_buffer->unmap();
+		if (!data.empty()) {
+			std::memcpy(cpu_buffer->map(), data.data(), sizeof(T) * data.size());
+
+			cpu_buffer->unmap();
+		}
 
 		const auto barrier = gpu_buffer->barrier(D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_GENERIC_READ);
 

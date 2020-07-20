@@ -1,5 +1,7 @@
 #include "resource_cache.hpp"
 
+#include "../path-tracing-core/resource_manager.hpp"
+
 path_tracing::dx::utilities::shape_cache_data::shape_cache_data(
 	const std::shared_ptr<buffer>& positions,
 	const std::shared_ptr<buffer>& normals,
@@ -52,15 +54,59 @@ void path_tracing::dx::utilities::resource_cache::execute(
 	const std::vector<std::shared_ptr<entity>>& entities, 
 	const std::shared_ptr<command_queue>& queue)
 {
-	// first, cache the shape data
-	for (const auto& entity : entities) {
-		// when the entity has not shape or the shape was cached we will continue
-		if (!entity->has_component<shape>() || mShapesIndex.find(entity->component<shape>()) != mShapesIndex.end()) continue;
+	std::vector<D3D12_RESOURCE_BARRIER> barriers;
+	
+	for (const auto& image : resource_manager::images) {
+		auto format = DXGI_FORMAT_UNKNOWN;
+		
+		if (!image->vector3().empty()) format = DXGI_FORMAT_R32G32B32_FLOAT;
+		if (!image->vector2().empty()) format = DXGI_FORMAT_R32G32_FLOAT;
+		if (!image->real().empty()) format = DXGI_FORMAT_R32_FLOAT;
 
-		auto positions = entity->component<shape>()->positions();
-		auto normals = entity->component<shape>()->normals();
-		auto indices = entity->component<shape>()->indices();
-		auto uvs = entity->component<shape>()->uvs();
+		const auto cpu_data = image->data();
+		
+		const auto texture = std::make_shared<texture2d>(mDevice, D3D12_RESOURCE_STATE_COPY_DEST,
+			D3D12_RESOURCE_FLAG_NONE, D3D12_HEAP_TYPE_DEFAULT, format, image->width(), image->height());
+
+		const auto buffer = std::make_shared<wrapper::buffer>(mDevice, D3D12_RESOURCE_STATE_GENERIC_READ,
+			D3D12_RESOURCE_FLAG_NONE, D3D12_HEAP_TYPE_UPLOAD,
+			texture->alignment() * texture->height());
+
+		auto gpu_data = static_cast<byte*>(buffer->map());
+		
+		const auto offset = size_of(texture->format()) * texture->width();
+		
+		if (texture->alignment() != offset) {
+			for (size_t y = 0; y < texture->height(); y++)
+				std::memcpy(gpu_data + y * texture->alignment(), cpu_data + y * offset, offset);
+		}
+		else std::memcpy(gpu_data, cpu_data, offset * texture->width());
+
+		buffer->unmap();
+
+		texture->upload(mCommandList, buffer);
+
+		barriers.push_back(texture->barrier(D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_GENERIC_READ));
+
+		mImagesCache.push_back(texture);
+		mCpuBuffers.push_back(buffer);
+	}
+
+	if (!barriers.empty()) (*mCommandList)->ResourceBarrier(static_cast<UINT>(barriers.size()), barriers.data());
+	
+	for (const auto& texture : resource_manager::textures) 
+		mTextures.push_back(texture->gpu_buffer());
+	
+	// cache the material data
+	for (const auto& material : resource_manager::materials) 
+		mMaterials.push_back(material->gpu_buffer());
+	
+	// cache the shape data
+	for (const auto& shape : resource_manager::shapes) {
+		auto positions = shape->positions();
+		auto normals = shape->normals();
+		auto indices = shape->indices();
+		auto uvs = shape->uvs();
 
 		shape_cache_data data;
 
@@ -75,20 +121,17 @@ void path_tracing::dx::utilities::resource_cache::execute(
 		copy_data_to_gpu_buffer(mCommandList, mDevice, uvs, cpu_buffer(), data.uvs);
 
 		data.geometry = std::make_shared<raytracing_geometry>(data.positions, data.indices);
-		
+
 		data.geometry->build(D3D12_RAYTRACING_ACCELERATION_STRUCTURE_BUILD_FLAG_PREFER_FAST_TRACE, mCommandList, mDevice);
 
-		mShapes.push_back(entity->component<shape>()->gpu_buffer());
+		mShapes.push_back(shape->gpu_buffer());
 
-		mShapesIndex.insert({ entity->component<shape>(), mShapesCache.size() });
+		mShapesIndex.insert({ shape, mShapesCache.size() });
 		mShapesCache.push_back(data);
 	}
 
-	// second, cache the entity data
+	// cache the entity data(because we need entity index in emitter, so we will cache emitter too)
 	for (const auto& entity : entities) {
-		if (entity->has_component<material>()) 
-			mMaterials.push_back(entity->component<material>()->gpu_buffer());
-
 		if (entity->has_component<emitter>()) 
 			mEmitters.push_back(entity->component<emitter>()->gpu_buffer(entity->transform(), entity->index()));
 
@@ -147,6 +190,11 @@ void path_tracing::dx::utilities::resource_cache::execute(
 	mCpuBuffers.clear();
 }
 
+const std::vector<std::shared_ptr<path_tracing::dx::wrapper::texture2d>>& path_tracing::dx::utilities::resource_cache::images_cache_data() const noexcept
+{
+	return mImagesCache;
+}
+
 const std::vector<path_tracing::dx::utilities::entity_cache_data>& path_tracing::dx::utilities::resource_cache::entities_cache_data() const noexcept
 {
 	return mEntitiesCache;
@@ -162,19 +210,24 @@ const std::vector<path_tracing::dx::wrapper::raytracing_instance>& path_tracing:
 	return mInstances;
 }
 
-const std::vector<path_tracing::core::scenes::entity_gpu_buffer>& path_tracing::dx::utilities::resource_cache::entities() const noexcept
-{
-	return mEntities;
-}
-
 const std::vector<path_tracing::core::materials::material_gpu_buffer>& path_tracing::dx::utilities::resource_cache::materials() const noexcept
 {
 	return mMaterials;
 }
 
+const std::vector<path_tracing::core::texture_gpu_buffer>& path_tracing::dx::utilities::resource_cache::textures() const noexcept
+{
+	return mTextures;
+}
+
 const std::vector<path_tracing::core::emitters::emitter_gpu_buffer>& path_tracing::dx::utilities::resource_cache::emitters() const noexcept
 {
 	return mEmitters;
+}
+
+const std::vector<path_tracing::core::scenes::entity_gpu_buffer>& path_tracing::dx::utilities::resource_cache::entities() const noexcept
+{
+	return mEntities;
 }
 
 const std::vector<path_tracing::core::shapes::shape_gpu_buffer>& path_tracing::dx::utilities::resource_cache::shapes() const noexcept

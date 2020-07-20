@@ -26,17 +26,25 @@ namespace path_tracing::core::converter {
 
 	std::shared_ptr<shape> create_sphere(const std::shared_ptr<metascene::shapes::sphere>& sphere)
 	{
-		return std::make_shared<shapes::sphere>(sphere->radius, sphere->reverse_orientation);
+		const auto instance = std::make_shared<shapes::sphere>(sphere->radius, sphere->reverse_orientation);
+
+		resource_manager::shapes.push_back(instance);
+
+		return instance;
 	}
 	
 	std::shared_ptr<shape> create_triangles(const std::shared_ptr<metascene::shapes::triangles>& triangles)
 	{
-		return std::make_shared<mesh>(
+		const auto instance = std::make_shared<mesh>(
 			triangles->positions,
 			triangles->normals,
 			triangles->uvs,
 			triangles->indices,
 			triangles->reverse_orientation);
+
+		resource_manager::shapes.push_back(instance);
+
+		return instance;
 	}
 	
 	std::shared_ptr<shape> create_shape(const std::shared_ptr<metascene::shapes::shape>& shape)
@@ -52,6 +60,6 @@ namespace path_tracing::core::converter {
 		if (shape->type == metascene::shapes::type::triangles)
 			return create_triangles(std::static_pointer_cast<metascene::shapes::triangles>(shape));
 
-		return std::make_shared<sphere>(static_cast<real>(1));
+		return nullptr;
 	}
 }

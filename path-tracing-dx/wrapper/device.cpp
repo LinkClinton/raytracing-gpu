@@ -2,7 +2,7 @@
 
 path_tracing::dx::wrapper::device::device(const D3D_FEATURE_LEVEL& level)
 {
-#ifdef _DEBUG
+#ifndef __NDXDEBUG__
 	ComPtr<ID3D12Debug> debug;
 
 	D3D12GetDebugInterface(IID_PPV_ARGS(debug.GetAddressOf()));

@@ -26,6 +26,8 @@ namespace path_tracing::core::textures {
 		
 		const std::vector<real>& real() const noexcept;
 
+		const byte* data() const noexcept;
+
 		size_t width() const noexcept;
 
 		size_t height() const noexcept;

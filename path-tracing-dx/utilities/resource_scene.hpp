@@ -20,11 +20,13 @@ namespace path_tracing::dx::utilities {
 		uint32 sample_index = 0;
 		uint32 max_depth = 5;
 		uint32 emitters = 0;
+		uint32 environment = entity_gpu_buffer::null;
+		uint32 texture = texture_gpu_buffer::null;
 		
 		matrix4x4 unused0 = matrix4x4(1);
 		vector4 unused1 = vector4(1);
 		vector4 unused2 = vector4(1);
-		vector3 unused3 = vector4(1);
+		real unused3 = 1;
 		
 		scene_info() = default;
 	};
@@ -59,9 +61,10 @@ namespace path_tracing::dx::utilities {
 		std::shared_ptr<texture2d> mRenderTarget;
 		
 		std::shared_ptr<buffer> mSceneInfo;
-		std::shared_ptr<buffer> mEntities;
 		std::shared_ptr<buffer> mMaterials;
+		std::shared_ptr<buffer> mTextures;
 		std::shared_ptr<buffer> mEmitters;
+		std::shared_ptr<buffer> mEntities;
 		std::shared_ptr<buffer> mShapes;
 		
 		std::shared_ptr<device> mDevice;

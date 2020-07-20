@@ -2,39 +2,98 @@
 #include "convert_spectrum.hpp"
 
 #include "meta-scene/textures/constant_texture.hpp"
+#include "meta-scene/textures/image_texture.hpp"
+#include "meta-scene/textures/scale_texture.hpp"
 
+#include "../resource_manager.hpp"
 
 namespace path_tracing::core::converter {
 
-	vector3 create_spectrum_texture(const std::shared_ptr<metascene::textures::constant_texture>& texture)
+	vector3 create_constant_spectrum_texture(const std::shared_ptr<metascene::textures::texture>& texture)
 	{
-		if (texture->value_type == metascene::textures::value_type::real)
-			return vector3(texture->real);
+		const auto instance = std::static_pointer_cast<metascene::textures::constant_texture>(texture);
 
-		return read_spectrum(texture->spectrum);
+		if (instance->value_type == metascene::textures::value_type::real)
+			return vector3(instance->real);
+
+		return vector3(read_spectrum(instance->spectrum));
+	}
+
+	real create_constant_real_texture(const std::shared_ptr<metascene::textures::texture>& texture)
+	{
+		const auto instance = std::static_pointer_cast<metascene::textures::constant_texture>(texture);
+
+		assert(instance->value_type == metascene::textures::value_type::real);
+
+		return instance->real;
+	}
+
+	std::shared_ptr<texture> create_scale_spectrum_texture(const std::shared_ptr<metascene::textures::scale_texture>& texture)
+	{
+		assert(texture->base->type == metascene::textures::type::image && texture->scale->type == metascene::textures::type::constant);
+
+		const auto instance = std::make_shared<textures::texture>(
+			resource_manager::read_spectrum_image(std::static_pointer_cast<metascene::image_texture>(texture->base)),
+			create_constant_spectrum_texture(texture->scale));
+
+		resource_manager::textures.push_back(instance);
+
+		return instance;
+	}
+
+	std::shared_ptr<texture> create_image_spectrum_texture(const std::shared_ptr<metascene::textures::image_texture>& texture)
+	{
+		const auto instance = std::make_shared<textures::texture>(
+			resource_manager::read_spectrum_image(texture), vector3(1));
+
+		resource_manager::textures.push_back(instance);
+
+		return instance;
 	}
 	
-	vector3 create_spectrum_texture(const std::shared_ptr<metascene::textures::texture>& texture)
+	std::shared_ptr<texture> create_image_spectrum_texture(const std::shared_ptr<metascene::textures::texture>& texture)
 	{
-		if (texture->type == metascene::textures::type::constant)
-			return create_spectrum_texture(std::static_pointer_cast<metascene::textures::constant_texture>(texture));
+		if (texture->type == metascene::textures::type::scale)
+			return create_scale_spectrum_texture(std::static_pointer_cast<metascene::scale_texture>(texture));
 
-		return vector3(0);
+		if (texture->type == metascene::textures::type::image)
+			return create_image_spectrum_texture(std::static_pointer_cast<metascene::image_texture>(texture));
+
+		return nullptr;
 	}
 
-	real create_real_texture(const std::shared_ptr<metascene::textures::constant_texture>& texture)
+	std::shared_ptr<texture> create_scale_real_texture(const std::shared_ptr<metascene::textures::scale_texture>& texture)
 	{
-		assert(texture->value_type == metascene::textures::value_type::real);
+		assert(texture->base->type == metascene::textures::type::image && texture->scale->type == metascene::textures::type::constant);
 
-		return texture->real;
+		const auto instance = std::make_shared<textures::texture>(
+			resource_manager::read_real_image(std::static_pointer_cast<metascene::image_texture>(texture->base)),
+			create_constant_spectrum_texture(texture->scale));
+
+		resource_manager::textures.push_back(instance);
+
+		return instance;
 	}
 
-	real create_real_texture(const std::shared_ptr<metascene::textures::texture>& texture)
+	std::shared_ptr<texture> create_image_real_texture(const std::shared_ptr<metascene::textures::image_texture>& texture)
 	{
-		if (texture->type == metascene::textures::type::constant)
-			return create_real_texture(std::static_pointer_cast<metascene::textures::constant_texture>(texture));
+		const auto instance = std::make_shared<textures::texture>(resource_manager::read_real_image(texture), vector3(1));
 
-		return 0;
+		resource_manager::textures.push_back(instance);
+
+		return instance;
 	}
+	
+	std::shared_ptr<texture> create_image_real_texture(const std::shared_ptr<metascene::textures::texture>& texture)
+	{
+		if (texture->type == metascene::textures::type::scale)
+			return create_scale_real_texture(std::static_pointer_cast<metascene::scale_texture>(texture));
+
+		if (texture->type == metascene::textures::type::image)
+			return create_image_real_texture(std::static_pointer_cast<metascene::image_texture>(texture));
+
+		return nullptr;
+	}
+
 
 }

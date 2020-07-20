@@ -25,7 +25,7 @@ namespace path_tracing::core::textures {
 
 		~texture() = default;
 
-		texture_gpu_buffer gpu_buffer(uint32 index) const noexcept;
+		texture_gpu_buffer gpu_buffer() const noexcept;
 
 		std::shared_ptr<image> image() const noexcept;
 

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../../path-tracing-core/materials/material.hpp"
+#include "../../path-tracing-core/textures/texture.hpp"
 #include "../../path-tracing-core/emitters/emitter.hpp"
 #include "../../path-tracing-core/scenes/entity.hpp"
 #include "../../path-tracing-core/shapes/shape.hpp"
@@ -18,6 +19,7 @@ namespace path_tracing::dx::utilities {
 	using namespace wrapper;
 
 	using namespace core::materials;
+	using namespace core::textures;
 	using namespace core::emitters;
 	using namespace core::scenes;
 	using namespace core::shapes;
@@ -75,17 +77,21 @@ namespace path_tracing::dx::utilities {
 			const std::vector<std::shared_ptr<entity>>& entities, 
 			const std::shared_ptr<command_queue>& queue);
 
+		const std::vector<std::shared_ptr<texture2d>>& images_cache_data() const noexcept;
+		
 		const std::vector<entity_cache_data>& entities_cache_data() const noexcept;
 
 		const std::vector<shape_cache_data>& shapes_cache_data() const noexcept;
 
 		const std::vector<raytracing_instance>& instances() const noexcept;
 		
-		const std::vector<entity_gpu_buffer>& entities() const noexcept;
-		
 		const std::vector<material_gpu_buffer>& materials() const noexcept;
 
+		const std::vector<texture_gpu_buffer>& textures() const noexcept;
+		
 		const std::vector<emitter_gpu_buffer>& emitters() const noexcept;
+		
+		const std::vector<entity_gpu_buffer>& entities() const noexcept;
 
 		const std::vector<shape_gpu_buffer>& shapes() const noexcept;
 	private:
@@ -94,6 +100,8 @@ namespace path_tracing::dx::utilities {
 		std::unordered_map<std::shared_ptr<shape>, size_t> mShapesIndex;
 		std::unordered_map<std::string, shape_type_data> mTypeCache;
 
+		std::vector<std::shared_ptr<texture2d>> mImagesCache;
+		
 		std::vector<shape_cache_data> mShapesCache;
 		std::vector<entity_cache_data> mEntitiesCache;
 		
@@ -107,6 +115,7 @@ namespace path_tracing::dx::utilities {
 		std::vector<raytracing_instance> mInstances;
 		
 		std::vector<material_gpu_buffer> mMaterials;
+		std::vector<texture_gpu_buffer> mTextures;
 		std::vector<emitter_gpu_buffer> mEmitters;
 		std::vector<shape_gpu_buffer> mShapes;
 

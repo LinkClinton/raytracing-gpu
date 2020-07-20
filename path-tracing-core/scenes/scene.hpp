@@ -17,6 +17,8 @@ namespace path_tracing::core::scenes {
 		const std::vector<std::shared_ptr<entity>>& entities() const noexcept;
 
 		const std::vector<std::shared_ptr<entity>>& emitters() const noexcept;
+
+		std::shared_ptr<entity> environment() const noexcept;
 	private:
 		std::vector<std::shared_ptr<entity>> mEntities;
 		std::vector<std::shared_ptr<entity>> mEmitters;
