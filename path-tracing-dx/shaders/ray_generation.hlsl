@@ -73,16 +73,16 @@ float3 uniform_sample_one_emitter(random_sampler sampler, path_tracing_info trac
 
 		if (!is_black(emitter_sample.intensity) && emitter_sample.pdf > 0) {
 			float3 wi = world_to_local(payload.interaction.shading_space, emitter_sample.wi);
-			
+
 			float3 function_value = evaluate_material(material, wo, wi, type);
 			float function_pdf = pdf_material(material, wo, wi, type);
-			
-			function_value = function_value * abs(dot(emitter_sample.wi, payload.interaction.shading_space.z()));
 
+			function_value = function_value * abs(dot(emitter_sample.wi, payload.interaction.shading_space.z()));
+			
 			if (!is_black(function_value) && function_pdf > 0) {
 				ray_desc shadow_ray = payload.interaction.spawn_ray_to(emitter_sample.interaction);
 				ray_payload shadow_payload;
-
+				
 				shadow_payload.missed = false;
 
 				TraceRay(global_acceleration, SHADOW_FLAG, 0xFF, 0,
@@ -95,7 +95,7 @@ float3 uniform_sample_one_emitter(random_sampler sampler, path_tracing_info trac
 			}
 		}
 	}
-
+	
 	{
 		scattering_sample function_sample = sample_material(material, wo, next_sample2d(sampler), type);
 
@@ -177,7 +177,7 @@ float3 trace(ray_desc first_ray, random_sampler sampler)
 
 		function_sample.wi = local_to_world(payload.interaction.shading_space, function_sample.wi);
 
-		tracing_info.beta *= function_sample.value * abs(dot(function_sample.wi, payload.interaction.normal)) / function_sample.pdf;
+		tracing_info.beta *= function_sample.value * abs(dot(function_sample.wi, payload.interaction.shading_space.z())) / function_sample.pdf;
 
 		tracing_info.specular = has(function_sample.type, scattering_specular);
 
@@ -219,7 +219,7 @@ void ray_generation_shader() {
 	float3 L = trace(ray, sampler);
 	
 	float factor = global_scene_info.sample_index / (global_scene_info.sample_index + 1.0f);
-
+	
 	float3 old_value = global_scene_info.sample_index == 0 ? 0 : global_render_target[DispatchRaysIndex().xy].xyz;
 	float3 new_value = gamma_correct(L);
 

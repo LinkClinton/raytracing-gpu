@@ -192,16 +192,16 @@
     <CopyFileToFolders Include="shaders\shapes\shape_include.hlsl">
       <Filter>shaders\shapes</Filter>
     </CopyFileToFolders>
+    <CopyFileToFolders Include="shaders\emitters\emitter_environment.hlsl" />
+    <CopyFileToFolders Include="shaders\textures\texture_include.hlsl" />
+    <CopyFileToFolders Include="shaders\textures\texture.hlsl" />
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="shaders\emitters\emitter_environment.hlsl">
-      <Filter>shaders\emitters</Filter>
+    <FxCompile Include="shaders\scatterings\scattering_specular.hlsl">
+      <Filter>shaders\scatterings</Filter>
     </FxCompile>
-    <FxCompile Include="shaders\textures\texture_include.hlsl">
-      <Filter>shaders\textures</Filter>
-    </FxCompile>
-    <FxCompile Include="shaders\textures\texture.hlsl">
-      <Filter>shaders\textures</Filter>
+    <FxCompile Include="shaders\materials\material_mirror.hlsl">
+      <Filter>shaders\materials</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

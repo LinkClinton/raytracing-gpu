@@ -3,12 +3,16 @@
 
 #include "material_include.hlsl"
 #include "material_diffuse.hlsl"
+#include "material_mirror.hlsl"
 
 float3 evaluate_material(material_gpu_buffer material, float3 wo, float3 wi, scattering_type include = scattering_all)
 {
 	if (material.type == material_diffuse)
 		return evaluate_diffuse_material(material, wo, wi, include);
 
+	if (material.type == material_mirror)
+		return evaluate_mirror_material(material, wo, wi, include);
+	
 	return 0;
 }
 
@@ -16,6 +20,9 @@ float pdf_material(material_gpu_buffer material, float3 wo, float3 wi, scatterin
 {
 	if (material.type == material_diffuse)
 		return pdf_diffuse_material(material, wo, wi, include);
+
+	if (material.type == material_mirror)
+		return pdf_mirror_material(material, wo, wi, include);
 
 	return 0;
 }
@@ -25,6 +32,9 @@ scattering_sample sample_material(material_gpu_buffer material, float3 wo, float
 	if (material.type == material_diffuse)
 		return sample_diffuse_material(material, wo, value, include);
 
+	if (material.type == material_mirror)
+		return sample_mirror_material(material, wo, value, include);
+	
 	scattering_sample sample; sample.pdf = 0; sample.type = scattering_unknown;
 
 	return sample;

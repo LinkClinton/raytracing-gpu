@@ -2,8 +2,10 @@
 #include "convert_texture.hpp"
 
 #include "meta-scene/materials/diffuse_material.hpp"
+#include "meta-scene/materials/mirror_material.hpp"
 
 #include "../materials/diffuse_material.hpp"
+#include "../materials/mirror_material.hpp"
 #include "../resource_manager.hpp"
 
 namespace path_tracing::core::converter {
@@ -11,6 +13,15 @@ namespace path_tracing::core::converter {
 	std::shared_ptr<material> create_diffuse_material(const std::shared_ptr<metascene::materials::diffuse_material>& material)
 	{
 		const auto instance = std::make_shared<diffuse_material>(create_constant_spectrum_texture(material->reflectance));
+
+		resource_manager::materials.push_back(instance);
+
+		return instance;
+	}
+
+	std::shared_ptr<material> create_mirror_material(const std::shared_ptr<metascene::materials::mirror_material>& material)
+	{
+		const auto instance = std::make_shared<mirror_material>(create_constant_spectrum_texture(material->reflectance));
 
 		resource_manager::materials.push_back(instance);
 
@@ -24,6 +35,9 @@ namespace path_tracing::core::converter {
 		if (material->type == metascene::materials::type::diffuse)
 			return create_diffuse_material(std::static_pointer_cast<metascene::materials::diffuse_material>(material));
 
+		if (material->type == metascene::materials::type::mirror)
+			return create_mirror_material(std::static_pointer_cast<metascene::materials::mirror_material>(material));
+		
 		return nullptr;
 	}
 }

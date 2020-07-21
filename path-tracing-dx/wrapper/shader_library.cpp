@@ -88,7 +88,7 @@ std::vector<byte> path_tracing::dx::wrapper::shader_library::compile_from_file(c
 
 #ifndef _DEBUG
 	compiler->Compile(encoding_blob.Get(), file_name.c_str(), L"",
-		L"lib_6_3", arguments, 1, defines.data(), static_cast<UINT32>(defines.size()),
+		L"lib_6_4", arguments, 1, defines.data(), static_cast<UINT32>(defines.size()),
 		include.Get(), result.GetAddressOf());
 #else
 	compiler->Compile(encoding_blob.Get(), file_name.c_str(), L"",

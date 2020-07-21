@@ -10,12 +10,15 @@ namespace path_tracing::core::materials {
 	
 	enum class material_type : uint32 {
 		unknown = 0,
-		diffuse = 1
+		diffuse = 1,
+		mirror = 2
 	};
 	
 	struct material_gpu_buffer {
 		material_type type = material_type::unknown;
+		vector3 reflectance = vector3(1);
 		vector3 diffuse = vector3(0);
+		real unused = 0;
 		
 		material_gpu_buffer() = default;
 	};

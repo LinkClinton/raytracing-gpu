@@ -16,8 +16,8 @@ float3 evaluate_environment_emitter(emitter_gpu_buffer emitter, interaction inte
 
 emitter_sample sample_environment_emitter(emitter_gpu_buffer emitter, interaction reference, float2 value)
 {
-	float theta = value.y;
-	float phi = value.x;
+	float theta = value.y * ONE_PI;
+	float phi = value.x * TWO_PI;
 
 	float cos_theta = cos(theta);
 	float sin_theta = sin(theta);

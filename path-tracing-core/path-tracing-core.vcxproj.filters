@@ -87,6 +87,9 @@
     <ClInclude Include="importers\image_importer.hpp">
       <Filter>importers</Filter>
     </ClInclude>
+    <ClInclude Include="materials\mirror_material.hpp">
+      <Filter>materials</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="interfaces">
@@ -200,6 +203,9 @@
     </ClCompile>
     <ClCompile Include="importers\image_importer.cpp">
       <Filter>importers</Filter>
+    </ClCompile>
+    <ClCompile Include="materials\mirror_material.cpp">
+      <Filter>materials</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

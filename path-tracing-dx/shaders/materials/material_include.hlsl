@@ -5,12 +5,15 @@
 
 enum material_type {
 	material_unknown = 0,
-	material_diffuse = 1
+	material_diffuse = 1,
+	material_mirror = 2
 };
 
 struct material_gpu_buffer {
 	material_type type;
+	float3 reflectance;
 	float3 diffuse;
+	float1 unused;
 };
 
 #endif

@@ -104,9 +104,9 @@ namespace path_tracing::core::importers {
 		auto values = std::vector<vector3>(info.width * info.height);
 
 		for (size_t index = 0; index < values.size(); index++) {
-			values[index].x = gamma ? inverse_gamma_correct(info.data[index * 4 + 0]) : info.data[index * 4 + 0];
-			values[index].y = gamma ? inverse_gamma_correct(info.data[index * 4 + 1]) : info.data[index * 4 + 1];
-			values[index].z = gamma ? inverse_gamma_correct(info.data[index * 4 + 2]) : info.data[index * 4 + 2];
+			values[index].x = info.data[index * 4 + 0];
+			values[index].y = info.data[index * 4 + 1];
+			values[index].z = info.data[index * 4 + 2];
 		}
 
 		return std::make_shared<image>(values, info.width, info.height);
