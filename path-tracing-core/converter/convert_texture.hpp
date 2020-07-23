@@ -17,4 +17,8 @@ namespace path_tracing::core::converter {
 	std::shared_ptr<texture> create_image_spectrum_texture(const std::shared_ptr<metascene::textures::texture>& texture);
 
 	std::shared_ptr<texture> create_image_real_texture(const std::shared_ptr<metascene::textures::texture>& texture);
+
+	std::shared_ptr<texture> create_spectrum_texture(const std::shared_ptr<metascene::textures::texture>& texture);
+
+	std::shared_ptr<texture> create_real_texture(const std::shared_ptr<metascene::textures::texture>& texture);
 }

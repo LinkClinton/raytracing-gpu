@@ -85,6 +85,7 @@ void path_tracing::dx::renderer_directx::render(const std::shared_ptr<core::came
 void path_tracing::dx::renderer_directx::build(const std::shared_ptr<core::scene>& scene, const render_config& config)
 {
 	mSceneInfo.environment = scene->environment() == nullptr ? entity_gpu_buffer::null : scene->environment()->index();
+	mSceneInfo.emitters = static_cast<uint32>(scene->emitters().size());
 	
 	if (scene->environment() != nullptr && std::static_pointer_cast<environment_emitter>(
 		scene->environment()->component<emitter>())->map() != nullptr) {
@@ -108,8 +109,6 @@ void path_tracing::dx::renderer_directx::build(const std::shared_ptr<core::scene
 	mResourceScene = std::make_shared<resource_scene>(mDevice);
 	mScenePipeline = std::make_shared<scene_pipeline>(mDevice);
 
-	mSceneInfo.emitters = static_cast<uint32>(scene->emitters().size());
-	
 	mResourceCache->execute(scene->entities(), mCommandQueue);
 	
 	mResourceScene->set_render_target(mRenderTarget);

@@ -1,5 +1,7 @@
 #include "resource_scene.hpp"
 
+#pragma optimize("", off)
+
 path_tracing::dx::utilities::resource_scene::resource_scene(const std::shared_ptr<device>& device) :
 	mDevice(device)
 {

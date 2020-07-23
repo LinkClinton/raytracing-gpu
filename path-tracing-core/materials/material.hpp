@@ -2,11 +2,13 @@
 
 #include "../interfaces/noncopyable.hpp"
 #include "../interfaces/indexable.hpp"
+#include "../textures/texture.hpp"
 #include "../shared/transform.hpp"
 
 namespace path_tracing::core::materials {
 
 	using namespace shared;
+	using namespace textures;
 	
 	enum class material_type : uint32 {
 		unknown = 0,
@@ -15,10 +17,13 @@ namespace path_tracing::core::materials {
 	};
 	
 	struct material_gpu_buffer {
+		constexpr static inline uint32 null = std::numeric_limits<uint32>::max();
+		
 		material_type type = material_type::unknown;
-		vector3 reflectance = vector3(1);
-		vector3 diffuse = vector3(0);
-		real unused = 0;
+
+		uint32 reflectance = null;
+		uint32 diffuse = null;
+		uint32 unused = 0;
 		
 		material_gpu_buffer() = default;
 	};

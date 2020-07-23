@@ -53,27 +53,33 @@ emitter_search_result search_emitter(random_sampler sampler, interaction interac
 	return result;
 }
 
-float3 uniform_sample_one_emitter(random_sampler sampler, path_tracing_info tracing_info, ray_payload payload)
+void uniform_sample_one_emitter(random_sampler sampler, uint emitters, out uint which, out float pdf)
+{
+	if (emitters == 0) { which = 0; pdf = 0; return; }
+
+	which = min(floor(next_sample1d(sampler) * emitters), emitters - 1);
+	pdf = 1.0 / emitters;
+}
+
+float3 uniform_sample_one_emitter(random_sampler sampler, material_shader_buffer material, path_tracing_info tracing_info, ray_payload payload)
 {
 	float3 wo = world_to_local(payload.interaction.shading_space, payload.interaction.wo);
 	float3 L = 0;
 	
 	scattering_type type = scattering_type(scattering_all ^ scattering_specular);
-
-	material_gpu_buffer material = global_materials[global_entities[payload.index].material];
 	
 	{
 		uint which = 0; float pdf = 0;
 		
 		uniform_sample_one_emitter(sampler, global_scene_info.emitters, which, pdf);
-
+		
 		emitter_sample emitter_sample = sample_emitter(global_emitters[which], payload.interaction.base_type(), next_sample2d(sampler));
 
 		emitter_sample.pdf = emitter_sample.pdf * pdf;
-
+		
 		if (!is_black(emitter_sample.intensity) && emitter_sample.pdf > 0) {
 			float3 wi = world_to_local(payload.interaction.shading_space, emitter_sample.wi);
-
+			
 			float3 function_value = evaluate_material(material, wo, wi, type);
 			float function_pdf = pdf_material(material, wo, wi, type);
 
@@ -164,14 +170,14 @@ float3 trace(ray_desc first_ray, random_sampler sampler)
 
 			continue;
 		}
-		
-		tracing_info.value += tracing_info.beta * uniform_sample_one_emitter(sampler, tracing_info, payload);
 
+		material_shader_buffer material = convert_gpu_buffer_to_shader_buffer(global_materials[global_entities[payload.index].material], payload.interaction.uv);
+		
+		tracing_info.value += tracing_info.beta * uniform_sample_one_emitter(sampler, material, tracing_info, payload);
+		
 		float3 wo = world_to_local(payload.interaction.shading_space, payload.interaction.wo);
 
-		uint material = global_entities[payload.index].material;
-		
-		scattering_sample function_sample = sample_material(global_materials[material], wo, next_sample2d(sampler));
+		scattering_sample function_sample = sample_material(material, wo, next_sample2d(sampler));
 
 		if (is_black(function_sample.value) || function_sample.pdf == 0) break;
 

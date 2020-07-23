@@ -11,9 +11,16 @@ enum material_type {
 
 struct material_gpu_buffer {
 	material_type type;
+	uint reflectance;
+	uint diffuse;
+	uint unused;
+};
+
+struct material_shader_buffer {
+	material_type type;
+
 	float3 reflectance;
 	float3 diffuse;
-	float1 unused;
 };
 
 #endif

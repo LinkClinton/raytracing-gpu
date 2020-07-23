@@ -6,14 +6,6 @@
 #include "emitter_surface.hlsl"
 #include "emitter_point.hlsl"
 
-void uniform_sample_one_emitter(random_sampler sampler, uint emitters, out uint which, out uint pdf)
-{
-	if (emitters == 0) { which = 0; pdf = 0; return; }
-
-	which = min(floor(next_sample1d(sampler) * emitters), emitters - 1);
-	pdf = 1.0 / emitters;
-}
-
 float3 evaluate_emitter(emitter_gpu_buffer emitter, interaction interaction, float3 wi)
 {
 	if (emitter.type == emitter_point)

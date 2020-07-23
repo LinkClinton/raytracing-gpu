@@ -11,7 +11,7 @@ float3 evaluate_environment_emitter(emitter_gpu_buffer emitter, interaction inte
 
 	float2 value = float2(spherical_phi(w) * ONE_OVER_TWO_PI, spherical_theta(w) * ONE_OVER_PI);
 	
-	return (global_scene_info.texture != ENTITY_NUll ? sample_texture(global_textures[global_scene_info.texture], value) : 1) * emitter.intensity;
+	return (global_scene_info.texture != ENTITY_NUll ? sample_texture_if_no_null(global_textures[global_scene_info.texture], value) : 1) * emitter.intensity;
 }
 
 emitter_sample sample_environment_emitter(emitter_gpu_buffer emitter, interaction reference, float2 value)
@@ -29,7 +29,7 @@ emitter_sample sample_environment_emitter(emitter_gpu_buffer emitter, interactio
 	sample.interaction.position = reference.position + sample.wi * 2 * 1000;
 	sample.interaction.wo = 0;
 	sample.interaction.normal = 0;
-	sample.intensity = (global_scene_info.texture != ENTITY_NUll ? sample_texture(global_textures[global_scene_info.texture], value) : 1) * emitter.intensity;
+	sample.intensity = (global_scene_info.texture != ENTITY_NUll ? sample_texture_if_no_null(global_textures[global_scene_info.texture], value) : 1) * emitter.intensity;
 
 	return sample;
 }

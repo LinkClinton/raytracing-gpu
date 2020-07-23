@@ -2,8 +2,9 @@
 #define __MATERIAL_DIFFUSE_HLSL__
 
 #include "../scatterings/scattering_lambertian.hlsl"
+#include "material_include.hlsl"
 
-float3 evaluate_diffuse_material(material_gpu_buffer material, float3 wo, float3 wi, scattering_type include = scattering_all)
+float3 evaluate_diffuse_material(material_shader_buffer material, float3 wo, float3 wi, scattering_type include = scattering_all)
 {
 	if (wo.z == 0 || same_hemisphere(wo, wi) == false) return 0;
 
@@ -13,7 +14,7 @@ float3 evaluate_diffuse_material(material_gpu_buffer material, float3 wo, float3
 	return 0;
 }
 
-float pdf_diffuse_material(material_gpu_buffer material, float3 wo, float3 wi, scattering_type include = scattering_all)
+float pdf_diffuse_material(material_shader_buffer material, float3 wo, float3 wi, scattering_type include = scattering_all)
 {
 	if (has(include, scattering_type(scattering_reflection | scattering_diffuse)))
 		return pdf_lambertian_reflection(wo, wi);
@@ -21,7 +22,7 @@ float pdf_diffuse_material(material_gpu_buffer material, float3 wo, float3 wi, s
 	return 0;
 }
 
-scattering_sample sample_diffuse_material(material_gpu_buffer material, float3 wo, float2 value, scattering_type include = scattering_all)
+scattering_sample sample_diffuse_material(material_shader_buffer material, float3 wo, float2 value, scattering_type include = scattering_all)
 {
 	if (!has(include, scattering_type(scattering_reflection | scattering_diffuse)) || wo.z == 0) {
 		scattering_sample sample;

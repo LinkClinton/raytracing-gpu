@@ -95,5 +95,29 @@ namespace path_tracing::core::converter {
 		return nullptr;
 	}
 
+	std::shared_ptr<texture> create_spectrum_texture(const std::shared_ptr<metascene::textures::texture>& texture)
+	{
+		if (texture->type == metascene::textures::type::image)
+			return create_image_spectrum_texture(texture);
+
+		const auto result = std::make_shared<textures::texture>(nullptr, create_constant_spectrum_texture(texture));
+
+		resource_manager::textures.push_back(result);
+
+		return result;
+	}
+
+	std::shared_ptr<texture> create_real_texture(const std::shared_ptr<metascene::textures::texture>& texture)
+	{
+		if (texture->type == metascene::textures::type::image)
+			return create_image_real_texture(texture);
+
+		const auto result = std::make_shared<textures::texture>(nullptr, vector3(create_constant_real_texture(texture)));
+
+		resource_manager::textures.push_back(result);
+
+		return result;
+	}
+
 
 }
