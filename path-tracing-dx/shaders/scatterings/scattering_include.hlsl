@@ -86,6 +86,11 @@ bool same_hemisphere(float3 v0, float3 v1)
 	return v0.z * v1.z > 0;
 }
 
+float3 not_default_reflect(float3 wi, float3 normal)
+{
+	return -wi + 2 * dot(wi, normal) * normal;
+}
+
 float roughness_to_alpha(float roughness)
 {
 	roughness = max(roughness, 1e-3);

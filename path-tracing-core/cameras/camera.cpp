@@ -1,12 +1,5 @@
 #include "camera.hpp"
 
-path_tracing::core::cameras::camera_gpu_buffer::camera_gpu_buffer(
-	const matrix4x4& raster_to_camera,
-	const matrix4x4& camera_to_world) :
-	raster_to_camera(raster_to_camera), camera_to_world(camera_to_world)
-{
-}
-
 path_tracing::core::cameras::camera::camera(
 	const shared::transform& projective, 
 	const shared::transform& transform,
@@ -49,7 +42,14 @@ path_tracing::core::cameras::camera_gpu_buffer path_tracing::core::cameras::came
 	const auto raster_to_screen = inverse(screen_to_raster);
 	const auto raster_to_camera = inverse(mCameraToScreen) * raster_to_screen;
 
-	return camera_gpu_buffer(raster_to_camera.matrix, mCameraToWorld.matrix);
+	camera_gpu_buffer buffer;
+
+	buffer.raster_to_camera = raster_to_camera.matrix;
+	buffer.camera_to_world = mCameraToWorld.matrix;
+	buffer.focus = mFocus;
+	buffer.lens = mLens;
+
+	return buffer;
 }
 
 path_tracing::core::shared::transform path_tracing::core::cameras::camera::camera_to_world() const noexcept

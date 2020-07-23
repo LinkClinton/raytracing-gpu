@@ -67,6 +67,8 @@ void path_tracing::dx::renderer_directx::render(const std::shared_ptr<core::came
 	
 	mSceneInfo.raster_to_camera = glm::transpose(camera_gpu_buffer.raster_to_camera);
 	mSceneInfo.camera_to_world = glm::transpose(camera_gpu_buffer.camera_to_world);
+	mSceneInfo.camera_focus = camera_gpu_buffer.focus;
+	mSceneInfo.camera_lens = camera_gpu_buffer.lens;
 	mSceneInfo.sample_index = static_cast<uint32>(mCurrentSample++);
 	mSceneInfo.max_depth = 5;
 	
@@ -84,7 +86,7 @@ void path_tracing::dx::renderer_directx::render(const std::shared_ptr<core::came
 
 void path_tracing::dx::renderer_directx::build(const std::shared_ptr<core::scene>& scene, const render_config& config)
 {
-	mSceneInfo.environment = scene->environment() == nullptr ? entity_gpu_buffer::null : scene->environment()->index();
+	mSceneInfo.environment = scene->environment() == nullptr ? entity_gpu_buffer::null : scene->environment()->component<emitter>()->index();
 	mSceneInfo.emitters = static_cast<uint32>(scene->emitters().size());
 	
 	if (scene->environment() != nullptr && std::static_pointer_cast<environment_emitter>(

@@ -10,12 +10,11 @@ namespace path_tracing::core::cameras {
 	struct camera_gpu_buffer {
 		matrix4x4 raster_to_camera;
 		matrix4x4 camera_to_world;
+
+		real focus;
+		real lens;
 		
 		camera_gpu_buffer() = default;
-
-		camera_gpu_buffer(
-			const matrix4x4& raster_to_camera,
-			const matrix4x4& camera_to_world);
 	};
 	
 	class camera final : public interfaces::noncopyable {

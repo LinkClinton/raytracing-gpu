@@ -16,7 +16,7 @@ struct path_tracing_info {
 struct emitter_search_result {
 	surface_interaction interaction;
 
-	uint index;
+	uint emitter;
 	
 	float pdf;
 };
@@ -37,18 +37,18 @@ emitter_search_result search_emitter(random_sampler sampler, interaction interac
 
 	if (emitter_payload.missed == true && global_scene_info.environment != ENTITY_NUll) {
 		result.interaction.position = interaction.position + wi * 2 * 1000;
-		result.index = global_scene_info.environment;
-		result.pdf = result.pdf = 1 / global_scene_info.emitters;
+		result.emitter = global_scene_info.environment;
+		result.pdf = result.pdf = 1.0 / global_scene_info.emitters;
 
 		return result;
 	}
 	
 	if (emitter_payload.missed == true || global_entities[emitter_payload.index].emitter == ENTITY_NUll)
 		return result;
-
+	
 	result.interaction = emitter_payload.interaction;
-	result.index = global_entities[emitter_payload.index].emitter;
-	result.pdf = 1 / global_scene_info.emitters;
+	result.emitter = global_entities[emitter_payload.index].emitter;
+	result.pdf = 1.0 / global_scene_info.emitters;
 
 	return result;
 }
@@ -104,25 +104,24 @@ float3 uniform_sample_one_emitter(random_sampler sampler, material_shader_buffer
 	
 	{
 		scattering_sample function_sample = sample_material(material, wo, next_sample2d(sampler), type);
-
+		
 		function_sample.wi = local_to_world(payload.interaction.shading_space, function_sample.wi);
 		function_sample.value = function_sample.value * abs(dot(function_sample.wi, payload.interaction.shading_space.z()));
-
+		
 		if (!is_black(function_sample.value) && function_sample.pdf > 0) {
+			
 			emitter_search_result search_result = search_emitter(sampler, payload.interaction.base_type(), function_sample.wi);
 
 			if (search_result.pdf > 0) {
-
-				emitter_gpu_buffer emitter = global_emitters[search_result.index];
+				emitter_gpu_buffer emitter = global_emitters[search_result.emitter];
 				
 				float3 emitter_value = evaluate_emitter(emitter, search_result.interaction.base_type(), -function_sample.wi);
 				float emitter_pdf = pdf_emitter(emitter, payload.interaction.base_type(), function_sample.wi) * search_result.pdf;
 
 				if (!is_black(emitter_value) && emitter_pdf > 0) {
-
 					float weight = has(function_sample.type, scattering_specular) ? 1 :
 						power_heuristic(function_sample.pdf, emitter_pdf);
-
+					
 					L += function_sample.value * emitter_value * weight / function_sample.pdf;
 				}
 			}
@@ -153,7 +152,7 @@ float3 trace(ray_desc first_ray, random_sampler sampler)
 			
 			interaction interaction;
 			
-			tracing_info.value += tracing_info.beta * evaluate_environment_emitter(global_emitters[global_entities[global_scene_info.environment].emitter],
+			tracing_info.value += tracing_info.beta * evaluate_environment_emitter(global_emitters[global_scene_info.environment],
 				interaction, -tracing_info.ray.Direction);
 			
 			break;
@@ -174,7 +173,7 @@ float3 trace(ray_desc first_ray, random_sampler sampler)
 		material_shader_buffer material = convert_gpu_buffer_to_shader_buffer(global_materials[global_entities[payload.index].material], payload.interaction.uv);
 		
 		tracing_info.value += tracing_info.beta * uniform_sample_one_emitter(sampler, material, tracing_info, payload);
-		
+
 		float3 wo = world_to_local(payload.interaction.shading_space, payload.interaction.wo);
 
 		scattering_sample function_sample = sample_material(material, wo, next_sample2d(sampler));
@@ -211,10 +210,18 @@ void ray_generation_shader() {
 	
 	float3 ray_target_camera_space = mul(float4(ray_pixel_position, 0, 1), global_scene_info.raster_to_camera).xyz;
 	float3 ray_origin_camera_space = float3(0, 0, 0);
+	float3 ray_direction_camera_space = normalize(ray_target_camera_space - ray_origin_camera_space);
+	
+	if (global_scene_info.camera_lens != 0) {
+		float2 lens = concentric_sample_disk(next_sample2d(sampler)) * global_scene_info.camera_lens;
+
+		ray_target_camera_space = ray_origin_camera_space + ray_direction_camera_space * (global_scene_info.camera_focus / ray_direction_camera_space.z);
+		ray_origin_camera_space = float3(lens.x, lens.y, 0);
+	}
 	
 	float3 ray_target_world_space = mul(float4(ray_target_camera_space, 1), global_scene_info.camera_to_world).xyz;
 	float3 ray_origin_world_space = mul(float4(ray_origin_camera_space, 1), global_scene_info.camera_to_world).xyz;
-
+	
 	RayDesc ray;
 
 	ray.Origin = ray_origin_world_space;

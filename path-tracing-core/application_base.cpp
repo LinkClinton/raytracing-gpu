@@ -76,7 +76,6 @@ void path_tracing::core::application_base::run_loop()
 
 void path_tracing::core::application_base::update(real delta)
 {
-	return;
 	const real speed = 200;
 	
 	if (is_key_down(2)) {

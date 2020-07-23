@@ -72,10 +72,10 @@ scattering_sample sample_fresnel_blend_reflection(
 
 		return sample;
 	}
-	
+
 	float2 sample_remapped = float2(min(2 * (value.x - 0.5), 1 - EPSILON), value.y);
 	float3 wh = sample_distribution(alpha_x, alpha_y, wo, sample_remapped);
-	float3 wi = reflect(wo, wh);
+	float3 wi = not_default_reflect(wo, wh);
 
 	if (!same_hemisphere(wo, wi)) return sample;
 
