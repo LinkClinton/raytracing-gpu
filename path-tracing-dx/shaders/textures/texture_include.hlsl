@@ -4,8 +4,8 @@
 #include "../utility.hlsl"
 
 struct texture_gpu_buffer {
-	uint index;
 	float3 scale;
+	uint index;
 };
 
 #endif

@@ -30,9 +30,72 @@ float cos_theta(float3 w)
 	return w.z;
 }
 
+float cos_theta_pow2(float3 w)
+{
+	return cos_theta(w) * cos_theta(w);
+}
+
+float sin_theta_pow2(float3 w)
+{
+	return max(0, 1 - cos_theta_pow2(w));
+}
+
+float tan_theta_pow2(float3 w)
+{
+	return sin_theta_pow2(w) / cos_theta_pow2(w);
+}
+
+float sin_theta(float3 w)
+{
+	// sin^2 theta + cos^2 theta = 1
+	// so sin_theta = sqrt(1 - cos_theta_pow2)
+	return sqrt(sin_theta_pow2(w));
+}
+
+float tan_theta(float3 w)
+{
+	return sin_theta(w) / cos_theta(w);
+}
+
+float cos_phi(float3 w)
+{
+	float sin = sin_theta(w);
+
+	return sin == 0 ? 1 : clamp(w.x / sin, -1, 1);
+}
+
+float sin_phi(float3 w)
+{
+	float sin = sin_theta(w);
+
+	return sin == 0 ? 0 : clamp(w.y / sin, -1, 1);
+}
+
+float cos_phi_pow2(float3 w)
+{
+	return cos_phi(w) * cos_phi(w);
+}
+
+float sin_phi_pow2(float3 w)
+{
+	return sin_phi(w) * sin_phi(w);
+}
+
 bool same_hemisphere(float3 v0, float3 v1)
 {
 	return v0.z * v1.z > 0;
 }
+
+float roughness_to_alpha(float roughness)
+{
+	roughness = max(roughness, 1e-3);
+
+	float x = log(roughness);
+
+	return 1.62142f + 0.819955f * x + 0.1734f * x * x + 0.0171201f * x * x * x +
+		0.000640711f * x * x * x * x;
+}
+
+#include "microfacet_distribution.hlsl"
 
 #endif

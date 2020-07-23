@@ -31,11 +31,13 @@ void closest_hit_shader(inout ray_payload payload, HitAttributes attribute) {
 	float3 local_position = position0 * b0 + position1 * b1 + position2 * b2;
 	float3 local_normal = cross(e1, e2);
 
+	uint reverse = global_shapes[global_entities[local_group_info.index].shape].reverse;
+
 	float4x3 local_to_world = ObjectToWorld4x3();
 	float3x3 inv_transpose = float3x3(WorldToObject4x3()[0], WorldToObject4x3()[1], WorldToObject4x3()[2]);
 	
 	payload.interaction.position = mul(float4(local_position, 1), local_to_world).xyz;
-	payload.interaction.normal = normalize(mul(inv_transpose, local_normal).xyz);
+	payload.interaction.normal = normalize(mul(inv_transpose, reverse != 0 ? local_normal * -1 : local_normal).xyz);
 	payload.interaction.uv = (uvs[index.x] * b0 + uvs[index.y] * b1 + uvs[index.z] * b2).xy;
 	payload.interaction.wo = -WorldRayDirection();
 
@@ -44,9 +46,13 @@ void closest_hit_shader(inout ray_payload payload, HitAttributes attribute) {
 		normals[index.x] * b0 + normals[index.y] * b1 + normals[index.z] * b2 :
 		local_normal;
 
+	if (reverse != 0) shading_normal *= -1;
+
 	payload.interaction.shading_space = build_coordinate_system(mul(inv_transpose, shading_normal).xyz);
 	payload.index = local_group_info.index;
 	payload.missed = false;
+
+	payload.interaction.normal = face_forward(payload.interaction.normal, payload.interaction.shading_space.z());
 }
 
 #endif

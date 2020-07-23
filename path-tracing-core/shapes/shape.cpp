@@ -20,6 +20,8 @@ path_tracing::core::shapes::shape_gpu_buffer path_tracing::core::shapes::shape::
 
 	buffer.indices = static_cast<uint32>(mIndices.size() / 3);
 
+	buffer.reverse = mReverseOrientation ? 1 : 0;
+
 	return buffer;
 }
 

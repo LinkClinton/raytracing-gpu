@@ -83,7 +83,7 @@ std::vector<byte> path_tracing::dx::wrapper::shader_library::compile_from_file(c
 	defines.push_back({ L"__HLSL_SHADER__", L"1" });
 
 	const wchar_t* arguments[] = {
-		L"-O3",
+		L"",
 	};
 
 #ifndef _DEBUG

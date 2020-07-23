@@ -237,10 +237,16 @@ template <typename T>
 T lerp(T x, T y, float s) { return x * (1 - s) + y * s; }
 
 template <typename T>
+T reflect(T x, T y) { return x; }
+
+template <typename T>
 bool isnan(T x) { return true; }
 
 template <typename T>
 bool isinf(T x) { return true; }
+
+template <typename T>
+T log(T x) { return x; }
 
 template <typename T>
 T transpose(T x) { return x; }

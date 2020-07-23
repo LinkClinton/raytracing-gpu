@@ -7,7 +7,7 @@
 
 float3 evaluate_environment_emitter(emitter_gpu_buffer emitter, interaction interaction, float3 wi)
 {
-	float3 w = normalize(mul(float4(-wi, 0), global_entities[emitter.index].world_to_local).xyz);
+	float3 w = normalize(-mul(float4(wi, 0), global_entities[emitter.index].world_to_local).xyz);
 
 	float2 value = float2(spherical_phi(w) * ONE_OVER_TWO_PI, spherical_theta(w) * ONE_OVER_PI);
 	

@@ -16,6 +16,9 @@ namespace path_tracing::core::shapes {
 		uint32 indices = 0;
 		uint32 uvs = 0;
 
+		uint32 reverse = 0;
+		vector3 unused = vector3(0);
+		
 		shape_gpu_buffer() = default;
 
 		shape_gpu_buffer(uint32 positions, uint32 normals, uint32 indices, uint32 uvs);

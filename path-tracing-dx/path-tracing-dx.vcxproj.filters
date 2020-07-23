@@ -208,4 +208,15 @@
       <Filter>shaders\materials</Filter>
     </CopyFileToFolders>
   </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="shaders\scatterings\microfacet_distribution.hlsl">
+      <Filter>shaders\scatterings</Filter>
+    </FxCompile>
+    <FxCompile Include="shaders\scatterings\scattering_fresnel_blend.hlsl">
+      <Filter>shaders\scatterings</Filter>
+    </FxCompile>
+    <FxCompile Include="shaders\materials\material_substrate.hlsl">
+      <Filter>shaders\materials</Filter>
+    </FxCompile>
+  </ItemGroup>
 </Project>

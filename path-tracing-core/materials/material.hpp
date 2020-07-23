@@ -13,7 +13,8 @@ namespace path_tracing::core::materials {
 	enum class material_type : uint32 {
 		unknown = 0,
 		diffuse = 1,
-		mirror = 2
+		mirror = 2,
+		substrate = 3
 	};
 	
 	struct material_gpu_buffer {
@@ -22,8 +23,13 @@ namespace path_tracing::core::materials {
 		material_type type = material_type::unknown;
 
 		uint32 reflectance = null;
+		uint32 specular = null;
 		uint32 diffuse = null;
-		uint32 unused = 0;
+		uint32 roughness_u = null;
+		uint32 roughness_v = null;
+		uint32 remapped = 0;
+		
+		float unused = 0;
 		
 		material_gpu_buffer() = default;
 	};

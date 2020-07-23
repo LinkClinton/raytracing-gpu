@@ -33,6 +33,9 @@ shape_sample sample_triangles(uint index, float2 value)
 	else
 		sample.interaction.normal = normalize(cross(position1 - position0, position2 - position0));
 
+	if (global_shapes[shape_index].reverse != 0)
+		sample.interaction.normal *= -1;
+	
 	float4x4 local_to_world = global_entities[index].local_to_world;
 	
 	sample.interaction.position = mul(float4(sample.interaction.position, 1), local_to_world).xyz;

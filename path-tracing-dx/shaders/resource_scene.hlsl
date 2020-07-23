@@ -40,6 +40,10 @@ struct shape_gpu_buffer {
 	uint normals;
 	uint indices;
 	uint uvs;
+
+	uint reverse;
+
+	uint3 unused;
 };
 
 struct ray_payload {

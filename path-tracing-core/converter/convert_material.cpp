@@ -5,6 +5,7 @@
 #include "meta-scene/materials/diffuse_material.hpp"
 #include "meta-scene/materials/mirror_material.hpp"
 
+#include "../materials/substrate_material.hpp"
 #include "../materials/diffuse_material.hpp"
 #include "../materials/mirror_material.hpp"
 #include "../resource_manager.hpp"
@@ -15,9 +16,12 @@ namespace path_tracing::core::converter {
 
 	std::shared_ptr<material> create_substrate_material(const std::shared_ptr<metascene::materials::substrate_material>& material)
 	{
-		// todo
-		const auto diffuse = create_spectrum_texture(material->diffuse);
-		const auto instance = std::make_shared<diffuse_material>(diffuse);
+		const auto instance = std::make_shared<substrate_material>(
+			create_spectrum_texture(material->specular),
+			create_spectrum_texture(material->diffuse),
+			create_real_texture(material->roughness_u),
+			create_real_texture(material->roughness_v),
+			material->remapped_roughness_to_alpha);
 
 		resource_manager::materials.push_back(instance);
 

@@ -90,6 +90,9 @@
     <ClInclude Include="materials\mirror_material.hpp">
       <Filter>materials</Filter>
     </ClInclude>
+    <ClInclude Include="materials\substrate_material.hpp">
+      <Filter>materials</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="interfaces">
@@ -205,6 +208,9 @@
       <Filter>importers</Filter>
     </ClCompile>
     <ClCompile Include="materials\mirror_material.cpp">
+      <Filter>materials</Filter>
+    </ClCompile>
+    <ClCompile Include="materials\substrate_material.cpp">
       <Filter>materials</Filter>
     </ClCompile>
   </ItemGroup>

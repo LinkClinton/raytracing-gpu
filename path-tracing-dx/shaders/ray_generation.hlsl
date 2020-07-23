@@ -150,15 +150,15 @@ float3 trace(ray_desc first_ray, random_sampler sampler)
 
 		if (payload.missed == true) {
 			if ((bounces != 0 && !tracing_info.specular) || global_scene_info.environment == ENTITY_NUll) break;
-
+			
 			interaction interaction;
 			
-			tracing_info.value += tracing_info.beta * evaluate_environment_emitter(global_emitters[global_scene_info.environment],
+			tracing_info.value += tracing_info.beta * evaluate_environment_emitter(global_emitters[global_entities[global_scene_info.environment].emitter],
 				interaction, -tracing_info.ray.Direction);
 			
 			break;
 		}
-
+		
 		if ((bounces == 0 || tracing_info.specular) && global_entities[payload.index].emitter != ENTITY_NUll)
 			tracing_info.value += tracing_info.beta * evaluate_emitter(global_emitters[global_entities[payload.index].emitter],
 				payload.interaction.base_type(), -tracing_info.ray.Direction);

@@ -11,10 +11,10 @@ namespace path_tracing::core::textures {
 
 	struct texture_gpu_buffer {
 		constexpr static inline uint32 null = std::numeric_limits<uint32>::max();
+
+		vector3 scale = vector3(1);
 		
 		uint32 index = null;
-		
-		vector3 scale = vector3(1);
 		
 		texture_gpu_buffer() = default;
 	};

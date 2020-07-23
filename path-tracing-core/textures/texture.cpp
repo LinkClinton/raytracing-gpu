@@ -9,9 +9,9 @@ path_tracing::core::textures::texture_gpu_buffer path_tracing::core::textures::t
 {
 	texture_gpu_buffer buffer;
 
-	buffer.index = mImage == nullptr ? texture_gpu_buffer::null : mImage->index();
 	buffer.scale = mScale;
-
+	buffer.index = mImage == nullptr ? texture_gpu_buffer::null : mImage->index();
+	
 	return buffer;
 }
 
