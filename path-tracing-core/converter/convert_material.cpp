@@ -4,12 +4,14 @@
 #include "meta-scene/materials/substrate_material.hpp"
 #include "meta-scene/materials/diffuse_material.hpp"
 #include "meta-scene/materials/mirror_material.hpp"
+#include "meta-scene/materials/metal_material.hpp"
 #include "meta-scene/materials/uber_material.hpp"
 #include "meta-scene/logs.hpp"
 
 #include "../materials/substrate_material.hpp"
 #include "../materials/diffuse_material.hpp"
 #include "../materials/mirror_material.hpp"
+#include "../materials/metal_material.hpp"
 #include "../resource_manager.hpp"
 
 #pragma optimize("", off)
@@ -50,6 +52,20 @@ namespace path_tracing::core::converter {
 		return instance;
 	}
 
+	std::shared_ptr<material> create_metal_material(const std::shared_ptr<metascene::materials::metal_material>& material)
+	{
+		const auto instance = std::make_shared<metal_material>(
+			create_spectrum_texture(material->eta),
+			create_spectrum_texture(material->k),
+			create_real_texture(material->roughness_u),
+			create_real_texture(material->roughness_v),
+			material->remapped_roughness_to_alpha);
+
+		resource_manager::materials.push_back(instance);
+
+		return instance;
+	}
+	
 	std::shared_ptr<material> create_uber_material(const std::shared_ptr<metascene::materials::material>& material)
 	{
 		return nullptr;
@@ -68,9 +84,9 @@ namespace path_tracing::core::converter {
 		if (material->type == metascene::materials::type::mirror)
 			return create_mirror_material(std::static_pointer_cast<metascene::materials::mirror_material>(material));
 
-		if (material->type == metascene::materials::type::uber)
-			return create_uber_material(std::static_pointer_cast<metascene::materials::uber_material>(material));
-
+		if (material->type == metascene::materials::type::metal)
+			return create_metal_material(std::static_pointer_cast<metascene::materials::metal_material>(material));
+		
 		metascene::logs::error("unknown material.");
 		
 		return nullptr;

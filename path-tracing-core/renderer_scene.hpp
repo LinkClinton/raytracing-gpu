@@ -16,6 +16,7 @@ namespace path_tracing::core {
 
 		size_t width = 0;
 		size_t height = 0;
+		real scale = 1;
 
 		renderer_scene() = default;
 	};

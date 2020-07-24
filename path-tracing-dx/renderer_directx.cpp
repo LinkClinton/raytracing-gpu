@@ -17,24 +17,9 @@ path_tracing::dx::renderer_directx::renderer_directx(void* handle, int width, in
 
 	mSwapChain = std::make_shared<swap_chain>(mCommandQueue, mDevice, mWidth, mHeight, mHandle);
 
-	mRenderTarget = std::make_shared<texture2d>(mDevice, D3D12_RESOURCE_STATE_GENERIC_READ,
-		D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS, D3D12_HEAP_TYPE_DEFAULT,
-		DXGI_FORMAT_R32G32B32A32_FLOAT,
-		static_cast<size_t>(width),
-		static_cast<size_t>(height));
-
 	mRenderTargetViewHeap = std::make_shared<descriptor_heap>(mDevice, D3D12_DESCRIPTOR_HEAP_TYPE_RTV, mSwapChain->count());
 	mImGuiDescriptorHeap = std::make_shared<descriptor_heap>(mDevice, D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, 16);
 
-	D3D12_SHADER_RESOURCE_VIEW_DESC srv_desc = {};
-
-	srv_desc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
-	srv_desc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
-	srv_desc.Format = mRenderTarget->format();
-	srv_desc.Texture2D.MipLevels = 1;
-
-	(*mDevice)->CreateShaderResourceView(mRenderTarget->get(), &srv_desc, mImGuiDescriptorHeap->cpu_handle(1));
-	
 	ImGui_ImplDX12_Init(mDevice->get(), static_cast<int>(mSwapChain->count()),
 		mSwapChain->format(), mImGuiDescriptorHeap->get(),
 		mImGuiDescriptorHeap->cpu_handle(),
@@ -54,13 +39,14 @@ path_tracing::dx::renderer_directx::renderer_directx(void* handle, int width, in
 
 path_tracing::dx::renderer_directx::~renderer_directx()
 {
+	(*mCommandQueue).wait();
 }
 
 void path_tracing::dx::renderer_directx::render(const std::shared_ptr<core::camera>& camera)
 {
 	(*mCommandAllocator)->Reset();
 
-	const auto camera_gpu_buffer = camera->gpu_buffer(mRenderTarget->width(), mRenderTarget->height());
+	const auto camera_gpu_buffer = camera->gpu_buffer(mRenderTargetHDR->width(), mRenderTargetHDR->height());
 
 	if (mSceneInfo.camera_to_world != transpose(camera_gpu_buffer.camera_to_world))
 		mCurrentSample = 0;
@@ -88,24 +74,29 @@ void path_tracing::dx::renderer_directx::build(const std::shared_ptr<core::scene
 {
 	mSceneInfo.environment = scene->environment() == nullptr ? entity_gpu_buffer::null : scene->environment()->component<emitter>()->index();
 	mSceneInfo.emitters = static_cast<uint32>(scene->emitters().size());
+	mSceneInfo.scale = config.scale;
 	
 	if (scene->environment() != nullptr && std::static_pointer_cast<environment_emitter>(
 		scene->environment()->component<emitter>())->map() != nullptr) {
 		mSceneInfo.texture = std::static_pointer_cast<environment_emitter>(scene->environment()->component<emitter>())->map()->index();
 	}
 	
-	mRenderTarget = std::make_shared<texture2d>(mDevice, D3D12_RESOURCE_STATE_GENERIC_READ,
+	mRenderTargetHDR = std::make_shared<texture2d>(mDevice, D3D12_RESOURCE_STATE_GENERIC_READ,
 		D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS, D3D12_HEAP_TYPE_DEFAULT,
 		DXGI_FORMAT_R32G32B32A32_FLOAT, config.width, config.height);
 
+	mRenderTargetSDR = std::make_shared<texture2d>(mDevice, D3D12_RESOURCE_STATE_GENERIC_READ,
+		D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS, D3D12_HEAP_TYPE_DEFAULT,
+		DXGI_FORMAT_R8G8B8A8_UNORM, config.width, config.height);
+	
 	D3D12_SHADER_RESOURCE_VIEW_DESC srv_desc = {};
 
 	srv_desc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
 	srv_desc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
-	srv_desc.Format = mRenderTarget->format();
+	srv_desc.Format = mRenderTargetSDR->format();
 	srv_desc.Texture2D.MipLevels = 1;
 
-	(*mDevice)->CreateShaderResourceView(mRenderTarget->get(), &srv_desc, mImGuiDescriptorHeap->cpu_handle(1));
+	(*mDevice)->CreateShaderResourceView(mRenderTargetSDR->get(), &srv_desc, mImGuiDescriptorHeap->cpu_handle(1));
 
 	mResourceCache = std::make_shared<resource_cache>(mDevice);
 	mResourceScene = std::make_shared<resource_scene>(mDevice);
@@ -113,7 +104,7 @@ void path_tracing::dx::renderer_directx::build(const std::shared_ptr<core::scene
 
 	mResourceCache->execute(scene->entities(), mCommandQueue);
 	
-	mResourceScene->set_render_target(mRenderTarget);
+	mResourceScene->set_render_target(mRenderTargetHDR, mRenderTargetSDR);
 
 	mResourceScene->execute(mResourceCache, mCommandQueue);
 	

@@ -3,6 +3,7 @@
 #include "meta-scene/shapes/triangles.hpp"
 #include "meta-scene/shapes/sphere.hpp"
 #include "meta-scene/shapes/mesh.hpp"
+#include "meta-scene/logs.hpp"
 
 #include "../shapes/sphere.hpp"
 #include "../shapes/mesh.hpp"
@@ -60,6 +61,8 @@ namespace path_tracing::core::converter {
 		if (shape->type == metascene::shapes::type::triangles)
 			return create_triangles(std::static_pointer_cast<metascene::shapes::triangles>(shape));
 
+		metascene::logs::error("unknown shape.");
+		
 		return nullptr;
 	}
 }

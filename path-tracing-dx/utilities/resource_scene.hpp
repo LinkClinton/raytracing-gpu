@@ -22,11 +22,11 @@ namespace path_tracing::dx::utilities {
 		uint32 emitters = 0;
 		uint32 environment = entity_gpu_buffer::null;
 		uint32 texture = texture_gpu_buffer::null;
+		real scale = static_cast<real>(1);
 		
 		matrix4x4 unused0 = matrix4x4(1);
 		vector4 unused1 = vector4(1);
 		vector4 unused2 = vector4(1);
-		real unused3 = 1;
 		
 		scene_info() = default;
 	};
@@ -37,7 +37,9 @@ namespace path_tracing::dx::utilities {
 
 		~resource_scene() = default;
 
-		void set_render_target(const std::shared_ptr<texture2d>& render_target);
+		void set_render_target(
+			const std::shared_ptr<texture2d>& render_target_hdr,
+			const std::shared_ptr<texture2d>& render_target_sdr);
 
 		void set_scene_info(const scene_info& info);
 
@@ -45,7 +47,9 @@ namespace path_tracing::dx::utilities {
 
 		void render(const std::shared_ptr<graphics_command_list>& command_list) const;
 
-		std::shared_ptr<texture2d> render_target() const noexcept;
+		std::shared_ptr<texture2d> render_target_hdr() const noexcept;
+
+		std::shared_ptr<texture2d> render_target_sdr() const noexcept;
 		
 		std::shared_ptr<root_signature> signature() const noexcept;
 	private:
@@ -58,7 +62,8 @@ namespace path_tracing::dx::utilities {
 		std::shared_ptr<graphics_command_list> mCommandList;
 		std::shared_ptr<command_allocator> mCommandAllocator;
 
-		std::shared_ptr<texture2d> mRenderTarget;
+		std::shared_ptr<texture2d> mRenderTargetHDR;
+		std::shared_ptr<texture2d> mRenderTargetSDR;
 		
 		std::shared_ptr<buffer> mSceneInfo;
 		std::shared_ptr<buffer> mMaterials;

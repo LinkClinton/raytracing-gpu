@@ -40,7 +40,8 @@ namespace path_tracing::dx {
 		
 		std::shared_ptr<swap_chain> mSwapChain;
 
-		std::shared_ptr<texture2d> mRenderTarget;
+		std::shared_ptr<texture2d> mRenderTargetHDR;
+		std::shared_ptr<texture2d> mRenderTargetSDR;
 		
 		std::shared_ptr<device> mDevice;
 

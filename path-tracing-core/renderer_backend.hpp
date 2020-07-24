@@ -11,10 +11,11 @@ namespace path_tracing::core {
 	struct render_config {
 		size_t width = 0;
 		size_t height = 0;
+		real scale = 1;
 
 		render_config() = default;
 
-		render_config(size_t width, size_t height);
+		render_config(size_t width, size_t height, real scale);
 	};
 	
 	class renderer_backend : interfaces::noncopyable {

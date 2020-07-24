@@ -100,8 +100,8 @@ void path_tracing::dx::utilities::scene_pipeline::render(const std::shared_ptr<g
 	
 	D3D12_DISPATCH_RAYS_DESC desc = {};
 
-	desc.Width = static_cast<UINT>(mResourceScene->render_target()->width());
-	desc.Height = static_cast<UINT>(mResourceScene->render_target()->height());
+	desc.Width = static_cast<UINT>(mResourceScene->render_target_hdr()->width());
+	desc.Height = static_cast<UINT>(mResourceScene->render_target_hdr()->height());
 	desc.Depth = 1;
 	desc.RayGenerationShaderRecord.StartAddress = base_address + shader_table->ray_generation_shader().address;
 	desc.RayGenerationShaderRecord.SizeInBytes = shader_table->ray_generation_shader().size;

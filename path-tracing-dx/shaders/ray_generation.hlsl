@@ -230,11 +230,10 @@ void ray_generation_shader() {
 	ray.TMax = 1e20;
 
 	float3 L = trace(ray, sampler);
-	
-	float factor = global_scene_info.sample_index / (global_scene_info.sample_index + 1.0f);
-	
-	float3 old_value = global_scene_info.sample_index == 0 ? 0 : global_render_target[DispatchRaysIndex().xy].xyz;
-	float3 new_value = gamma_correct(L);
 
-	global_render_target[DispatchRaysIndex().xy] = float4(lerp(new_value, old_value, factor), 1);
+	uint count = global_scene_info.sample_index + 1;
+	
+	global_render_target_hdr[DispatchRaysIndex().xy] += float4(L, 0);
+	global_render_target_sdr[DispatchRaysIndex().xy] = 
+		float4(gamma_correct(global_render_target_hdr[DispatchRaysIndex().xy].xyz * global_scene_info.scale / count), 1);
 }

@@ -11,6 +11,7 @@ path_tracing::core::renderer_scene path_tracing::core::create_from_meta_scene(co
 	scene.scene = converter::create_scene(meta_scene);
 	scene.width = meta_scene->film->width;
 	scene.height = meta_scene->film->height;
+	scene.scale = meta_scene->film->scale;
 
 	return scene;
 }

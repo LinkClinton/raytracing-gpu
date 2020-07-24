@@ -18,11 +18,11 @@ struct scene_info {
 	uint emitters;
 	uint environment;
 	uint texture;
+	float scale;
 	
 	float4x4 unused0;
 	float4 unused1;
 	float4 unused2;
-	float1 unused3;
 };
 
 struct entity_gpu_buffer {
@@ -64,7 +64,8 @@ SHADER_STRUCTURED_BUFFER_DEFINE(emitter_gpu_buffer, global_emitters, t3, space1)
 SHADER_STRUCTURED_BUFFER_DEFINE(entity_gpu_buffer, global_entities, t4, space1);
 SHADER_STRUCTURED_BUFFER_DEFINE(shape_gpu_buffer, global_shapes, t5, space1);
 
-SHADER_RESOURCE_DEFINE(RWTexture2D<float4>, global_render_target, u0, space2);
+SHADER_RESOURCE_DEFINE(RWTexture2D<float4>, global_render_target_hdr, u0, space2);
+SHADER_RESOURCE_DEFINE(RWTexture2D<float4>, global_render_target_sdr, u1, space2);
 
 SHADER_STRUCTURED_BUFFER_DEFINE(float3, global_positions[], t0, space3);
 SHADER_STRUCTURED_BUFFER_DEFINE(float3, global_normals[], t0, space4);

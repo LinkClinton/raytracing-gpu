@@ -14,7 +14,8 @@ namespace path_tracing::core::materials {
 		unknown = 0,
 		diffuse = 1,
 		mirror = 2,
-		substrate = 3
+		substrate = 3,
+		metal = 4
 	};
 	
 	struct material_gpu_buffer {
@@ -27,9 +28,11 @@ namespace path_tracing::core::materials {
 		uint32 diffuse = null;
 		uint32 roughness_u = null;
 		uint32 roughness_v = null;
+		uint32 eta = null;
+		uint32 k = null;
 		uint32 remapped = 0;
-		
-		float unused = 0;
+
+		vector3 unused = vector3(0);
 		
 		material_gpu_buffer() = default;
 	};

@@ -11,8 +11,9 @@ int main() {
 	//const auto scene = importers::import_pbrt_scene("./../scenes/cornell-box/scene.pbrt");
 	//const auto scene = importers::import_pbrt_scene("./../scenes/dragon/f0-0.pbrt");
 	//const auto scene = importers::import_pbrt_scene("./../scenes/basic-test/uv-test.pbrt");
-	//const auto scene = importers::import_pbrt_scene("./../scenes/measure-one/frame380.pbrt");
-	const auto scene = importers::import_pbrt_scene("./../scenes/ganesha/ganesha.pbrt");
+	const auto scene = importers::import_pbrt_scene("./../scenes/measure-one/frame380.pbrt");
+	//const auto scene = importers::import_pbrt_scene("./../scenes/ganesha/ganesha.pbrt");
+	//const auto scene = importers::import_pbrt_scene("./../scenes/yeahright/yeahright.pbrt");
 
 	
 	const auto width = static_cast<int>(scene.width);
@@ -21,6 +22,6 @@ int main() {
 	auto app = std::make_shared<application>("application-dx", width , height);
 	
 	app->initialize();
-	app->load(scene.camera, scene.scene, { scene.width, scene.height });
+	app->load(scene.camera, scene.scene, { scene.width, scene.height, scene.scale });
 	app->run_loop();
 }

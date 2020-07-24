@@ -180,6 +180,7 @@
     <ClInclude Include="interfaces\noncopyable.hpp" />
     <ClInclude Include="materials\diffuse_material.hpp" />
     <ClInclude Include="materials\material.hpp" />
+    <ClInclude Include="materials\metal_material.hpp" />
     <ClInclude Include="materials\mirror_material.hpp" />
     <ClInclude Include="materials\substrate_material.hpp" />
     <ClInclude Include="renderer_backend.hpp" />
@@ -214,6 +215,7 @@
     <ClCompile Include="importers\ply_importer.cpp" />
     <ClCompile Include="materials\diffuse_material.cpp" />
     <ClCompile Include="materials\material.cpp" />
+    <ClCompile Include="materials\metal_material.cpp" />
     <ClCompile Include="materials\mirror_material.cpp" />
     <ClCompile Include="materials\substrate_material.cpp" />
     <ClCompile Include="renderer_backend.cpp" />

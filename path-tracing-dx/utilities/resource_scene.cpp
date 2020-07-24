@@ -12,17 +12,19 @@ path_tracing::dx::utilities::resource_scene::resource_scene(const std::shared_pt
 
 	mDescriptorTable->add_cbv_range({ "scene_info" }, 0, 0);
 	mDescriptorTable->add_srv_range({ "acceleration", "materials", "textures", "emitters", "entities", "shapes" }, 0, 1);
-	mDescriptorTable->add_uav_range({ "render_target" }, 0, 2);
+	mDescriptorTable->add_uav_range({ "render_target_hdr", "render_target_sdr" }, 0, 2);
 
 	mSceneInfo = std::make_shared<buffer>(mDevice, D3D12_RESOURCE_STATE_GENERIC_READ, D3D12_RESOURCE_FLAG_NONE,
 		D3D12_HEAP_TYPE_UPLOAD, sizeof(scene_info));
 }
 
-void path_tracing::dx::utilities::resource_scene::set_render_target(const std::shared_ptr<texture2d>& render_target)
+void path_tracing::dx::utilities::resource_scene::set_render_target(
+	const std::shared_ptr<texture2d>& render_target_hdr,
+	const std::shared_ptr<texture2d>& render_target_sdr)
 {
-	mRenderTarget = render_target;
+	mRenderTargetHDR = render_target_hdr;
+	mRenderTargetSDR = render_target_sdr;
 }
-
 
 void path_tracing::dx::utilities::resource_scene::set_scene_info(const scene_info& info)
 {
@@ -154,12 +156,19 @@ void path_tracing::dx::utilities::resource_scene::execute(const std::shared_ptr<
 	shapes_desc.Buffer.NumElements = static_cast<UINT>(cache->shapes().size());
 	shapes_desc.Buffer.StructureByteStride = sizeof(shape_gpu_buffer);
 	
-	D3D12_UNORDERED_ACCESS_VIEW_DESC render_target_desc = {};
+	D3D12_UNORDERED_ACCESS_VIEW_DESC render_target_hdr_desc = {};
 
-	render_target_desc.ViewDimension = D3D12_UAV_DIMENSION_TEXTURE2D;
-	render_target_desc.Format = mRenderTarget->format();
-	render_target_desc.Texture2D.PlaneSlice = 0;
-	render_target_desc.Texture2D.MipSlice = 0;
+	render_target_hdr_desc.ViewDimension = D3D12_UAV_DIMENSION_TEXTURE2D;
+	render_target_hdr_desc.Format = mRenderTargetHDR->format();
+	render_target_hdr_desc.Texture2D.PlaneSlice = 0;
+	render_target_hdr_desc.Texture2D.MipSlice = 0;
+
+	D3D12_UNORDERED_ACCESS_VIEW_DESC render_target_sdr_desc = {};
+
+	render_target_sdr_desc.ViewDimension = D3D12_UAV_DIMENSION_TEXTURE2D;
+	render_target_sdr_desc.Format = mRenderTargetSDR->format();
+	render_target_sdr_desc.Texture2D.PlaneSlice = 0;
+	render_target_sdr_desc.Texture2D.MipSlice = 0;
 
 	const auto scene_info_index = mDescriptorTable->index("scene_info");
 	const auto acceleration_index = mDescriptorTable->index("acceleration");
@@ -168,8 +177,9 @@ void path_tracing::dx::utilities::resource_scene::execute(const std::shared_ptr<
 	const auto emitters_index = mDescriptorTable->index("emitters");
 	const auto entities_index = mDescriptorTable->index("entities");
 	const auto shapes_index = mDescriptorTable->index("shapes");
-	const auto render_target_index = mDescriptorTable->index("render_target");
-
+	const auto render_target_hdr_index = mDescriptorTable->index("render_target_hdr");
+	const auto render_target_sdr_index = mDescriptorTable->index("render_target_sdr");
+	
 	(*mDevice)->CreateConstantBufferView(&scene_info_desc, mDescriptorHeap->cpu_handle(scene_info_index));
 	(*mDevice)->CreateShaderResourceView(nullptr, &acceleration_desc, mDescriptorHeap->cpu_handle(acceleration_index));
 	(*mDevice)->CreateShaderResourceView(mMaterials->get(), &materials_desc, mDescriptorHeap->cpu_handle(materials_index));
@@ -177,8 +187,10 @@ void path_tracing::dx::utilities::resource_scene::execute(const std::shared_ptr<
 	(*mDevice)->CreateShaderResourceView(mEmitters->get(), &emitters_desc, mDescriptorHeap->cpu_handle(emitters_index));
 	(*mDevice)->CreateShaderResourceView(mEntities->get(), &entities_desc, mDescriptorHeap->cpu_handle(entities_index));
 	(*mDevice)->CreateShaderResourceView(mShapes->get(), &shapes_desc, mDescriptorHeap->cpu_handle(shapes_index));
-	(*mDevice)->CreateUnorderedAccessView(mRenderTarget->get(), nullptr, 
-		&render_target_desc, mDescriptorHeap->cpu_handle(render_target_index));
+	(*mDevice)->CreateUnorderedAccessView(mRenderTargetHDR->get(), nullptr, 
+		&render_target_hdr_desc, mDescriptorHeap->cpu_handle(render_target_hdr_index));
+	(*mDevice)->CreateUnorderedAccessView(mRenderTargetSDR->get(), nullptr,
+		&render_target_sdr_desc, mDescriptorHeap->cpu_handle(render_target_sdr_index));
 
 	size_t shape_index = 0;
 	
@@ -248,9 +260,14 @@ void path_tracing::dx::utilities::resource_scene::render(const std::shared_ptr<g
 	(*command_list)->SetComputeRootDescriptorTable(0, mDescriptorHeap->gpu_handle());
 }
 
-std::shared_ptr<path_tracing::dx::wrapper::texture2d> path_tracing::dx::utilities::resource_scene::render_target() const noexcept
+std::shared_ptr<path_tracing::dx::wrapper::texture2d> path_tracing::dx::utilities::resource_scene::render_target_hdr() const noexcept
 {
-	return mRenderTarget;
+	return mRenderTargetHDR;
+}
+
+std::shared_ptr<path_tracing::dx::wrapper::texture2d> path_tracing::dx::utilities::resource_scene::render_target_sdr() const noexcept
+{
+	return mRenderTargetSDR;
 }
 
 std::shared_ptr<path_tracing::dx::wrapper::root_signature> path_tracing::dx::utilities::resource_scene::signature() const noexcept
