@@ -4,6 +4,8 @@
 #include "meta-scene/materials/substrate_material.hpp"
 #include "meta-scene/materials/diffuse_material.hpp"
 #include "meta-scene/materials/mirror_material.hpp"
+#include "meta-scene/materials/uber_material.hpp"
+#include "meta-scene/logs.hpp"
 
 #include "../materials/substrate_material.hpp"
 #include "../materials/diffuse_material.hpp"
@@ -48,6 +50,11 @@ namespace path_tracing::core::converter {
 		return instance;
 	}
 
+	std::shared_ptr<material> create_uber_material(const std::shared_ptr<metascene::materials::material>& material)
+	{
+		return nullptr;
+	}
+
 	std::shared_ptr<material> create_material(const std::shared_ptr<metascene::materials::material>& material)
 	{
 		if (material == nullptr) return nullptr;
@@ -60,6 +67,11 @@ namespace path_tracing::core::converter {
 
 		if (material->type == metascene::materials::type::mirror)
 			return create_mirror_material(std::static_pointer_cast<metascene::materials::mirror_material>(material));
+
+		if (material->type == metascene::materials::type::uber)
+			return create_uber_material(std::static_pointer_cast<metascene::materials::uber_material>(material));
+
+		metascene::logs::error("unknown material.");
 		
 		return nullptr;
 	}

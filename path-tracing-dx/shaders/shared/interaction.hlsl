@@ -87,11 +87,6 @@ struct surface_interaction {
 	}
 };
 
-float3 face_forward(float3 v, float3 forward)
-{
-	return dot(v, forward) > 0 ? v : -v;
-}
-
 float3 local_to_world(coordinate_system system, float3 value) 
 {
 	return float3(

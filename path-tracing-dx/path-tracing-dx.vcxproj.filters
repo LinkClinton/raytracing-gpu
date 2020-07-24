@@ -207,16 +207,16 @@
     <CopyFileToFolders Include="shaders\materials\material_mirror.hlsl">
       <Filter>shaders\materials</Filter>
     </CopyFileToFolders>
+    <CopyFileToFolders Include="shaders\scatterings\microfacet_distribution.hlsl" />
+    <CopyFileToFolders Include="shaders\scatterings\scattering_fresnel_blend.hlsl" />
+    <CopyFileToFolders Include="shaders\materials\material_substrate.hlsl" />
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="shaders\scatterings\microfacet_distribution.hlsl">
+    <FxCompile Include="shaders\scatterings\scattering_microfacet.hlsl">
       <Filter>shaders\scatterings</Filter>
     </FxCompile>
-    <FxCompile Include="shaders\scatterings\scattering_fresnel_blend.hlsl">
+    <FxCompile Include="shaders\scatterings\scattering_fresnel_effect.hlsl">
       <Filter>shaders\scatterings</Filter>
-    </FxCompile>
-    <FxCompile Include="shaders\materials\material_substrate.hlsl">
-      <Filter>shaders\materials</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

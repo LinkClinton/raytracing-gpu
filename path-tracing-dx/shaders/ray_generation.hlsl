@@ -173,7 +173,7 @@ float3 trace(ray_desc first_ray, random_sampler sampler)
 		material_shader_buffer material = convert_gpu_buffer_to_shader_buffer(global_materials[global_entities[payload.index].material], payload.interaction.uv);
 		
 		tracing_info.value += tracing_info.beta * uniform_sample_one_emitter(sampler, material, tracing_info, payload);
-
+		
 		float3 wo = world_to_local(payload.interaction.shading_space, payload.interaction.wo);
 
 		scattering_sample function_sample = sample_material(material, wo, next_sample2d(sampler));

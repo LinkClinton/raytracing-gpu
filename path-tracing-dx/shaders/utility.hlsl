@@ -127,4 +127,9 @@ float power_heuristic(float f_pdf, float g_pdf)
 	return (f_pdf * f_pdf) / (f_pdf * f_pdf + g_pdf * g_pdf);
 }
 
+float3 face_forward(float3 v, float3 forward)
+{
+	return dot(v, forward) > 0 ? v : -v;
+}
+
 #endif

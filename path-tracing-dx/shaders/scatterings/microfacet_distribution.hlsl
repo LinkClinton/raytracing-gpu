@@ -98,6 +98,12 @@ float distribution_masking_shadowing(float alpha_x, float alpha_y, float3 w)
 	return 1 / (1 + trowbridge_reitz_lambda(alpha_x, alpha_y, w));
 }
 
+float distribution_masking_shadowing(float alpha_x, float alpha_y, float3 wo, float3 wi)
+{
+	// G = G(wo) * G(wi), but we use G = 1 / (1 + lambda(wo) + lambda(wi)).
+	return 1 / (1 + trowbridge_reitz_lambda(alpha_x, alpha_y, wo) + trowbridge_reitz_lambda(alpha_x, alpha_y, wi));
+}
+
 float pdf_distribution(float alpha_x, float alpha_y, float3 wo, float3 wh)
 {
 	return evaluate_distribution(alpha_x, alpha_y, wh) * 

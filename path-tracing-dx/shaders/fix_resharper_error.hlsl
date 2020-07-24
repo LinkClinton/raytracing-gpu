@@ -25,6 +25,7 @@
 	OPERATOR_DEFINE(this_type, +, this_type); \
 	OPERATOR_DEFINE(this_type, -, this_type); \
 	OPERATOR_DEFINE(this_type, *, this_type); \
+	OPERATOR_DEFINE(this_type, /, this_type); \
 	OPERATOR_DEFINE(this_type, +, T); \
 	OPERATOR_DEFINE(this_type, *, T); \
 	OPERATOR_DEFINE(this_type, -, T); \

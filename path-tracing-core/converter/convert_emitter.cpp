@@ -2,6 +2,7 @@
 
 #include "meta-scene/emitters/environment_emitter.hpp"
 #include "meta-scene/emitters/surface_emitter.hpp"
+#include "meta-scene/logs.hpp"
 
 #include "../emitters/environment_emitter.hpp"
 #include "../emitters/surface_emitter.hpp"
@@ -50,6 +51,8 @@ namespace path_tracing::core::converter {
 
 		if (emitter->type == metascene::emitters::type::environment)
 			return create_environment_emitter(std::static_pointer_cast<metascene::emitters::environment_emitter>(emitter));
+
+		metascene::logs::error("unknown emitter.");
 		
 		return nullptr;
 	}
