@@ -3,6 +3,36 @@
 
 #include "scattering_include.hlsl"
 
+float fresnel_reflect_dielectric(float cos_theta_i, float eta_i, float eta_o)
+{
+	cos_theta_i = clamp(cos_theta_i, -1, 1);
+
+	if (cos_theta_i < 0.f) {
+		float temp = eta_i;
+
+		eta_i = eta_o;
+		eta_o = temp;
+
+		cos_theta_i = abs(cos_theta_i);
+	}
+
+	float sin_theta_i = sqrt(max(0, 1 - cos_theta_i * cos_theta_i));
+	float sin_theta_o = sin_theta_i * eta_i / eta_o;
+	float cos_theta_o = sqrt(max(0, 1 - sin_theta_o * sin_theta_o));
+
+	if (sin_theta_o >= 1) return 1;
+
+	float r0 =
+		(eta_o * cos_theta_i - eta_i * cos_theta_o) /
+		(eta_o * cos_theta_i + eta_i * cos_theta_o);
+
+	float r1 =
+		(eta_i * cos_theta_i - eta_o * cos_theta_o) /
+		(eta_i * cos_theta_i + eta_o * cos_theta_o);
+
+	return (r0 * r0 + r1 * r1) / 2;
+}
+
 float3 fresnel_reflect_conductor(float cos_theta_i, float3 eta_i, float3 eta_o, float3 k)
 {
 	cos_theta_i = clamp(cos_theta_i, -1, 1);

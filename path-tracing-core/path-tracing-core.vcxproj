@@ -183,6 +183,7 @@
     <ClInclude Include="materials\metal_material.hpp" />
     <ClInclude Include="materials\mirror_material.hpp" />
     <ClInclude Include="materials\substrate_material.hpp" />
+    <ClInclude Include="materials\uber_material.hpp" />
     <ClInclude Include="renderer_backend.hpp" />
     <ClInclude Include="renderer_scene.hpp" />
     <ClInclude Include="resource_manager.hpp" />
@@ -218,6 +219,7 @@
     <ClCompile Include="materials\metal_material.cpp" />
     <ClCompile Include="materials\mirror_material.cpp" />
     <ClCompile Include="materials\substrate_material.cpp" />
+    <ClCompile Include="materials\uber_material.cpp" />
     <ClCompile Include="renderer_backend.cpp" />
     <ClCompile Include="renderer_scene.cpp" />
     <ClCompile Include="resource_manager.cpp" />

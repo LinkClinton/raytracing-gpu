@@ -28,6 +28,8 @@ namespace path_tracing::dx {
 		void render_scene() const;
 		
 		void render_imgui() const;
+
+		void save() const;
 	private:
 		std::shared_ptr<command_allocator> mCommandAllocator;
 		std::shared_ptr<command_queue> mCommandQueue;
@@ -42,6 +44,7 @@ namespace path_tracing::dx {
 
 		std::shared_ptr<texture2d> mRenderTargetHDR;
 		std::shared_ptr<texture2d> mRenderTargetSDR;
+		std::shared_ptr<buffer> mRenderTargetBuffer;
 		
 		std::shared_ptr<device> mDevice;
 
@@ -51,6 +54,8 @@ namespace path_tracing::dx {
 
 		scene_info mSceneInfo;
 		size_t mCurrentSample = 0;
+
+		bool mSaveImage = false;
 	};
 	
 }

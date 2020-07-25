@@ -1,6 +1,7 @@
 #include "renderer_directx.hpp"
 
 #include "../path-tracing-core/emitters/environment_emitter.hpp"
+#include "../path-tracing-core/resource_manager.hpp"
 
 #include "utilities/imgui_impl_dx12.hpp"
 
@@ -44,19 +45,40 @@ path_tracing::dx::renderer_directx::~renderer_directx()
 
 void path_tracing::dx::renderer_directx::render(const std::shared_ptr<core::camera>& camera)
 {
+	ImGui_ImplDX12_NewFrame();
+	ImGui::NewFrame();
+
+	ImGui::GetBackgroundDrawList()->AddImage(
+		reinterpret_cast<ImTextureID>(mImGuiDescriptorHeap->gpu_handle(1).ptr),
+		ImVec2(0, 0),
+		ImVec2(static_cast<float>(mWidth), static_cast<float>(mHeight)));
+
+	int max_depth = static_cast<int>(mSceneInfo.max_depth);
+
+	ImGui::Begin("Debug InFo");
+	ImGui::Text("average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+	ImGui::Text(("Samples : " + std::to_string(mCurrentSample)).c_str());
+	ImGui::InputInt("max depth", &max_depth);
+
+	mSaveImage = ImGui::Button("Save");
+	
+	max_depth = max_depth < 1 ? 1 : max_depth;
+	
+	ImGui::End();
+	
 	(*mCommandAllocator)->Reset();
 
 	const auto camera_gpu_buffer = camera->gpu_buffer(mRenderTargetHDR->width(), mRenderTargetHDR->height());
 
-	if (mSceneInfo.camera_to_world != transpose(camera_gpu_buffer.camera_to_world))
+	if (mSceneInfo.camera_to_world != transpose(camera_gpu_buffer.camera_to_world) || mSceneInfo.max_depth != max_depth)
 		mCurrentSample = 0;
-	
+
+	mSceneInfo.max_depth = static_cast<uint32>(max_depth);	
 	mSceneInfo.raster_to_camera = glm::transpose(camera_gpu_buffer.raster_to_camera);
 	mSceneInfo.camera_to_world = glm::transpose(camera_gpu_buffer.camera_to_world);
 	mSceneInfo.camera_focus = camera_gpu_buffer.focus;
 	mSceneInfo.camera_lens = camera_gpu_buffer.lens;
 	mSceneInfo.sample_index = static_cast<uint32>(mCurrentSample++);
-	mSceneInfo.max_depth = 5;
 	
 	mResourceScene->set_scene_info(mSceneInfo);
 	
@@ -68,6 +90,8 @@ void path_tracing::dx::renderer_directx::render(const std::shared_ptr<core::came
 	mSwapChain->present(false);
 
 	mCommandQueue->wait();
+
+	if (mSaveImage) save();
 }
 
 void path_tracing::dx::renderer_directx::build(const std::shared_ptr<core::scene>& scene, const render_config& config)
@@ -88,6 +112,9 @@ void path_tracing::dx::renderer_directx::build(const std::shared_ptr<core::scene
 	mRenderTargetSDR = std::make_shared<texture2d>(mDevice, D3D12_RESOURCE_STATE_GENERIC_READ,
 		D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS, D3D12_HEAP_TYPE_DEFAULT,
 		DXGI_FORMAT_R8G8B8A8_UNORM, config.width, config.height);
+
+	mRenderTargetBuffer = std::make_shared<buffer>(mDevice, D3D12_RESOURCE_STATE_COPY_DEST,
+		D3D12_RESOURCE_FLAG_NONE, D3D12_HEAP_TYPE_READBACK, mRenderTargetHDR->alignment() * mRenderTargetHDR->height());
 	
 	D3D12_SHADER_RESOURCE_VIEW_DESC srv_desc = {};
 
@@ -138,28 +165,17 @@ void path_tracing::dx::renderer_directx::release()
 void path_tracing::dx::renderer_directx::render_scene() const
 {
 	(*mSceneCommandList)->Reset(mCommandAllocator->get(), nullptr);
-
+	
 	mResourceScene->render(mSceneCommandList);
 	mScenePipeline->render(mSceneCommandList);
 
+	if (mSaveImage) mRenderTargetHDR->read(mSceneCommandList, mRenderTargetBuffer);
+	
 	(*mSceneCommandList)->Close();
 }
 
 void path_tracing::dx::renderer_directx::render_imgui() const
 {
-	ImGui_ImplDX12_NewFrame();
-	ImGui::NewFrame();
-
-	ImGui::GetBackgroundDrawList()->AddImage(
-		reinterpret_cast<ImTextureID>(mImGuiDescriptorHeap->gpu_handle(1).ptr),
-		ImVec2(0, 0),
-		ImVec2(static_cast<float>(mWidth), static_cast<float>(mHeight)));
-
-	ImGui::Begin("Debug InFo");
-	ImGui::Text("average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
-	ImGui::Text(("Samples : " + std::to_string(mCurrentSample)).c_str());
-	ImGui::End();
-	
 	const auto current_frame_index = mSwapChain->current_frame_index();
 
 	const auto before_barrier = mSwapChain->buffer(current_frame_index)->barrier(
@@ -185,4 +201,24 @@ void path_tracing::dx::renderer_directx::render_imgui() const
 
 	command_list->ResourceBarrier(1, &after_barrier);
 	command_list->Close();
+}
+
+void path_tracing::dx::renderer_directx::save() const
+{
+	auto image_data = std::vector<real>(mRenderTargetHDR->width() * mRenderTargetHDR->height() * 4);
+
+	const auto buffer_data = static_cast<byte*>(mRenderTargetBuffer->map());
+
+	for (size_t y = 0; y < mRenderTargetHDR->height(); y++) {
+		std::memcpy(image_data.data() + y * mRenderTargetHDR->width() * 4,
+			buffer_data + y * mRenderTargetHDR->alignment(),
+			mRenderTargetHDR->width() * size_of(mRenderTargetHDR->format()));
+	}
+
+	for (size_t index = 0; index < image_data.size(); index++) 
+		image_data[index] = image_data[index] * mSceneInfo.scale / (mSceneInfo.sample_index + 1);
+	
+	mRenderTargetBuffer->unmap();
+
+	resource_manager::write_image("image", image_data, mRenderTargetHDR->width(), mRenderTargetHDR->height());
 }

@@ -39,6 +39,8 @@ namespace path_tracing::core {
 		static std::shared_ptr<image> read_real_image(const std::shared_ptr<metascene::textures::image_texture>& texture);
 
 		static std::shared_ptr<image> read_environment_map(const std::string& filename, bool gamma);
+
+		static void write_image(const std::string& filename, const std::vector<real>& image, size_t width, size_t height);
 	};
 	
 }

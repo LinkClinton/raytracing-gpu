@@ -8,7 +8,8 @@ enum material_type {
 	material_diffuse = 1,
 	material_mirror = 2,
 	material_substrate = 3,
-	material_metal = 4
+	material_metal = 4,
+	material_uber = 5
 };
 
 struct material_gpu_buffer {

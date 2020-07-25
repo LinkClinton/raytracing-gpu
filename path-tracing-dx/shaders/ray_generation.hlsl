@@ -232,6 +232,8 @@ void ray_generation_shader() {
 	float3 L = trace(ray, sampler);
 
 	uint count = global_scene_info.sample_index + 1;
+
+	if (global_scene_info.sample_index == 0) global_render_target_hdr[DispatchRaysIndex().xy] = float4(0, 0, 0, 0);
 	
 	global_render_target_hdr[DispatchRaysIndex().xy] += float4(L, 0);
 	global_render_target_sdr[DispatchRaysIndex().xy] = 

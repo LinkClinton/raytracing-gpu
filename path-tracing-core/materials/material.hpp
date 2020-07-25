@@ -15,7 +15,8 @@ namespace path_tracing::core::materials {
 		diffuse = 1,
 		mirror = 2,
 		substrate = 3,
-		metal = 4
+		metal = 4,
+		uber = 5
 	};
 	
 	struct material_gpu_buffer {

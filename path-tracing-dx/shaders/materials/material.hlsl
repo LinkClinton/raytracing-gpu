@@ -8,6 +8,7 @@
 #include "material_diffuse.hlsl"
 #include "material_mirror.hlsl"
 #include "material_metal.hlsl"
+#include "material_uber.hlsl"
 
 material_shader_buffer convert_gpu_buffer_to_shader_buffer(material_gpu_buffer gpu_buffer, float2 value)
 {
@@ -37,6 +38,7 @@ float3 evaluate_material(material_shader_buffer material, float3 wo, float3 wi, 
 	case material_diffuse: return evaluate_diffuse_material(material, wo, wi, include);
 	case material_mirror: return evaluate_mirror_material(material, wo, wi, include);
 	case material_metal: return evaluate_metal_material(material, wo, wi, include);
+	case material_uber: return evaluate_uber_material(material, wo, wi, include);
 	default:
 		return 0;
 	}
@@ -49,6 +51,7 @@ float pdf_material(material_shader_buffer material, float3 wo, float3 wi, scatte
 	case material_diffuse: return pdf_diffuse_material(material, wo, wi, include);
 	case material_mirror: return pdf_mirror_material(material, wo, wi, include);
 	case material_metal: return pdf_metal_material(material, wo, wi, include);
+	case material_uber: return pdf_uber_material(material, wo, wi, include);
 	default:
 		return 0;
 	}
@@ -63,6 +66,7 @@ scattering_sample sample_material(material_shader_buffer material, float3 wo, fl
 	case material_diffuse: return sample_diffuse_material(material, wo, value, include);
 	case material_mirror: return sample_mirror_material(material, wo, value, include);
 	case material_metal: return sample_metal_material(material, wo, value, include);
+	case material_uber: return sample_uber_material(material, wo, value, include);
 	default: return sample;
 	}
 }

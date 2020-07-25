@@ -66,6 +66,10 @@ namespace path_tracing::dx::wrapper {
 		void upload(
 			const std::shared_ptr<graphics_command_list>& command_list,
 			const std::shared_ptr<buffer>& buffer) const;
+
+		void read(
+			const std::shared_ptr<graphics_command_list>& command_list,
+			const std::shared_ptr<buffer>& buffer) const;
 	private:
 		size_t mWidth = 0, mHeight = 0;
 

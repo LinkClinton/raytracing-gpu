@@ -172,3 +172,33 @@ void path_tracing::dx::wrapper::texture2d::upload(
 
 	(*command_list)->CopyTextureRegion(&dest, 0, 0, 0, &src, &region);
 }
+
+void path_tracing::dx::wrapper::texture2d::read(
+	const std::shared_ptr<graphics_command_list>& command_list,
+	const std::shared_ptr<buffer>& buffer) const
+{
+	D3D12_TEXTURE_COPY_LOCATION dest;
+	D3D12_TEXTURE_COPY_LOCATION src;
+
+	dest.Type = D3D12_TEXTURE_COPY_TYPE_PLACED_FOOTPRINT;
+	dest.PlacedFootprint.Offset = 0;
+	dest.PlacedFootprint.Footprint.Format = mFormat;
+	dest.PlacedFootprint.Footprint.Width = static_cast<UINT>(mWidth);
+	dest.PlacedFootprint.Footprint.Height = static_cast<UINT>(mHeight);
+	dest.PlacedFootprint.Footprint.Depth = 1;
+	dest.PlacedFootprint.Footprint.RowPitch = static_cast<UINT>(alignment());
+	dest.pResource = buffer->get();
+
+	src.Type = D3D12_TEXTURE_COPY_TYPE_SUBRESOURCE_INDEX;
+	src.SubresourceIndex = 0;
+	src.pResource = mResource.Get();
+
+	D3D12_BOX region = {
+		0, 0, 0,
+		static_cast<UINT>(mWidth),
+		static_cast<UINT>(mHeight),
+		1
+	};
+
+	(*command_list)->CopyTextureRegion(&dest, 0, 0, 0, &src, &region);
+}

@@ -2,8 +2,6 @@
 
 #include "../path-tracing-core/resource_manager.hpp"
 
-#pragma optimize("", off)
-
 path_tracing::dx::utilities::shape_cache_data::shape_cache_data(
 	const std::shared_ptr<buffer>& positions,
 	const std::shared_ptr<buffer>& normals,

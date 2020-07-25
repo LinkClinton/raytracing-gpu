@@ -3,8 +3,19 @@
 #include "importers/image_importer.hpp"
 #include "importers/ply_importer.hpp"
 
+#define STB_IMAGE_WRITE_IMPLEMENTATION
+
+#include <stb_image_write.h>
+
 namespace path_tracing::core {
 
+	inline real gamma_correct(real value)
+	{
+		if (value <= 0.0031308f) return 12.92f * value;
+
+		return 1.055f * pow(value, 1.f / 2.4f) - 0.055f;
+	}
+	
 	std::shared_ptr<mesh> resource_manager::read_ply_mesh(const std::shared_ptr<metascene::shapes::mesh>& mesh)
 	{
 		const auto index = mesh->to_string();
@@ -63,4 +74,24 @@ namespace path_tracing::core {
 
 		return image;
 	}
+
+	void resource_manager::write_image(const std::string& filename, const std::vector<real>& image, size_t width, size_t height)
+	{
+		auto sdr_image = std::vector<byte>(image.size());
+
+		for (size_t index = 0; index < image.size(); index++) {
+			sdr_image[index] = static_cast<byte>(glm::clamp(
+				255 * gamma_correct(image[index]) + 0.5f,
+				static_cast<real>(0),
+				static_cast<real>(255)
+			));
+		}
+
+		for (size_t index = 3; index < image.size(); index += 4)
+			sdr_image[index] = 255;
+
+		stbi_write_png((filename + ".png").c_str(), static_cast<int>(width), static_cast<int>(height), 4, sdr_image.data(), 0);
+	}
+
+
 }
