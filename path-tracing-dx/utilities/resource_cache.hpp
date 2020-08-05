@@ -12,6 +12,7 @@
 #include "../wrapper/shader_library.hpp"
 
 #include <unordered_map>
+#include <unordered_set>
 #include <optional>
 
 namespace path_tracing::dx::utilities {
@@ -78,7 +79,9 @@ namespace path_tracing::dx::utilities {
 			const std::shared_ptr<command_queue>& queue);
 
 		const std::vector<std::shared_ptr<texture2d>>& images_cache_data() const noexcept;
-		
+
+		const std::unordered_set<std::wstring>& shaders_cache_data() const noexcept;
+
 		const std::vector<entity_cache_data>& entities_cache_data() const noexcept;
 
 		const std::vector<shape_cache_data>& shapes_cache_data() const noexcept;
@@ -100,6 +103,8 @@ namespace path_tracing::dx::utilities {
 		std::unordered_map<std::shared_ptr<shape>, size_t> mShapesIndex;
 		std::unordered_map<std::string, shape_type_data> mTypeCache;
 
+		std::unordered_set<std::wstring> mShadersCache;
+		
 		std::vector<std::shared_ptr<texture2d>> mImagesCache;
 		
 		std::vector<shape_cache_data> mShapesCache;

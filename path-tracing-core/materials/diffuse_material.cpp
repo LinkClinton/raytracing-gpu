@@ -14,3 +14,8 @@ path_tracing::core::materials::material_gpu_buffer path_tracing::core::materials
 
 	return buffer;
 }
+
+std::wstring path_tracing::core::materials::diffuse_material::name() const noexcept
+{
+	return L"diffuse_material";
+}

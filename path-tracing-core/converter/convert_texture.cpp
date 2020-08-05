@@ -4,6 +4,7 @@
 #include "meta-scene/textures/constant_texture.hpp"
 #include "meta-scene/textures/image_texture.hpp"
 #include "meta-scene/textures/scale_texture.hpp"
+#include "meta-scene/logs.hpp"
 
 #include "../resource_manager.hpp"
 
@@ -59,6 +60,8 @@ namespace path_tracing::core::converter {
 		if (texture->type == metascene::textures::type::image)
 			return create_image_spectrum_texture(std::static_pointer_cast<metascene::image_texture>(texture));
 
+		metascene::logs::error("unknown texture.");
+		
 		return nullptr;
 	}
 
@@ -92,6 +95,8 @@ namespace path_tracing::core::converter {
 		if (texture->type == metascene::textures::type::image)
 			return create_image_real_texture(std::static_pointer_cast<metascene::image_texture>(texture));
 
+		metascene::logs::error("unknown texture.");
+		
 		return nullptr;
 	}
 

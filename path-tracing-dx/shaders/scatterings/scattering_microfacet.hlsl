@@ -90,6 +90,7 @@ scattering_sample sample_dielectric_microfacet_reflection(
 	scattering_sample sample;
 
 	sample.type = scattering_type(scattering_reflection | scattering_glossy);
+	sample.wi = 0;
 	sample.pdf = 0;
 
 	if (wo.z == 0) return sample;

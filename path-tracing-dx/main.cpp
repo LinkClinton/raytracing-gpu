@@ -11,8 +11,10 @@ int main() {
 	//const auto scene = importers::import_pbrt_scene("./../scenes/cornell-box/scene.pbrt");
 	//const auto scene = importers::import_pbrt_scene("./../scenes/dragon/f0-0.pbrt");
 	//const auto scene = importers::import_pbrt_scene("./../scenes/basic-test/uv-test.pbrt");
-	//const auto scene = importers::import_pbrt_scene("./../scenes/measure-one/frame25.pbrt");
-	const auto scene = importers::import_pbrt_scene("./../scenes/ganesha/ganesha.pbrt");
+	//const auto scene = importers::import_pbrt_scene("./../scenes/basic-test/uber-test.pbrt");
+	const auto scene = importers::import_pbrt_scene("./../scenes/measure-one/frame25.pbrt");
+	//const auto scene = importers::import_pbrt_scene("./../scenes/measure-one/frame380.pbrt");
+	//const auto scene = importers::import_pbrt_scene("./../scenes/ganesha/ganesha.pbrt");
 	//const auto scene = importers::import_pbrt_scene("./../scenes/yeahright/yeahright.pbrt");
 
 	

@@ -3,7 +3,7 @@
 
 #include "../utility.hlsl"
 
-enum scattering_type {
+enum scattering_type : uint {
 	scattering_unknown = 0,
 	scattering_reflection = 1 << 0,
 	scattering_transmission = 1 << 1,

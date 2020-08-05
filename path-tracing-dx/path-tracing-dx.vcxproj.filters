@@ -225,10 +225,8 @@
     <CopyFileToFolders Include="shaders\materials\material_metal.hlsl">
       <Filter>shaders\materials</Filter>
     </CopyFileToFolders>
-  </ItemGroup>
-  <ItemGroup>
-    <FxCompile Include="shaders\materials\material_uber.hlsl">
+    <CopyFileToFolders Include="shaders\materials\material_uber.hlsl">
       <Filter>shaders\materials</Filter>
-    </FxCompile>
+    </CopyFileToFolders>
   </ItemGroup>
 </Project>

@@ -25,13 +25,19 @@ void path_tracing::dx::utilities::scene_pipeline::execute(const std::shared_ptr<
 
 	std::unordered_map<std::wstring, std::vector<std::wstring>> shaders_map;
 
+	std::vector<std::wstring> closest_hit_shaders;
+
+	for (const auto& shader : mResourceCache->shaders_cache_data())
+		closest_hit_shaders.push_back(shader);
+	
 	shaders_map.insert({ L"./shaders/ray_generation.hlsl", {
 		ray_generation_shader
 	} });
-
+	
 	shaders_map.insert({ L"./shaders/closest_hit.hlsl", {
-		L"closest_hit_shader"
+		closest_hit_shaders
 	} });
+	
 	shaders_map.insert({ L"./shaders/miss_shaders.hlsl", miss_shaders });
 	
 	mPipeline = std::make_shared<raytracing_pipeline>();

@@ -6,6 +6,47 @@
 #include "emitter_surface.hlsl"
 #include "emitter_point.hlsl"
 
+emitter_search_result search_emitter(interaction interaction, float3 wi)
+{
+	emitter_search_result result;
+
+	result.pdf = 0;
+
+	ray_desc emitter_ray = interaction.spawn_ray(wi);
+	ray_payload emitter_payload;
+
+	emitter_payload.shadow = true;
+	emitter_payload.missed = false;
+
+	TraceRay(global_acceleration, RAY_FLAG_FORCE_OPAQUE, 0xFF, 0,
+		1, 0, emitter_ray, emitter_payload);
+
+	if (emitter_payload.missed == true && global_scene_info.environment != ENTITY_NUll) {
+		result.interaction.position = interaction.position + wi * 2 * 1000;
+		result.emitter = global_scene_info.environment;
+		result.pdf = 1.0 / global_scene_info.emitters;
+
+		return result;
+	}
+
+	if (emitter_payload.missed == true || global_entities[emitter_payload.index].emitter == ENTITY_NUll)
+		return result;
+
+	result.interaction = emitter_payload.interaction;
+	result.emitter = global_entities[emitter_payload.index].emitter;
+	result.pdf = 1.0 / global_scene_info.emitters;
+
+	return result;
+}
+
+void uniform_sample_one_emitter(inout random_sampler sampler, uint emitters, out uint which, out float pdf)
+{
+	if (emitters == 0) { which = 0; pdf = 0; return; }
+
+	which = min(floor(next_sample1d(sampler) * emitters), emitters - 1);
+	pdf = 1.0 / emitters;
+}
+
 float3 evaluate_emitter(emitter_gpu_buffer emitter, interaction interaction, float3 wi)
 {
 	if (emitter.type == emitter_point)

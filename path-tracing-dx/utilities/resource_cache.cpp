@@ -144,6 +144,12 @@ void path_tracing::dx::utilities::resource_cache::execute(
 			data.group = type_data.group;
 			data.group.name = L"entity" + std::to_wstring(mEntitiesCache.size());
 
+			if (entity->has_component<material>())
+				data.group.closest_hit = L"closest_hit_" + entity->component<material>()->name() + L"_shader";
+
+			if (mShadersCache.find(data.group.closest_hit) == mShadersCache.end())
+				mShadersCache.insert(data.group.closest_hit);
+			
 			data.association = shader_association(type_data.association.root_signature, type_data.association.config, data.group.name);
 
 			data.shader_table_data = std::vector<byte>(type_data.association.root_signature->size());
@@ -193,6 +199,11 @@ void path_tracing::dx::utilities::resource_cache::execute(
 const std::vector<std::shared_ptr<path_tracing::dx::wrapper::texture2d>>& path_tracing::dx::utilities::resource_cache::images_cache_data() const noexcept
 {
 	return mImagesCache;
+}
+
+const std::unordered_set<std::wstring>& path_tracing::dx::utilities::resource_cache::shaders_cache_data() const noexcept
+{
+	return mShadersCache;
 }
 
 const std::vector<path_tracing::dx::utilities::entity_cache_data>& path_tracing::dx::utilities::resource_cache::entities_cache_data() const noexcept

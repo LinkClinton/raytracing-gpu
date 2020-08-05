@@ -8,7 +8,7 @@
 namespace path_tracing::dx::wrapper {
 
 	struct shader_raytracing_config final {
-		constexpr static inline size_t default_payload_size = 128;
+		constexpr static inline size_t default_payload_size = 256;
 		
 		size_t max_attribute_size = D3D12_RAYTRACING_MAX_ATTRIBUTE_SIZE_IN_BYTES;
 		size_t max_payload_size = default_payload_size;

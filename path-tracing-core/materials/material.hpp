@@ -5,6 +5,8 @@
 #include "../textures/texture.hpp"
 #include "../shared/transform.hpp"
 
+#include <string>
+
 namespace path_tracing::core::materials {
 
 	using namespace shared;
@@ -46,6 +48,8 @@ namespace path_tracing::core::materials {
 
 		virtual material_gpu_buffer gpu_buffer() const noexcept = 0;
 
+		virtual std::wstring name() const noexcept = 0;
+		
 		material_type type() const noexcept;
 
 		static uint32 count() noexcept;

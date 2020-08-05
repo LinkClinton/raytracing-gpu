@@ -16,6 +16,8 @@ namespace path_tracing::core::materials {
 		~metal_material() = default;
 
 		material_gpu_buffer gpu_buffer() const noexcept override;
+
+		std::wstring name() const noexcept override;
 	private:
 		std::shared_ptr<texture> mEta;
 		std::shared_ptr<texture> mK;

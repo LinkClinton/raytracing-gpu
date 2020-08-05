@@ -2,6 +2,7 @@
 #define __MATERIAL_INCLUDE_HLSL__
 
 #include "../scatterings/scattering_include.hlsl"
+#include "../shared/interaction.hlsl"
 
 enum material_type {
 	material_unknown = 0,
@@ -38,5 +39,25 @@ struct material_shader_buffer {
 	float roughness_u;
 	float roughness_v;
 };
+
+struct path_tracing_info {
+	float3 value;
+	float3 beta;
+
+	float eta;
+
+	bool specular;
+
+	ray_desc ray;
+};
+
+struct emitter_search_result {
+	surface_interaction interaction;
+
+	uint emitter;
+
+	float pdf;
+};
+
 
 #endif

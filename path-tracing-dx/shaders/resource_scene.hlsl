@@ -48,9 +48,19 @@ struct shape_gpu_buffer {
 
 struct ray_payload {
 	surface_interaction interaction;
-
+	
+	random_sampler sampler;
+	
+	float3 function_value;
+	float3 function_wi;
+	float  function_pdf;
+	
+	float3 value;
+	
+	bool specular;
 	bool missed;
-
+	bool shadow;
+	
 	uint index;
 };
 

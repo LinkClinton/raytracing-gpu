@@ -11,6 +11,8 @@ namespace path_tracing::core::materials {
 		~mirror_material() = default;
 
 		material_gpu_buffer gpu_buffer() const noexcept override;
+
+		std::wstring name() const noexcept override;
 	private:
 		std::shared_ptr<texture> mReflectance;
 	};
