@@ -16,6 +16,7 @@ int main() {
 	//const auto scene = importers::import_pbrt_scene("./../scenes/measure-one/frame380.pbrt");
 	//const auto scene = importers::import_pbrt_scene("./../scenes/ganesha/ganesha.pbrt");
 	//const auto scene = importers::import_pbrt_scene("./../scenes/yeahright/yeahright.pbrt");
+	//const auto scene = importers::import_pbrt_scene("./../scenes/structuresynth/metal.pbrt");
 
 	
 	const auto width = static_cast<int>(scene.width);

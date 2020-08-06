@@ -1,6 +1,6 @@
 # path-tracing-gpu
 
-This is an experimental lab for me to explore the path tracing and ray tracing in GPU with DXR/VK. 
+This is an experimental lab for me to explore the path tracing and ray tracing on GPU with DXR/VK. 
 
 ## Supported
 
@@ -10,6 +10,7 @@ This is an experimental lab for me to explore the path tracing and ray tracing i
 
 ## Todo
 
+- Performance Test and Profile.
 - Different Material Framework.
 - Real-Time Ray-tracing.
 - Better Path-tracing.
