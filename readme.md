@@ -4,15 +4,11 @@ This is an experimental lab for me to explore the path tracing and ray tracing o
 
 ## Supported
 
-- Path-tracing with DXR.
-- Environment/Area Light.
-- Part PBRT Scene.
+- Remaking
 
 ## Todo
 
 - Performance Test and Profile.
-- Different Material Framework.
-- Real-Time Ray-tracing.
 - Better Path-tracing.
 - Optimize Shaders.
 - Denoise.
