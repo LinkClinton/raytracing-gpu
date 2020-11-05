@@ -1,0 +1,64 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="scenes\components\transform.cpp">
+      <Filter>scenes\components</Filter>
+    </ClCompile>
+    <ClCompile Include="runtimes\render\render_device.cpp">
+      <Filter>runtimes\render</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="extensions">
+      <UniqueIdentifier>{9c9734e7-2d23-4ff8-9b47-6f22d3d2fc61}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="renderers">
+      <UniqueIdentifier>{385a650b-abff-449c-b114-3de3cd809b13}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="scenes">
+      <UniqueIdentifier>{67312bb0-ec4b-4ece-8d8d-514b13da352c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="scenes\components">
+      <UniqueIdentifier>{c63a95c6-bdb4-4a33-b4cf-df3cdc3e71ad}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="resources">
+      <UniqueIdentifier>{75169d83-d5ba-4bdf-a19b-d5774137d219}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="extensions\glm">
+      <UniqueIdentifier>{d010a760-c900-4042-9ac3-093f8a9b5874}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="scenes\resources">
+      <UniqueIdentifier>{29315fc1-21a9-4935-890b-d0deba09a8f6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="cores">
+      <UniqueIdentifier>{6110b0bf-0a3e-46f6-a196-fd3c4523f1a3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="runtimes">
+      <UniqueIdentifier>{c7136d99-3711-4ae2-83e1-6e7089865e86}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="runtimes\render">
+      <UniqueIdentifier>{350b5a00-a1b6-4daa-adeb-cb7bcfe63ad8}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="scenes\components\transform.hpp">
+      <Filter>scenes\components</Filter>
+    </ClInclude>
+    <ClInclude Include="extensions\glm\glm.hpp">
+      <Filter>extensions\glm</Filter>
+    </ClInclude>
+    <ClInclude Include="scenes\resources\meshes_system.hpp">
+      <Filter>scenes\resources</Filter>
+    </ClInclude>
+    <ClInclude Include="cores\noncopyable.hpp">
+      <Filter>cores</Filter>
+    </ClInclude>
+    <ClInclude Include="cores\types.hpp">
+      <Filter>cores</Filter>
+    </ClInclude>
+    <ClInclude Include="runtimes\render\render_device.hpp">
+      <Filter>runtimes\render</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
