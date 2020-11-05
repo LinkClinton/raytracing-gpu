@@ -1,5 +1,9 @@
 #include "device.hpp"
 
+#ifndef _DEBUG
+#define __NDXDEBUG__
+#endif
+
 path_tracing::dx::wrapper::device::device(const D3D_FEATURE_LEVEL& level)
 {
 #ifndef __NDXDEBUG__

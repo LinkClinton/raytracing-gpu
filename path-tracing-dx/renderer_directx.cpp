@@ -99,7 +99,7 @@ void path_tracing::dx::renderer_directx::build(const std::shared_ptr<core::scene
 	mSceneInfo.environment = scene->environment() == nullptr ? entity_gpu_buffer::null : scene->environment()->component<emitter>()->index();
 	mSceneInfo.emitters = static_cast<uint32>(scene->emitters().size());
 	mSceneInfo.scale = config.scale;
-	mSceneInfo.max_depth = 2;
+	mSceneInfo.max_depth = 3;
 	
 	if (scene->environment() != nullptr && std::static_pointer_cast<environment_emitter>(
 		scene->environment()->component<emitter>())->map() != nullptr) {
