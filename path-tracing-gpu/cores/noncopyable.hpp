@@ -15,3 +15,5 @@ namespace path_tracing::cores {
 	};
 
 }
+
+using namespace path_tracing::cores;
