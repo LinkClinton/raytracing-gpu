@@ -1,7 +1,5 @@
 #pragma once
 
-#include "render/render_device.hpp"
-
 #include "runtime_service.hpp"
 
 namespace path_tracing::runtime {
@@ -11,7 +9,7 @@ namespace path_tracing::runtime {
 		runtime_process();
 
 		~runtime_process() = default;
-
+	
 		runtime_service service() const noexcept;
 		
 		friend struct runtime_service;
@@ -21,6 +19,8 @@ namespace path_tracing::runtime {
 		resources::meshes_system mMeshesSystem;
 		
 		render::render_device mRenderDevice;
+
+		scenes::scene mScene;
 	};
 	
 }

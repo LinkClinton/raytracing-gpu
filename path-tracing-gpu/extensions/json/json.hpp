@@ -33,6 +33,20 @@ namespace nlohmann {
 	};
 
 	template <>
+	struct adl_serializer<vector2> {
+		static void to_json(json& json, const vector2& vector)
+		{
+			json = { vector.x, vector.y };
+		}
+
+		static void from_json(const json& json, vector2& vector)
+		{
+			vector = vector2(json[0], json[1]);
+		}
+	};
+
+
+	template <>
 	struct adl_serializer<std::vector<vector3>> {
 		static void to_json(json& json, const std::vector<vector3>& vector)
 		{

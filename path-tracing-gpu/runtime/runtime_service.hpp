@@ -1,8 +1,9 @@
 #pragma once
 
 #include "resources/meshes_system.hpp"
-
 #include "render/render_device.hpp"
+
+#include "../scenes/scene.hpp"
 
 namespace path_tracing::runtime {
 
@@ -12,6 +13,8 @@ namespace path_tracing::runtime {
 		resources::meshes_system& meshes_system;
 		
 		render::render_device& render_device;
+
+		scenes::scene& scene;
 		
 		runtime_service(runtime_process& process);
 	};

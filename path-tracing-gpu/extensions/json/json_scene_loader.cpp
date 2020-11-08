@@ -28,12 +28,40 @@ namespace path_tracing::extensions::json {
 
 		return transform(look_at(system, eye, at, up)).inverse();
 	}
-	
+
+	transform load_transform_from_property(const coordinate_system& system, const nlohmann::json& json)
+	{
+		if (json.contains("matrix")) return load_transform_from_matrix_property(json["matrix"]);
+		if (json.contains("eye")) return load_transform_from_look_at_property(system, json);
+
+		throw "not implementation";
+	}
+
+	perspective_camera load_perspective_camera(const coordinate_system& system, const nlohmann::json& json)
+	{
+		return perspective_camera{
+			load_transform_from_property(system, json["transform"]),
+			json["resolution"].get<vector2>(),
+			json["fov"].get<real>()
+		};
+	}
+
+	mesh_info load_mesh_from_data_property(const meshes_system& system, const nlohmann::json& json)
+	{
+		mesh_cpu_buffer instance;
+
+		instance.positions = json["positions"].get<std::vector<vector3>>();
+		instance.indices = json["indices"].get<std::vector<uint32>>();
+
+		if (json.contains("normals")) instance.normals = json["normals"].get<std::vector<vector3>>();
+		
+	}
 }
 
 void path_tracing::extensions::json::json_scene_loader::load(const runtime_service& service, 
 	const nlohmann::json& scene, const std::string& directory)
 {
+	
 }
 
 void path_tracing::extensions::json::json_scene_loader::load(const runtime_service& service, const std::string& filename)
