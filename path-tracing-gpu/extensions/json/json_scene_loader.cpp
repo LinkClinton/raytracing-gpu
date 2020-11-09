@@ -36,7 +36,7 @@ namespace path_tracing::extensions::json {
 
 		throw "not implementation";
 	}
-
+	
 	perspective_camera load_perspective_camera(const coordinate_system& system, const nlohmann::json& json)
 	{
 		return perspective_camera{
@@ -46,7 +46,7 @@ namespace path_tracing::extensions::json {
 		};
 	}
 
-	mesh_info load_mesh_from_data_property(const meshes_system& system, const nlohmann::json& json)
+	mesh_info load_mesh_from_data_property(meshes_system& system, const nlohmann::json& json)
 	{
 		mesh_cpu_buffer instance;
 
@@ -54,14 +54,46 @@ namespace path_tracing::extensions::json {
 		instance.indices = json["indices"].get<std::vector<uint32>>();
 
 		if (json.contains("normals")) instance.normals = json["normals"].get<std::vector<vector3>>();
-		
+		if (json.contains("uvs")) instance.uvs = json["uvs"].get<std::vector<vector3>>();
+
+		return system.allocate("unknown" + std::to_string(system.count()), std::move(instance));
+	}
+
+	mesh_info load_mesh_from_property(meshes_system& system, const nlohmann::json& json)
+	{
+		if (json["type"] == "triangles") return load_mesh_from_data_property(system, json["data"]);
+
+		throw "not implementation";
 	}
 }
 
 void path_tracing::extensions::json::json_scene_loader::load(const runtime_service& service, 
 	const nlohmann::json& scene, const std::string& directory)
 {
+	if (scene.contains("config") == true) {
+		const auto config = scene["config"];
+
+		if (config.contains("camera_system")) service.scene.camera_system =
+			config["camera_system"] == "right_hand" ? coordinate_system::right_hand : coordinate_system::left_hand;
+
+		if (config.contains("output_window")) 
+			service.scene.output_window = config["output_window"];
+	}
+
+	if (scene.contains("camera") == true) {
+		const auto camera = scene["camera"];
+
+		service.scene.camera = load_perspective_camera(service.scene.camera_system, camera);
+	}
+
+	for (const auto& entity : scene["entities"]) {
+		service.scene.entities.push_back({
+			load_transform_from_property(service.scene.camera_system, entity["transform"]),
+			load_mesh_from_property(service.meshes_system, entity["shape"])
+		});
+	}
 	
+	service.meshes_system.upload_cached_buffers(service.render_device);
 }
 
 void path_tracing::extensions::json::json_scene_loader::load(const runtime_service& service, const std::string& filename)

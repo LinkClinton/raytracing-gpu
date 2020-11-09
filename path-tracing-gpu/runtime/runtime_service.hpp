@@ -2,6 +2,7 @@
 
 #include "resources/meshes_system.hpp"
 #include "render/render_device.hpp"
+#include "windows/view_window.hpp"
 
 #include "../scenes/scene.hpp"
 

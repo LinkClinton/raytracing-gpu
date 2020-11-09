@@ -26,7 +26,7 @@ namespace path_tracing::runtime::windows {
 
 		void update(float delta);
 		
-		void present(bool sync) const;
+		void present(bool sync = true) const;
 
 		bool living() const noexcept;
 

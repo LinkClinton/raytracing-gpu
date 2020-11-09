@@ -14,6 +14,8 @@ namespace path_tracing::scenes {
 		perspective_camera camera;
 		
 		std::vector<entity> entities;
+
+		std::string output_window = "";
 	};
 	
 }

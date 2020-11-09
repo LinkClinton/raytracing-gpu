@@ -10,7 +10,9 @@ void load_scene_from_file(const path_tracing::runtime::runtime_process& process,
 
 int main()
 {
-	const auto process = path_tracing::runtime::runtime_process();
+	auto process = path_tracing::runtime::runtime_process();
 
 	load_scene_from_file(process, "./resources/scenes/cornell-box/scene.json");
+
+	process.run_loop();
 }

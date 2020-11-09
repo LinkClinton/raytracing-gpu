@@ -9,7 +9,9 @@ namespace path_tracing::runtime {
 		runtime_process();
 
 		~runtime_process() = default;
-	
+
+		void run_loop();
+		
 		runtime_service service() const noexcept;
 		
 		friend struct runtime_service;
@@ -17,9 +19,11 @@ namespace path_tracing::runtime {
 		runtime_service mRuntimeService;
 
 		resources::meshes_system mMeshesSystem;
-		
+
 		render::render_device mRenderDevice;
 
+		windows::view_window mViewWindow;
+		
 		scenes::scene mScene;
 	};
 	
