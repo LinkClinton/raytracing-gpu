@@ -52,18 +52,23 @@ namespace path_tracing::runtime::resources {
 
 		mesh_info info(const std::string& name) const;
 
+		wrapper::directx12::raytracing_geometry geometry(const mesh_info& info) const;
+		
 		const mesh_cpu_buffer& cpu_buffer() const noexcept;
 
 		const mesh_gpu_buffer& gpu_buffer() const noexcept;
 		
 		bool has(const std::string& name) const noexcept;
 
+		bool has(const mesh_info& info) const noexcept;
+
 		size_t count() const noexcept;
 	private:
 		void allocate_gpu_buffer_memory(const render_device& device);
 		
 		std::vector<std::pair<std::string, mesh_cpu_buffer>> mCachedMeshes;
-		
+
+		mapping<uint32, wrapper::directx12::raytracing_geometry> mGeometries;
 		mapping<std::string, mesh_info> mMeshInfos;
 
 		mesh_cpu_buffer mCpuBuffers;

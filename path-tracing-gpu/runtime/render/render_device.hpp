@@ -1,5 +1,6 @@
 #pragma once
 
+#include <directx12-wrapper/raytracings/accleration.hpp>
 #include <directx12-wrapper/commands/command_queue.hpp>
 #include <directx12-wrapper/resources/buffer.hpp>
 

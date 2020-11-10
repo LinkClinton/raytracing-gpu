@@ -23,7 +23,9 @@ void path_tracing::runtime::runtime_process::run_loop()
 		current = time_point::now();
 		
 		mViewWindow.update(duration.count());
-		mViewWindow.present();
+		mViewWindow.present(false);
+
+		mRenderDevice.wait();
 	}
 
 	mRenderDevice.wait();

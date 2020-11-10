@@ -16,6 +16,8 @@ void path_tracing::runtime::resources::meshes_system::upload_cached_buffers(cons
 	size_t idx_extend_count = 0;
 
 	for (const auto& mesh : mCachedMeshes) {
+		assert(!mesh.second.positions.empty() && !mesh.second.indices.empty());
+		
 		vtx_extend_count += mesh.second.positions.size();
 		idx_extend_count += mesh.second.indices.size();
 	}
@@ -93,6 +95,11 @@ path_tracing::runtime::resources::mesh_info path_tracing::runtime::resources::me
 	return mMeshInfos.at(name);
 }
 
+wrapper::directx12::raytracing_geometry path_tracing::runtime::resources::meshes_system::geometry(const mesh_info& info) const
+{
+	return mGeometries.at(info.idx_location);
+}
+
 const path_tracing::runtime::resources::mesh_cpu_buffer& path_tracing::runtime::resources::meshes_system::cpu_buffer() const noexcept
 {
 	return mCpuBuffers;
@@ -106,6 +113,11 @@ const path_tracing::runtime::resources::mesh_gpu_buffer& path_tracing::runtime::
 bool path_tracing::runtime::resources::meshes_system::has(const std::string& name) const noexcept
 {
 	return mMeshInfos.find(name) != mMeshInfos.end();
+}
+
+bool path_tracing::runtime::resources::meshes_system::has(const mesh_info& info) const noexcept
+{
+	return mGeometries.find(info.idx_location) != mGeometries.end();
 }
 
 size_t path_tracing::runtime::resources::meshes_system::count() const noexcept
@@ -157,6 +169,33 @@ void path_tracing::runtime::resources::meshes_system::allocate_gpu_buffer_memory
 	barriers.push_back(mGpuBuffers.indices.barrier(D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_GENERIC_READ));
 
 	command_list.resource_barrier(barriers);
+
+	mGeometries.clear();
+
+	// rebuild raytracing geometries of meshes
+	// because raytracing geometries will reference the mesh buffer
+	// see https://docs.microsoft.com/en-us/windows/win32/api/d3d12/ns-d3d12-d3d12_raytracing_geometry_triangles_desc
+	// we need clear up all geometries and rebuild all
+	for (const auto& iterator : mMeshInfos) {
+		const auto& mesh_info = iterator.second;
+
+		const auto vtx_address = mGpuBuffers.positions->GetGPUVirtualAddress() + 
+			mesh_info.vtx_location * sizeof(vector3);
+		const auto idx_address = mGpuBuffers.indices->GetGPUVirtualAddress() +
+			mesh_info.idx_location * sizeof(uint32);
+		
+		const auto geometry = wrapper::directx12::raytracing_geometry::create(
+			D3D12_RAYTRACING_ACCELERATION_STRUCTURE_BUILD_FLAG_PREFER_FAST_TRACE,
+			command_list, device.device(),
+			vtx_address, mesh_info.vtx_count,
+			idx_address, mesh_info.idx_count
+		);
+
+		// we use mesh_info::idx_location as key value
+		// because there is no mesh_info has same idx_location
+		mGeometries.insert({ mesh_info.idx_location, geometry });
+	}
+	
 	command_list.close();
 
 	device.queue().execute({ command_list });
