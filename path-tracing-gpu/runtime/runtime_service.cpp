@@ -4,6 +4,6 @@
 
 path_tracing::runtime::runtime_service::runtime_service(runtime_process& process) :
 	meshes_system(process.mMeshesSystem), render_device(process.mRenderDevice),
-	scene(process.mScene)
+	render_system(process.mRenderSystem), scene(process.mScene)
 {
 }

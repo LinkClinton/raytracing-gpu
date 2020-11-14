@@ -2,13 +2,14 @@
 
 #include <directx12-wrapper/raytracings/accleration.hpp>
 #include <directx12-wrapper/commands/command_queue.hpp>
+#include <directx12-wrapper/resources/texture2d.hpp>
 #include <directx12-wrapper/resources/buffer.hpp>
 
 #include "../../cores/noncopyable.hpp"
 #include "../../cores/types.hpp"
 
 namespace path_tracing::runtime::render {
-
+	
 	class render_device final : public noncopyable {
 	public:
 		render_device() = default;

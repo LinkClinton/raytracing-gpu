@@ -15,12 +15,17 @@ void path_tracing::runtime::runtime_process::run_loop()
 			static_cast<uint32>(mScene.camera.resolution.y));
 	}
 
+	mRenderSystem.resolve(mRuntimeService);
+	
 	auto current = time_point::now();
 	
 	while (mViewWindow.living()) {
 		auto duration = std::chrono::duration_cast<std::chrono::duration<float>>(time_point::now() - current);
 
 		current = time_point::now();
+
+		mRenderSystem.update(mRuntimeService, duration.count());
+		mRenderSystem.render(mRuntimeService, duration.count());
 		
 		mViewWindow.update(duration.count());
 		mViewWindow.present(false);

@@ -2,6 +2,7 @@
 
 #include "resources/meshes_system.hpp"
 #include "render/render_device.hpp"
+#include "render/render_system.hpp"
 #include "windows/view_window.hpp"
 
 #include "../scenes/scene.hpp"
@@ -14,7 +15,8 @@ namespace path_tracing::runtime {
 		resources::meshes_system& meshes_system;
 		
 		render::render_device& render_device;
-
+		render::render_system& render_system;
+		
 		scenes::scene& scene;
 		
 		runtime_service(runtime_process& process);

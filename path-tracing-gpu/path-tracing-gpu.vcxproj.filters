@@ -26,6 +26,15 @@
     <ClCompile Include="extensions\json\json_scene_loader.cpp">
       <Filter>extensions\json</Filter>
     </ClCompile>
+    <ClCompile Include="renderers\renderer.cpp">
+      <Filter>renderers</Filter>
+    </ClCompile>
+    <ClCompile Include="runtime\render\render_system.cpp">
+      <Filter>runtime\render</Filter>
+    </ClCompile>
+    <ClCompile Include="renderers\depth_renderer.cpp">
+      <Filter>renderers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="extensions">
@@ -113,6 +122,15 @@
     </ClInclude>
     <ClInclude Include="extensions\json\json_scene_loader.hpp">
       <Filter>extensions\json</Filter>
+    </ClInclude>
+    <ClInclude Include="renderers\renderer.hpp">
+      <Filter>renderers</Filter>
+    </ClInclude>
+    <ClInclude Include="runtime\render\render_system.hpp">
+      <Filter>runtime\render</Filter>
+    </ClInclude>
+    <ClInclude Include="renderers\depth_renderer.hpp">
+      <Filter>renderers</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
