@@ -1,7 +1,5 @@
 #pragma once
 
-#include "../../cores/noncopyable.hpp"
-#include "../../cores/types.hpp"
 #include "render_device.hpp"
 
 #include <memory>

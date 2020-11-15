@@ -58,9 +58,6 @@
     <Filter Include="resources">
       <UniqueIdentifier>{75169d83-d5ba-4bdf-a19b-d5774137d219}</UniqueIdentifier>
     </Filter>
-    <Filter Include="cores">
-      <UniqueIdentifier>{6110b0bf-0a3e-46f6-a196-fd3c4523f1a3}</UniqueIdentifier>
-    </Filter>
     <Filter Include="runtime">
       <UniqueIdentifier>{c7136d99-3711-4ae2-83e1-6e7089865e86}</UniqueIdentifier>
     </Filter>
@@ -82,16 +79,13 @@
     <Filter Include="extensions\json">
       <UniqueIdentifier>{a0023d6d-32c2-41fd-a1ee-4c45eb99d3f6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="interfaces">
+      <UniqueIdentifier>{0693ceb7-e701-48f5-8f0e-595df1092e5e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="scenes\components\transform.hpp">
       <Filter>scenes\components</Filter>
-    </ClInclude>
-    <ClInclude Include="cores\noncopyable.hpp">
-      <Filter>cores</Filter>
-    </ClInclude>
-    <ClInclude Include="cores\types.hpp">
-      <Filter>cores</Filter>
     </ClInclude>
     <ClInclude Include="runtime\render\render_device.hpp">
       <Filter>runtime\render</Filter>
@@ -146,6 +140,10 @@
     </ClInclude>
     <ClInclude Include="runtime\resources\resource_system.hpp">
       <Filter>runtime\resources</Filter>
+    </ClInclude>
+    <ClInclude Include="types.hpp" />
+    <ClInclude Include="interfaces\noncopyable.hpp">
+      <Filter>interfaces</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

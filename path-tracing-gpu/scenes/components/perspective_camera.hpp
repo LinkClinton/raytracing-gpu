@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../../cores/types.hpp"
+#include "../../types.hpp"
 #include "transform.hpp"
 
 namespace path_tracing::scenes::components {

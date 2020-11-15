@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../../cores/types.hpp"
+#include "../../types.hpp"
 
 #undef near
 #undef far

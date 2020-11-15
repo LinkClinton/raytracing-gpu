@@ -4,7 +4,6 @@
 #include <directx12-wrapper/swap_chain.hpp>
 
 #include "../../runtime/render/render_device.hpp"
-#include "../../cores/types.hpp"
 
 namespace path_tracing::runtime {
 

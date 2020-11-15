@@ -2,8 +2,8 @@
 
 #include <directx12-wrapper/resources/texture2d.hpp>
 
-#include "../../cores/noncopyable.hpp"
-#include "../../cores/types.hpp"
+#include "../interfaces/noncopyable.hpp"
+#include "../../types.hpp"
 
 namespace path_tracing::runtime {
 

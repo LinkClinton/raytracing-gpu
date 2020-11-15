@@ -1,11 +1,15 @@
 #pragma once
 
-#include "../../cores/types.hpp"
+#include "../../types.hpp"
 
 #include <nlohmann/json.hpp>
 
 namespace nlohmann {
 
+	using vector4 = path_tracing::vector4;
+	using vector3 = path_tracing::vector3;
+	using vector2 = path_tracing::vector2;
+	
 	template <>
 	struct adl_serializer<vector4> {
 		static void to_json(json& json, const vector4& vector)

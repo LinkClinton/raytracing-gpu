@@ -116,12 +116,12 @@ bool path_tracing::runtime::windows::view_window::living() const noexcept
 	return mLiving;
 }
 
-uint32 path_tracing::runtime::windows::view_window::size_x() const noexcept
+path_tracing::uint32 path_tracing::runtime::windows::view_window::size_x() const noexcept
 {
 	return mSizeX;
 }
 
-uint32 path_tracing::runtime::windows::view_window::size_y() const noexcept
+path_tracing::uint32 path_tracing::runtime::windows::view_window::size_y() const noexcept
 {
 	return mSizeY;
 }

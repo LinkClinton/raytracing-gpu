@@ -13,12 +13,12 @@ path_tracing::scenes::components::transform path_tracing::scenes::components::tr
 	return transform(mInverse, mMatrix);
 }
 
-matrix4x4 path_tracing::scenes::components::transform::matrix() const noexcept
+path_tracing::matrix4x4 path_tracing::scenes::components::transform::matrix() const noexcept
 {
 	return mMatrix;
 }
 
-matrix4x4 path_tracing::scenes::components::perspective_fov(const coordinate_system& system, real fov, real width,
+path_tracing::matrix4x4 path_tracing::scenes::components::perspective_fov(const coordinate_system& system, real fov, real width,
 	real height, real near, real far)
 {
 	if (system == coordinate_system::right_hand)
@@ -27,7 +27,7 @@ matrix4x4 path_tracing::scenes::components::perspective_fov(const coordinate_sys
 		return glm::perspectiveFovLH(fov, width, height, near, far);
 }
 
-matrix4x4 path_tracing::scenes::components::look_at(const coordinate_system& system, const vector3& eye,
+path_tracing::matrix4x4 path_tracing::scenes::components::look_at(const coordinate_system& system, const vector3& eye,
 	const vector3& at, const vector3& up)
 {
 	if (system == coordinate_system::right_hand)

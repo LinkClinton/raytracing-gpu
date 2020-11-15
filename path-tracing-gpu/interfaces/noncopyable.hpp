@@ -1,6 +1,6 @@
 #pragma once
 
-namespace path_tracing::cores {
+namespace path_tracing::interfaces {
 
 	class noncopyable {
 	public:
@@ -16,4 +16,4 @@ namespace path_tracing::cores {
 
 }
 
-using namespace path_tracing::cores;
+using namespace path_tracing::interfaces;

@@ -1,11 +1,11 @@
 #pragma once
 
-#include "../../extensions/glm/glm.hpp"
+#include "extensions/glm/glm.hpp"
 
 #include <unordered_map>
 
-namespace path_tracing::cores {
-	
+namespace path_tracing {
+
 	using uint32 = unsigned;
 	using real = float;
 
@@ -18,5 +18,3 @@ namespace path_tracing::cores {
 	template <typename Key, typename Value>
 	using mapping = std::unordered_map<Key, Value>;
 }
-
-using namespace path_tracing::cores;

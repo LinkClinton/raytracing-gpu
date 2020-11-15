@@ -2,8 +2,8 @@
 
 #include <directx12-wrapper/swap_chain.hpp>
 
-#include "../../cores/noncopyable.hpp"
-#include "../../cores/types.hpp"
+#include "../../interfaces/noncopyable.hpp"
+#include "../../types.hpp"
 
 #include <string>
 

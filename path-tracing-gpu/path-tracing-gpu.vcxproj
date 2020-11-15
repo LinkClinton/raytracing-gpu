@@ -178,13 +178,12 @@
     <ClCompile Include="scenes\components\transform.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="cores\noncopyable.hpp" />
-    <ClInclude Include="cores\types.hpp" />
     <ClInclude Include="extensions\glm\glm.hpp" />
     <ClInclude Include="extensions\imgui\imgui_impl_win32.hpp" />
     <ClInclude Include="extensions\imgui\imgui_renderer.hpp" />
     <ClInclude Include="extensions\json\json.hpp" />
     <ClInclude Include="extensions\json\json_scene_loader.hpp" />
+    <ClInclude Include="interfaces\noncopyable.hpp" />
     <ClInclude Include="renderers\depth_renderer.hpp" />
     <ClInclude Include="renderers\renderer.hpp" />
     <ClInclude Include="runtime\render\render_device.hpp" />
@@ -199,6 +198,7 @@
     <ClInclude Include="scenes\components\transform.hpp" />
     <ClInclude Include="scenes\entity.hpp" />
     <ClInclude Include="scenes\scene.hpp" />
+    <ClInclude Include="types.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\references\directx12-wrapper\directx12-wrapper.vcxproj">
