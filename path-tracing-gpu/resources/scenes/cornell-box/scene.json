@@ -1,7 +1,10 @@
 {
     "config": {
         "camera_system": "left_hand",
-        "output_window": "view_window"
+        "output_window": {
+            "name": "view_window",
+            "font": 12
+        }
     },
     "camera": {
         "fov": 19.5,

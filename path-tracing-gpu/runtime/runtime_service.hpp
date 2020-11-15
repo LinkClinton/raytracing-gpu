@@ -1,9 +1,12 @@
 #pragma once
 
+#include "resources/resource_system.hpp"
 #include "resources/meshes_system.hpp"
+
 #include "render/render_device.hpp"
 #include "render/render_system.hpp"
-#include "windows/view_window.hpp"
+
+#include "windows/window_system.hpp"
 
 #include "../scenes/scene.hpp"
 
@@ -12,10 +15,13 @@ namespace path_tracing::runtime {
 	class runtime_process;
 	
 	struct runtime_service final {
+		resources::resource_system& resource_system;
 		resources::meshes_system& meshes_system;
 		
 		render::render_device& render_device;
 		render::render_system& render_system;
+
+		windows::window_system& window_system;
 		
 		scenes::scene& scene;
 		

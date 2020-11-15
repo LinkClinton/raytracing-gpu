@@ -18,12 +18,13 @@ namespace path_tracing::runtime {
 	private:
 		runtime_service mRuntimeService;
 
+		resources::resource_system mResourceSystem;
 		resources::meshes_system mMeshesSystem;
 
 		render::render_device mRenderDevice;
 		render::render_system mRenderSystem;
-		
-		windows::view_window mViewWindow;
+
+		windows::window_system mWindowSystem;
 		
 		scenes::scene mScene;
 	};

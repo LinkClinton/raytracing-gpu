@@ -10,7 +10,7 @@
 namespace path_tracing::runtime::windows {
 
 	using handle = void*;
-	
+
 	class view_window final : public noncopyable {
 	public:
 		view_window() = default;
@@ -25,17 +25,26 @@ namespace path_tracing::runtime::windows {
 		~view_window();
 
 		void update(float delta);
-		
+
 		void present(bool sync = true) const;
 
 		bool living() const noexcept;
 
+		uint32 size_x() const noexcept;
+
+		uint32 size_y() const noexcept;
+		
 		view_window& operator=(view_window&& window) noexcept;
+
+		friend class window_system;
 	private:
 		wrapper::directx12::swap_chain mSwapChain;
 
+		uint32 mSizeX = 0;
+		uint32 mSizeY = 0;
+		
 		handle mHandle = nullptr;
 		bool mLiving = false;
 	};
-	
+
 }

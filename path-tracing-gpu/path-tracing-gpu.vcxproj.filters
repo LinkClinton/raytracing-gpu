@@ -35,6 +35,12 @@
     <ClCompile Include="renderers\depth_renderer.cpp">
       <Filter>renderers</Filter>
     </ClCompile>
+    <ClCompile Include="extensions\imgui\imgui_renderer.cpp">
+      <Filter>extensions\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="runtime\windows\window_system.cpp">
+      <Filter>runtime\windows</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="extensions">
@@ -131,6 +137,15 @@
     </ClInclude>
     <ClInclude Include="renderers\depth_renderer.hpp">
       <Filter>renderers</Filter>
+    </ClInclude>
+    <ClInclude Include="extensions\imgui\imgui_renderer.hpp">
+      <Filter>extensions\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="runtime\windows\window_system.hpp">
+      <Filter>runtime\windows</Filter>
+    </ClInclude>
+    <ClInclude Include="runtime\resources\resource_system.hpp">
+      <Filter>runtime\resources</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

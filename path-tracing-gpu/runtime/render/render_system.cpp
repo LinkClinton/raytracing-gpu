@@ -15,6 +15,8 @@ void path_tracing::runtime::render::render_system::resolve(const runtime_service
 		static_cast<size_t>(service.scene.camera.resolution.x),
 		static_cast<size_t>(service.scene.camera.resolution.y)
 	);
+
+	service.resource_system.add<wrapper::directx12::texture2d>("RenderSystem.RenderTarget", mRenderTarget);
 }
 
 void path_tracing::runtime::render::render_system::update(const runtime_service& service, real delta)

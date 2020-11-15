@@ -5,8 +5,18 @@
 
 #include "entity.hpp"
 
+#include <optional>
+
 namespace path_tracing::scenes {
 
+	struct output_window_property {
+		std::string name = "";
+
+		uint32 font_size = 20;
+		
+		output_window_property() = default;
+	};
+	
 	struct scene final {
 		coordinate_system texture_system = coordinate_system::left_hand;
 		coordinate_system camera_system = coordinate_system::right_hand;
@@ -15,7 +25,7 @@ namespace path_tracing::scenes {
 		
 		std::vector<entity> entities;
 
-		std::string output_window = "";
+		std::optional<output_window_property> output_window;
 	};
 	
 }

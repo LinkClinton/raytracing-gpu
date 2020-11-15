@@ -8,18 +8,13 @@ path_tracing::runtime::runtime_process::runtime_process() :
 void path_tracing::runtime::runtime_process::run_loop()
 {
 	using time_point = std::chrono::high_resolution_clock;
-	
-	if (!mScene.output_window.empty()) {
-		mViewWindow = windows::view_window(mRenderDevice.queue(), mRenderDevice.device(), mScene.output_window,
-			static_cast<uint32>(mScene.camera.resolution.x),
-			static_cast<uint32>(mScene.camera.resolution.y));
-	}
 
 	mRenderSystem.resolve(mRuntimeService);
+	mWindowSystem.resolve(mRuntimeService);
 	
 	auto current = time_point::now();
 	
-	while (mViewWindow.living()) {
+	while (mWindowSystem.living()) {
 		auto duration = std::chrono::duration_cast<std::chrono::duration<float>>(time_point::now() - current);
 
 		current = time_point::now();
@@ -27,15 +22,13 @@ void path_tracing::runtime::runtime_process::run_loop()
 		mRenderSystem.update(mRuntimeService, duration.count());
 		mRenderSystem.render(mRuntimeService, duration.count());
 		
-		mViewWindow.update(duration.count());
-		mViewWindow.present(false);
-
+		mWindowSystem.update(mRuntimeService, duration.count());
+		mWindowSystem.render(mRuntimeService, duration.count());
+		
 		mRenderDevice.wait();
 	}
 
 	mRenderDevice.wait();
-	
-	mViewWindow = windows::view_window();
 }
 
 path_tracing::runtime::runtime_service path_tracing::runtime::runtime_process::service() const noexcept

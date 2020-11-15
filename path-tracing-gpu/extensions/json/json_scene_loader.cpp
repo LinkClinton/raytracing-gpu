@@ -76,8 +76,12 @@ void path_tracing::extensions::json::json_scene_loader::load(const runtime_servi
 		if (config.contains("camera_system")) service.scene.camera_system =
 			config["camera_system"] == "right_hand" ? coordinate_system::right_hand : coordinate_system::left_hand;
 
-		if (config.contains("output_window")) 
-			service.scene.output_window = config["output_window"];
+		if (config.contains("output_window")) {
+			service.scene.output_window = scenes::output_window_property{
+				config["output_window"]["name"],
+				config["output_window"]["font"]
+			};
+		}
 	}
 
 	if (scene.contains("camera") == true) {

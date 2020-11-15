@@ -27,7 +27,8 @@ LRESULT DefaultWindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 path_tracing::runtime::windows::view_window::view_window(
 	const wrapper::directx12::command_queue& queue,
 	const wrapper::directx12::device& device, 
-	const std::string& name, uint32 size_x, uint32 size_y)
+	const std::string& name, uint32 size_x, uint32 size_y) :
+	mSizeX(size_x), mSizeY(size_y)
 {
 	const auto hInstance = GetModuleHandle(nullptr);
 	const auto class_name = name;
@@ -74,7 +75,8 @@ path_tracing::runtime::windows::view_window::view_window(
 }
 
 path_tracing::runtime::windows::view_window::view_window(view_window&& window) noexcept :
-	mSwapChain(window.mSwapChain), mHandle(window.mHandle), mLiving(window.mLiving)
+	mSwapChain(window.mSwapChain), mSizeX(window.mSizeX), mSizeY(window.mSizeY),
+	mHandle(window.mHandle), mLiving(window.mLiving)
 {
 	window.mHandle = nullptr;
 	window.mLiving = false;
@@ -114,13 +116,25 @@ bool path_tracing::runtime::windows::view_window::living() const noexcept
 	return mLiving;
 }
 
+uint32 path_tracing::runtime::windows::view_window::size_x() const noexcept
+{
+	return mSizeX;
+}
+
+uint32 path_tracing::runtime::windows::view_window::size_y() const noexcept
+{
+	return mSizeY;
+}
+
 path_tracing::runtime::windows::view_window& path_tracing::runtime::windows::view_window::operator=(
 	view_window&& window) noexcept
 {
 	mSwapChain = window.mSwapChain;
+	mSizeX = window.mSizeX;
+	mSizeY = window.mSizeY;
 	mHandle = window.mHandle;
 	mLiving = window.mLiving;
-
+	
 	window.mHandle = nullptr;
 	window.mLiving = false;
 

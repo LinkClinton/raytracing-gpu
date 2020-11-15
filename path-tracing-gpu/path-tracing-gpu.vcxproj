@@ -139,6 +139,9 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
+    <Manifest>
+      <EnableDpiAwareness>false</EnableDpiAwareness>
+    </Manifest>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -160,6 +163,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="extensions\imgui\imgui_impl_win32.cpp" />
+    <ClCompile Include="extensions\imgui\imgui_renderer.cpp" />
     <ClCompile Include="extensions\json\json_scene_loader.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="renderers\depth_renderer.cpp" />
@@ -170,6 +174,7 @@
     <ClCompile Include="runtime\runtime_process.cpp" />
     <ClCompile Include="runtime\runtime_service.cpp" />
     <ClCompile Include="runtime\windows\view_window.cpp" />
+    <ClCompile Include="runtime\windows\window_system.cpp" />
     <ClCompile Include="scenes\components\transform.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -177,6 +182,7 @@
     <ClInclude Include="cores\types.hpp" />
     <ClInclude Include="extensions\glm\glm.hpp" />
     <ClInclude Include="extensions\imgui\imgui_impl_win32.hpp" />
+    <ClInclude Include="extensions\imgui\imgui_renderer.hpp" />
     <ClInclude Include="extensions\json\json.hpp" />
     <ClInclude Include="extensions\json\json_scene_loader.hpp" />
     <ClInclude Include="renderers\depth_renderer.hpp" />
@@ -184,9 +190,11 @@
     <ClInclude Include="runtime\render\render_device.hpp" />
     <ClInclude Include="runtime\render\render_system.hpp" />
     <ClInclude Include="runtime\resources\meshes_system.hpp" />
+    <ClInclude Include="runtime\resources\resource_system.hpp" />
     <ClInclude Include="runtime\runtime_process.hpp" />
     <ClInclude Include="runtime\runtime_service.hpp" />
     <ClInclude Include="runtime\windows\view_window.hpp" />
+    <ClInclude Include="runtime\windows\window_system.hpp" />
     <ClInclude Include="scenes\components\perspective_camera.hpp" />
     <ClInclude Include="scenes\components\transform.hpp" />
     <ClInclude Include="scenes\entity.hpp" />
