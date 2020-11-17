@@ -34,7 +34,8 @@ namespace path_tracing::runtime::render {
 	private:
 		std::shared_ptr<renderers::renderer> mRenderer;
 
-		wrapper::directx12::texture2d mRenderTarget;
+		wrapper::directx12::texture2d mRenderTargetHDR;
+		wrapper::directx12::texture2d mRenderTargetSDR;
 	};
 	
 }

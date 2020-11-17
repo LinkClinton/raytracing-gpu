@@ -14,5 +14,5 @@ namespace path_tracing::scenes::components {
 
 		perspective_camera() = default;
 	};
-	
+
 }

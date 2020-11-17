@@ -27,5 +27,7 @@ namespace path_tracing::scenes {
 
 		std::optional<output_window_property> output_window;
 	};
-	
+
+	std::tuple<matrix4x4, matrix4x4> compute_camera_matrix(const scene& scene);
+
 }

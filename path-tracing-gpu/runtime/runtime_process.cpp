@@ -20,12 +20,12 @@ void path_tracing::runtime::runtime_process::run_loop()
 		current = time_point::now();
 
 		mRenderSystem.update(mRuntimeService, duration.count());
-		mRenderSystem.render(mRuntimeService, duration.count());
-		
 		mWindowSystem.update(mRuntimeService, duration.count());
-		mWindowSystem.render(mRuntimeService, duration.count());
-		
+
 		mRenderDevice.wait();
+		
+		mRenderSystem.render(mRuntimeService, duration.count());
+		mWindowSystem.render(mRuntimeService, duration.count());
 	}
 
 	mRenderDevice.wait();

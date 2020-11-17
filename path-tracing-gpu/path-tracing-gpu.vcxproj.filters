@@ -41,6 +41,9 @@
     <ClCompile Include="runtime\windows\window_system.cpp">
       <Filter>runtime\windows</Filter>
     </ClCompile>
+    <ClCompile Include="scenes\scene.cpp">
+      <Filter>scenes</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="extensions">
@@ -81,6 +84,12 @@
     </Filter>
     <Filter Include="interfaces">
       <UniqueIdentifier>{0693ceb7-e701-48f5-8f0e-595df1092e5e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="resources\shaders">
+      <UniqueIdentifier>{b87c4413-0d9a-4846-8ca9-7be537512923}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="resources\shaders\depth_renderer">
+      <UniqueIdentifier>{e10a9001-abe7-44e5-9d9f-3f7b33a4dbe7}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -145,5 +154,27 @@
     <ClInclude Include="interfaces\noncopyable.hpp">
       <Filter>interfaces</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="resources\shaders\fix_resharper_error.hlsl">
+      <Filter>resources\shaders</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="resources\shaders\depth_renderer\closest_hits.hlsl">
+      <Filter>resources\shaders\depth_renderer</Filter>
+    </FxCompile>
+    <FxCompile Include="resources\shaders\depth_renderer\miss_shaders.hlsl">
+      <Filter>resources\shaders\depth_renderer</Filter>
+    </FxCompile>
+    <FxCompile Include="resources\shaders\depth_renderer\ray_generation.hlsl">
+      <Filter>resources\shaders\depth_renderer</Filter>
+    </FxCompile>
+    <FxCompile Include="resources\shaders\types.hlsl">
+      <Filter>resources\shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="resources\shaders\depth_renderer\depth_types.hlsl">
+      <Filter>resources\shaders\depth_renderer</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>
