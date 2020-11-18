@@ -91,6 +91,9 @@
     <Filter Include="resources\shaders\depth_renderer">
       <UniqueIdentifier>{e10a9001-abe7-44e5-9d9f-3f7b33a4dbe7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="resources\fonts">
+      <UniqueIdentifier>{b30bb9c3-4b87-40c0-b182-b5c6f0abf0b3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="scenes\components\transform.hpp">
@@ -159,22 +162,15 @@
     <None Include="resources\shaders\fix_resharper_error.hlsl">
       <Filter>resources\shaders</Filter>
     </None>
+    <None Include="resources\shaders\depth_renderer\closest_hits.hlsl" />
+    <None Include="resources\shaders\depth_renderer\miss_shaders.hlsl" />
+    <None Include="resources\shaders\depth_renderer\ray_generation.hlsl" />
+    <None Include="resources\shaders\types.hlsl" />
+    <None Include="resources\shaders\depth_renderer\depth_types.hlsl" />
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="resources\shaders\depth_renderer\closest_hits.hlsl">
-      <Filter>resources\shaders\depth_renderer</Filter>
-    </FxCompile>
-    <FxCompile Include="resources\shaders\depth_renderer\miss_shaders.hlsl">
-      <Filter>resources\shaders\depth_renderer</Filter>
-    </FxCompile>
-    <FxCompile Include="resources\shaders\depth_renderer\ray_generation.hlsl">
-      <Filter>resources\shaders\depth_renderer</Filter>
-    </FxCompile>
-    <FxCompile Include="resources\shaders\types.hlsl">
-      <Filter>resources\shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="resources\shaders\depth_renderer\depth_types.hlsl">
-      <Filter>resources\shaders\depth_renderer</Filter>
-    </FxCompile>
+    <Font Include="resources\fonts\CascadiaCode.ttf">
+      <Filter>resources\fonts</Filter>
+    </Font>
   </ItemGroup>
 </Project>

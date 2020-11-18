@@ -12,9 +12,9 @@ struct scene_config {
 	float4x4 raster_to_camera;
 	float4x4 camera_to_world;
 
-	uint sample_index;
+	float3 camera_position;
 	
-	uint3 unused;
+	uint sample_index;
 };
 
 SHADER_CONSTANT_BUFFER_DEFINE(scene_config, config, b0, space0);

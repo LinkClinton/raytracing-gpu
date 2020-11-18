@@ -46,6 +46,7 @@ void path_tracing::renderers::depth_renderer::update(const runtime_service& serv
 
 	mSceneConfig.raster_to_camera = raster_to_camera;
 	mSceneConfig.camera_to_world = camera_to_world;
+	mSceneConfig.camera_position = transform_point(service.scene.camera.transform, vector3(0));
 	mSceneConfig.sample_index++;
 }
 
@@ -62,10 +63,10 @@ void path_tracing::renderers::depth_renderer::render(const runtime_service& serv
 	mCommandList->Reset(mCommandAllocator.get(), nullptr);
 
 	mCommandList->SetPipelineState1(mRaytracingPipeline.get());
-	mCommandList->SetGraphicsRootSignature(mRootSignature[0].get());
+	mCommandList->SetComputeRootSignature(mRootSignature[0].get());
 	
 	mCommandList.set_descriptor_heaps({ mDescriptorHeap.get() });
-	mCommandList.set_graphics_descriptor_table(mRootSignatureInfo->index("descriptor_table"), mDescriptorHeap.gpu_handle());
+	mCommandList.set_compute_descriptor_table(mRootSignatureInfo->index("descriptor_table"), mDescriptorHeap.gpu_handle());
 
 	D3D12_DISPATCH_RAYS_DESC desc = {};
 
@@ -198,7 +199,7 @@ void path_tracing::renderers::depth_renderer::build_root_signature(const runtime
 {
 	mRootSignatureInfo[0]
 		.add_descriptor_table("descriptor_table", mDescriptorTable);
-	
+
 	mRootSignature[0] = wrapper::directx12::root_signature::create(service.render_device.device(), mRootSignatureInfo[0], false);
 	mRootSignature[1] = wrapper::directx12::root_signature::create(service.render_device.device(), mRootSignatureInfo[1], true);
 
@@ -232,6 +233,8 @@ void path_tracing::renderers::depth_renderer::build_shader_association(const run
 
 void path_tracing::renderers::depth_renderer::build_raytracing_pipeline(const runtime_service& service)
 {
+	mRaytracingPipelineInfo.set_max_depth(5);
+	
 	mRaytracingPipeline = wrapper::directx12::raytracing_pipeline::create(service.render_device.device(), mRaytracingPipelineInfo);
 }
 

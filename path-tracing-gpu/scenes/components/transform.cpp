@@ -35,3 +35,8 @@ path_tracing::matrix4x4 path_tracing::scenes::components::look_at(const coordina
 	else
 		return glm::lookAtLH(eye, at, up);
 }
+
+path_tracing::vector3 path_tracing::scenes::components::transform_point(const transform& transform, const vector3& point)
+{
+	return transform.matrix() * vector4(point, 1);
+}

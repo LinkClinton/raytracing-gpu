@@ -11,9 +11,9 @@ namespace path_tracing::renderers {
 		matrix4x4 raster_to_camera = matrix4x4(1);
 		matrix4x4 camera_to_world = matrix4x4(1);
 
-		uint32 sample_index = 0;
+		vector3 camera_position = vector3(0);
 
-		vector3 unused = vector3(0);
+		uint32 sample_index = 0;
 
 		depth_renderer_scene_config() = default;
 	};

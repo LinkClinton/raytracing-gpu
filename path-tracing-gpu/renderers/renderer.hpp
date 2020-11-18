@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../../runtime/runtime_service.hpp"
+#include "../runtime/runtime_service.hpp"
 
 namespace path_tracing::renderers {
 

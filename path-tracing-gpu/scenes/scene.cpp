@@ -6,7 +6,7 @@ std::tuple<path_tracing::matrix4x4, path_tracing::matrix4x4> path_tracing::scene
 	const auto screen_window_max = vector3(1);
 	const auto screen_window_min = vector3(-1);
 
-	const auto camera_to_screen = perspective_fov(scene.camera_system, scene.camera.fov,
+	const auto camera_to_screen = perspective_fov(scene.camera_system, glm::radians(scene.camera.fov),
 		scene.camera.resolution.x, scene.camera.resolution.y,
 		0.1f, 1000.f);
 	
@@ -34,7 +34,7 @@ std::tuple<path_tracing::matrix4x4, path_tracing::matrix4x4> path_tracing::scene
 	const auto raster_to_camera = glm::inverse(camera_to_screen) * raster_to_screen;
 
 	return {
-		raster_to_camera,
-		scene.camera.transform.matrix()
+		glm::transpose(raster_to_camera),
+		glm::transpose(scene.camera.transform.matrix())
 	};
 }

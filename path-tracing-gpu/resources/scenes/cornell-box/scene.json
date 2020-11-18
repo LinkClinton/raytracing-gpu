@@ -3,15 +3,15 @@
         "camera_system": "left_hand",
         "output_window": {
             "name": "view_window",
-            "font": 12
+            "font": 20
         }
     },
     "camera": {
         "fov": 19.5,
         "name": "camera",
         "resolution": [
-            512,
-            512
+            1024,
+            1024
         ],
         "transform": {
             "matrix": [
@@ -28,7 +28,7 @@
                 -1.0,
                 0.0,
                 0.0,
-                1.0,
+                0.9999999,
                 6.800000190734863,
                 1.0
             ]
