@@ -94,6 +94,9 @@
     <Filter Include="resources\fonts">
       <UniqueIdentifier>{b30bb9c3-4b87-40c0-b182-b5c6f0abf0b3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="resources\shaders\samplers">
+      <UniqueIdentifier>{82d6a8cf-2549-488f-b206-a1c7e2cf9bfb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="scenes\components\transform.hpp">
@@ -159,18 +162,34 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="resources\shaders\fix_resharper_error.hlsl">
+    <CopyFileToFolders Include="resources\shaders\depth_renderer\depth_types.hlsl">
+      <Filter>resources\shaders\depth_renderer</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="resources\shaders\depth_renderer\closest_hits.hlsl">
+      <Filter>resources\shaders\depth_renderer</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="resources\shaders\depth_renderer\miss_shaders.hlsl">
+      <Filter>resources\shaders\depth_renderer</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="resources\shaders\depth_renderer\ray_generation.hlsl">
+      <Filter>resources\shaders\depth_renderer</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="resources\shaders\types.hlsl">
       <Filter>resources\shaders</Filter>
-    </None>
-    <None Include="resources\shaders\depth_renderer\closest_hits.hlsl" />
-    <None Include="resources\shaders\depth_renderer\miss_shaders.hlsl" />
-    <None Include="resources\shaders\depth_renderer\ray_generation.hlsl" />
-    <None Include="resources\shaders\types.hlsl" />
-    <None Include="resources\shaders\depth_renderer\depth_types.hlsl" />
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="resources\fonts\CascadiaCode.ttf">
+      <Filter>resources\fonts</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="resources\shaders\fix_resharper_error.hlsl">
+      <Filter>resources\shaders</Filter>
+    </CopyFileToFolders>
   </ItemGroup>
   <ItemGroup>
-    <Font Include="resources\fonts\CascadiaCode.ttf">
-      <Filter>resources\fonts</Filter>
-    </Font>
+    <FxCompile Include="resources\shaders\samplers\random_generator.hlsl">
+      <Filter>resources\shaders\samplers</Filter>
+    </FxCompile>
+    <FxCompile Include="resources\shaders\samplers\random_sampler.hlsl">
+      <Filter>resources\shaders\samplers</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

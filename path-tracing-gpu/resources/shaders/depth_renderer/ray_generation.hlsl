@@ -1,5 +1,7 @@
 #include "depth_types.hlsl"
 
+#include "../samplers/random_sampler.hlsl"
+
 float3 trace(RayDesc ray)
 {
 	tracing_payload payload;
@@ -16,7 +18,9 @@ float3 trace(RayDesc ray)
 [shader("raygeneration")]
 void ray_generation()
 {
-	float2 ray_pixel_location = DispatchRaysIndex().xy + float2(0.5, 0.5).xy;
+	random_sampler sampler = create_random_sampler(config.sample_index);
+	
+	float2 ray_pixel_location = DispatchRaysIndex().xy + next_sample2d(sampler).xy;
 
 	float3 ray_target_camera_space = mul(float4(ray_pixel_location, 0, 1), config.raster_to_camera).xyz;
 	float3 ray_origin_camera_space = float3(0, 0, 0);
