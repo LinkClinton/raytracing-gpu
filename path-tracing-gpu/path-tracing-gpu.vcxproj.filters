@@ -160,6 +160,9 @@
     <ClInclude Include="interfaces\noncopyable.hpp">
       <Filter>interfaces</Filter>
     </ClInclude>
+    <ClInclude Include="runtime\runtime_frame.hpp">
+      <Filter>runtime</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <CopyFileToFolders Include="resources\shaders\depth_renderer\depth_types.hlsl">
@@ -183,13 +186,7 @@
     <CopyFileToFolders Include="resources\shaders\fix_resharper_error.hlsl">
       <Filter>resources\shaders</Filter>
     </CopyFileToFolders>
-  </ItemGroup>
-  <ItemGroup>
-    <FxCompile Include="resources\shaders\samplers\random_generator.hlsl">
-      <Filter>resources\shaders\samplers</Filter>
-    </FxCompile>
-    <FxCompile Include="resources\shaders\samplers\random_sampler.hlsl">
-      <Filter>resources\shaders\samplers</Filter>
-    </FxCompile>
+    <CopyFileToFolders Include="resources\shaders\samplers\random_generator.hlsl" />
+    <CopyFileToFolders Include="resources\shaders\samplers\random_sampler.hlsl" />
   </ItemGroup>
 </Project>

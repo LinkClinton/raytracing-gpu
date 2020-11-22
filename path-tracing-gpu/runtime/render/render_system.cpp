@@ -3,6 +3,7 @@
 #include "../../renderers/depth_renderer.hpp"
 
 #include "../runtime_service.hpp"
+#include "../runtime_frame.hpp"
 
 void path_tracing::runtime::render::render_system::resolve(const runtime_service& service)
 {
@@ -28,16 +29,16 @@ void path_tracing::runtime::render::render_system::resolve(const runtime_service
 	mRenderer = std::make_shared<renderers::depth_renderer>(service);
 }
 
-void path_tracing::runtime::render::render_system::update(const runtime_service& service, real delta)
+void path_tracing::runtime::render::render_system::update(const runtime_service& service, const runtime_frame& frame)
 {
 	if (mRenderer == nullptr) return;
 
-	mRenderer->update(service, delta);
+	mRenderer->update(service, frame);
 }
 
-void path_tracing::runtime::render::render_system::render(const runtime_service& service, real delta)
+void path_tracing::runtime::render::render_system::render(const runtime_service& service, const runtime_frame& frame)
 {
 	if (mRenderer == nullptr) return;
 	
-	mRenderer->render(service, delta);
+	mRenderer->render(service, frame);
 }

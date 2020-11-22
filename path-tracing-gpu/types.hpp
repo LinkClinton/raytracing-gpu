@@ -6,6 +6,7 @@
 
 namespace path_tracing {
 
+	using uint64 = unsigned long long;
 	using uint32 = unsigned;
 	using real = float;
 

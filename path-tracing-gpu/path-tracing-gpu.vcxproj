@@ -200,6 +200,7 @@
     <ClInclude Include="runtime\render\render_system.hpp" />
     <ClInclude Include="runtime\resources\meshes_system.hpp" />
     <ClInclude Include="runtime\resources\resource_system.hpp" />
+    <ClInclude Include="runtime\runtime_frame.hpp" />
     <ClInclude Include="runtime\runtime_process.hpp" />
     <ClInclude Include="runtime\runtime_service.hpp" />
     <ClInclude Include="runtime\windows\view_window.hpp" />

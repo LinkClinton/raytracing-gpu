@@ -79,9 +79,20 @@ void path_tracing::extensions::json::json_scene_loader::load(const runtime_servi
 		if (config.contains("output_window")) {
 			service.scene.output_window = scenes::output_window_property{
 				config["output_window"]["name"],
-				config["output_window"]["font"]
+				config["output_window"]["font"],
+				config["output_window"]["enable"]
 			};
 		}
+
+		if (config.contains("output_images")) {
+			service.scene.output_images = scenes::output_images_property{
+				config["output_images"]["sdr"],
+				config["output_images"]["hdr"]
+			};
+		}
+		
+		if (config.contains("sample_count"))
+			service.scene.sample_count = config["sample_count"];
 	}
 
 	if (scene.contains("camera") == true) {

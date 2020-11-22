@@ -40,17 +40,18 @@ path_tracing::renderers::depth_renderer::depth_renderer(const runtime_service& s
 	service.render_device.wait();
 }
 
-void path_tracing::renderers::depth_renderer::update(const runtime_service& service, real delta)
+void path_tracing::renderers::depth_renderer::update(const runtime_service& service, const runtime_frame& frame)
 {
-	const auto [raster_to_camera, camera_to_world] = compute_camera_matrix(service.scene);
+	const auto [raster_to_camera, camera_to_world] = compute_camera_matrix(
+		service.scene);
 
 	mSceneConfig.raster_to_camera = raster_to_camera;
 	mSceneConfig.camera_to_world = camera_to_world;
 	mSceneConfig.camera_position = transform_point(service.scene.camera.transform, vector3(0));
-	mSceneConfig.sample_index++;
+	mSceneConfig.sample_index = static_cast<uint32>(frame.frame_index);
 }
 
-void path_tracing::renderers::depth_renderer::render(const runtime_service& service, real delta)
+void path_tracing::renderers::depth_renderer::render(const runtime_service& service, const runtime_frame& frame)
 {
 	const auto render_target = service.resource_system.resource<wrapper::directx12::texture2d>(
 		"RenderSystem.RenderTarget.HDR");

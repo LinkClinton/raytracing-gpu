@@ -24,9 +24,9 @@ namespace path_tracing::renderers {
 
 		~depth_renderer() = default;
 
-		void update(const runtime_service& service, real delta) override;
+		void update(const runtime_service& service, const runtime_frame& frame) override;
 
-		void render(const runtime_service& service, real delta) override;
+		void render(const runtime_service& service, const runtime_frame& frame) override;
 	private:	
 		void build_acceleration(const runtime_service& service);
 

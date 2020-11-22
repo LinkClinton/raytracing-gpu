@@ -7,6 +7,7 @@
 namespace path_tracing::runtime {
 
 	struct runtime_service;
+	struct runtime_frame;
 	
 }
 
@@ -22,14 +23,14 @@ namespace path_tracing::runtime::windows {
 
 		void resolve(const runtime_service& service);
 
-		void update(const runtime_service& service, real delta);
+		void update(const runtime_service& service, const runtime_frame& frame);
 
-		void render(const runtime_service& service, real delta);
+		void render(const runtime_service& service, const runtime_frame& frame);
 		
 		bool living() const noexcept;
 	private:
 		imgui_renderer mImGuiRenderer;
-		
+
 		view_window mViewWindow;
 
 		ImTextureID mRenderTargetID = nullptr;

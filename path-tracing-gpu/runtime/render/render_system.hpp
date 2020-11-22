@@ -13,6 +13,7 @@ namespace path_tracing::renderers {
 namespace path_tracing::runtime {
 
 	struct runtime_service;
+	struct runtime_frame;
 	
 }
 
@@ -28,9 +29,9 @@ namespace path_tracing::runtime::render {
 
 		void resolve(const runtime_service& service);
 		
-		void update(const runtime_service& service, real delta);
+		void update(const runtime_service& service, const runtime_frame& frame);
 
-		void render(const runtime_service& service, real delta);
+		void render(const runtime_service& service, const runtime_frame& frame);
 	private:
 		std::shared_ptr<renderers::renderer> mRenderer;
 

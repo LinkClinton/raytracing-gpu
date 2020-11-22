@@ -8,6 +8,7 @@
 namespace path_tracing::runtime {
 
 	struct runtime_service;
+	struct runtime_frame;
 	
 }
 
@@ -15,6 +16,7 @@ namespace path_tracing::extensions::imgui {
 
 	using runtime::render::render_device;
 	using runtime::runtime_service;
+	using runtime::runtime_frame;
 	
 	class imgui_renderer final {
 	public:
@@ -26,9 +28,9 @@ namespace path_tracing::extensions::imgui {
 			const wrapper::directx12::swap_chain& swap_chain,
 			const render_device& device, uint32 font_size);
 
-		void update(const runtime_service& service, real delta);
+		void update(const runtime_service& service, const runtime_frame& frame);
 
-		void render(const runtime_service& service, real delta);
+		void render(const runtime_service& service, const runtime_frame& frame);
 		
 		ImTextureID allocate(const wrapper::directx12::texture2d& resource, size_t index) const;
 	private:

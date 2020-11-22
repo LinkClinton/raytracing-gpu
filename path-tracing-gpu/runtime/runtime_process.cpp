@@ -1,4 +1,5 @@
 #include "runtime_process.hpp"
+#include "runtime_frame.hpp"
 
 path_tracing::runtime::runtime_process::runtime_process() :
 	mRuntimeService(*this), mRenderDevice(D3D_FEATURE_LEVEL_12_0)
@@ -13,19 +14,26 @@ void path_tracing::runtime::runtime_process::run_loop()
 	mWindowSystem.resolve(mRuntimeService);
 	
 	auto current = time_point::now();
+
+	runtime_frame frame;
 	
-	while (mWindowSystem.living()) {
+	while (mWindowSystem.living() || frame.frame_index < mRuntimeService.scene.sample_count) {
 		auto duration = std::chrono::duration_cast<std::chrono::duration<float>>(time_point::now() - current);
 
 		current = time_point::now();
 
-		mRenderSystem.update(mRuntimeService, duration.count());
-		mWindowSystem.update(mRuntimeService, duration.count());
+		frame.delta_time = duration.count();
+		frame.total_time = frame.total_time + duration.count();
+		
+		mRenderSystem.update(mRuntimeService, frame);
+		mWindowSystem.update(mRuntimeService, frame);
 
 		mRenderDevice.wait();
 		
-		mRenderSystem.render(mRuntimeService, duration.count());
-		mWindowSystem.render(mRuntimeService, duration.count());
+		mRenderSystem.render(mRuntimeService, frame);
+		mWindowSystem.render(mRuntimeService, frame);
+
+		frame.frame_index++;
 	}
 
 	mRenderDevice.wait();

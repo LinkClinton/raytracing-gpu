@@ -7,6 +7,13 @@
 
 #include <string>
 
+namespace path_tracing::runtime {
+
+	struct runtime_service;
+	struct runtime_frame;
+	
+}
+
 namespace path_tracing::runtime::windows {
 
 	using handle = void*;
@@ -24,7 +31,7 @@ namespace path_tracing::runtime::windows {
 
 		~view_window();
 
-		void update(float delta);
+		void update(const runtime_service& service, const runtime_frame& frame);
 
 		void present(bool sync = true) const;
 

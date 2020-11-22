@@ -1,6 +1,8 @@
 #include "view_window.hpp"
 
 #include "../../extensions/imgui/imgui_impl_win32.hpp"
+#include "../runtime_service.hpp"
+#include "../runtime_frame.hpp"
 
 #include <Windows.h>
 
@@ -90,7 +92,7 @@ path_tracing::runtime::windows::view_window::~view_window()
 	}
 }
 
-void path_tracing::runtime::windows::view_window::update(float delta)
+void path_tracing::runtime::windows::view_window::update(const runtime_service& service, const runtime_frame& frame)
 {
 	MSG message;
 

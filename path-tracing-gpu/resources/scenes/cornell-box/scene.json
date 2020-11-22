@@ -2,9 +2,15 @@
     "config": {
         "camera_system": "left_hand",
         "output_window": {
+            "enable": true,
             "name": "view_window",
             "font": 20
-        }
+        },
+        "output_images": {
+            "sdr": "image.png",
+            "hdr": "image.hdr"
+        },
+        "sample_count": 1024
     },
     "camera": {
         "fov": 19.5,

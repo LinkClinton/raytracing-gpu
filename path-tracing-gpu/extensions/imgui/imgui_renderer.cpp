@@ -1,6 +1,7 @@
 #include "imgui_renderer.hpp"
 
 #include "../../runtime/runtime_service.hpp"
+#include "../../runtime/runtime_frame.hpp"
 
 void path_tracing::extensions::imgui::imgui_renderer::resolve(
 	const wrapper::directx12::swap_chain& swap_chain,
@@ -41,13 +42,13 @@ void path_tracing::extensions::imgui::imgui_renderer::resolve(
 	wrapper::directx12::extensions::imgui_context::set_multi_sample(1);
 }
 
-void path_tracing::extensions::imgui::imgui_renderer::update(const runtime_service& service, real delta)
+void path_tracing::extensions::imgui::imgui_renderer::update(const runtime_service& service, const runtime_frame& frame)
 {
 	wrapper::directx12::extensions::imgui_context::new_frame();
 	ImGui::NewFrame();
 }
 
-void path_tracing::extensions::imgui::imgui_renderer::render(const runtime_service& service, real delta)
+void path_tracing::extensions::imgui::imgui_renderer::render(const runtime_service& service, const runtime_frame& frame)
 {
 	mCommandAllocator->Reset();
 	mCommandList->Reset(mCommandAllocator.get(), nullptr);
