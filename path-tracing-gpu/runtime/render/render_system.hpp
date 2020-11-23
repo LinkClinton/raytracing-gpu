@@ -32,6 +32,8 @@ namespace path_tracing::runtime::render {
 		void update(const runtime_service& service, const runtime_frame& frame);
 
 		void render(const runtime_service& service, const runtime_frame& frame);
+
+		void save_render_target_sdr(const render_device& device, const std::string& filename) const;
 	private:
 		std::shared_ptr<renderers::renderer> mRenderer;
 

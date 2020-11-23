@@ -44,6 +44,9 @@
     <ClCompile Include="scenes\scene.cpp">
       <Filter>scenes</Filter>
     </ClCompile>
+    <ClCompile Include="extensions\images\image_stb.cpp">
+      <Filter>extensions\images</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="extensions">
@@ -96,6 +99,9 @@
     </Filter>
     <Filter Include="resources\shaders\samplers">
       <UniqueIdentifier>{82d6a8cf-2549-488f-b206-a1c7e2cf9bfb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="extensions\images">
+      <UniqueIdentifier>{9c5bee70-5b75-486f-88ad-620ded9ddda4}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -156,12 +162,18 @@
     <ClInclude Include="runtime\resources\resource_system.hpp">
       <Filter>runtime\resources</Filter>
     </ClInclude>
-    <ClInclude Include="types.hpp" />
     <ClInclude Include="interfaces\noncopyable.hpp">
       <Filter>interfaces</Filter>
     </ClInclude>
     <ClInclude Include="runtime\runtime_frame.hpp">
       <Filter>runtime</Filter>
+    </ClInclude>
+    <ClInclude Include="types.hpp" />
+    <ClInclude Include="extensions\images\image_info.hpp">
+      <Filter>extensions\images</Filter>
+    </ClInclude>
+    <ClInclude Include="extensions\images\image_stb.hpp">
+      <Filter>extensions\images</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -186,7 +198,11 @@
     <CopyFileToFolders Include="resources\shaders\fix_resharper_error.hlsl">
       <Filter>resources\shaders</Filter>
     </CopyFileToFolders>
-    <CopyFileToFolders Include="resources\shaders\samplers\random_generator.hlsl" />
-    <CopyFileToFolders Include="resources\shaders\samplers\random_sampler.hlsl" />
+    <CopyFileToFolders Include="resources\shaders\samplers\random_generator.hlsl">
+      <Filter>resources\shaders\samplers</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="resources\shaders\samplers\random_sampler.hlsl">
+      <Filter>resources\shaders\samplers</Filter>
+    </CopyFileToFolders>
   </ItemGroup>
 </Project>

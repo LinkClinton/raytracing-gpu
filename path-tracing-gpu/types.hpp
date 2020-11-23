@@ -9,6 +9,7 @@ namespace path_tracing {
 	using uint64 = unsigned long long;
 	using uint32 = unsigned;
 	using real = float;
+	using byte = unsigned char;
 
 	using vector2 = glm::vec<2, real>;
 	using vector3 = glm::vec<3, real>;

@@ -36,6 +36,9 @@ void path_tracing::runtime::runtime_process::run_loop()
 		frame.frame_index++;
 	}
 
+	if (mScene.output_images.has_value() && !mScene.output_images->sdr_image.empty())
+		mRenderSystem.save_render_target_sdr(mRenderDevice, mScene.output_images->sdr_image);
+	
 	mRenderDevice.wait();
 }
 

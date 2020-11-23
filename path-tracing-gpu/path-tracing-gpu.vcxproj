@@ -171,6 +171,7 @@
     </Manifest>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="extensions\images\image_stb.cpp" />
     <ClCompile Include="extensions\imgui\imgui_impl_win32.cpp" />
     <ClCompile Include="extensions\imgui\imgui_renderer.cpp" />
     <ClCompile Include="extensions\json\json_scene_loader.cpp" />
@@ -189,6 +190,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="extensions\glm\glm.hpp" />
+    <ClInclude Include="extensions\images\image_info.hpp" />
+    <ClInclude Include="extensions\images\image_stb.hpp" />
     <ClInclude Include="extensions\imgui\imgui_impl_win32.hpp" />
     <ClInclude Include="extensions\imgui\imgui_renderer.hpp" />
     <ClInclude Include="extensions\json\json.hpp" />

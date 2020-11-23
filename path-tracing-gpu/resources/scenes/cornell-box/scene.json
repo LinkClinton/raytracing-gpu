@@ -7,7 +7,7 @@
             "font": 20
         },
         "output_images": {
-            "sdr": "image.png",
+            "sdr": "",
             "hdr": "image.hdr"
         },
         "sample_count": 1024
