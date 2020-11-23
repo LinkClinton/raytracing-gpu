@@ -23,6 +23,8 @@ namespace path_tracing::runtime::windows {
 
 		void resolve(const runtime_service& service);
 
+		void release(const runtime_service& service);
+		
 		void update(const runtime_service& service, const runtime_frame& frame);
 
 		void render(const runtime_service& service, const runtime_frame& frame);

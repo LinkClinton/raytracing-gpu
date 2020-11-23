@@ -178,6 +178,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="renderers\depth_renderer.cpp" />
     <ClCompile Include="renderers\renderer.cpp" />
+    <ClCompile Include="runtime\output\output_system.cpp" />
     <ClCompile Include="runtime\render\render_device.cpp" />
     <ClCompile Include="runtime\render\render_system.cpp" />
     <ClCompile Include="runtime\resources\meshes_system.cpp" />
@@ -196,9 +197,11 @@
     <ClInclude Include="extensions\imgui\imgui_renderer.hpp" />
     <ClInclude Include="extensions\json\json.hpp" />
     <ClInclude Include="extensions\json\json_scene_loader.hpp" />
+    <ClInclude Include="extensions\spdlog\spdlog.hpp" />
     <ClInclude Include="interfaces\noncopyable.hpp" />
     <ClInclude Include="renderers\depth_renderer.hpp" />
     <ClInclude Include="renderers\renderer.hpp" />
+    <ClInclude Include="runtime\output\output_system.hpp" />
     <ClInclude Include="runtime\render\render_device.hpp" />
     <ClInclude Include="runtime\render\render_system.hpp" />
     <ClInclude Include="runtime\resources\meshes_system.hpp" />

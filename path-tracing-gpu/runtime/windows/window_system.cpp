@@ -19,6 +19,10 @@ void path_tracing::runtime::windows::window_system::resolve(const runtime_servic
 	}
 }
 
+void path_tracing::runtime::windows::window_system::release(const runtime_service& service)
+{
+}
+
 void path_tracing::runtime::windows::window_system::update(const runtime_service& service, const runtime_frame& frame)
 {
 	if (mViewWindow.living() == false) return;

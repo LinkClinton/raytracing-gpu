@@ -21,6 +21,8 @@ namespace path_tracing::runtime {
 		resources::resource_system mResourceSystem;
 		resources::meshes_system mMeshesSystem;
 
+		output::output_system mOutputSystem;
+		
 		render::render_device mRenderDevice;
 		render::render_system mRenderSystem;
 

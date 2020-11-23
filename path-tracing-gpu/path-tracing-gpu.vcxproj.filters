@@ -47,6 +47,9 @@
     <ClCompile Include="extensions\images\image_stb.cpp">
       <Filter>extensions\images</Filter>
     </ClCompile>
+    <ClCompile Include="runtime\output\output_system.cpp">
+      <Filter>runtime\output</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="extensions">
@@ -102,6 +105,12 @@
     </Filter>
     <Filter Include="extensions\images">
       <UniqueIdentifier>{9c5bee70-5b75-486f-88ad-620ded9ddda4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="runtime\output">
+      <UniqueIdentifier>{75339f14-78c3-4ac2-b3fd-51a7e5878a9f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="extensions\spdlog">
+      <UniqueIdentifier>{302ab170-540e-4ad7-aa1c-8cd9fe3ee8be}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -174,6 +183,12 @@
     </ClInclude>
     <ClInclude Include="extensions\images\image_stb.hpp">
       <Filter>extensions\images</Filter>
+    </ClInclude>
+    <ClInclude Include="runtime\output\output_system.hpp">
+      <Filter>runtime\output</Filter>
+    </ClInclude>
+    <ClInclude Include="extensions\spdlog\spdlog.hpp">
+      <Filter>extensions\spdlog</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

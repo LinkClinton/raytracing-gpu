@@ -12,6 +12,7 @@ void path_tracing::runtime::runtime_process::run_loop()
 
 	mRenderSystem.resolve(mRuntimeService);
 	mWindowSystem.resolve(mRuntimeService);
+	mOutputSystem.resolve(mRuntimeService);
 	
 	auto current = time_point::now();
 
@@ -27,6 +28,7 @@ void path_tracing::runtime::runtime_process::run_loop()
 		
 		mRenderSystem.update(mRuntimeService, frame);
 		mWindowSystem.update(mRuntimeService, frame);
+		mOutputSystem.update(mRuntimeService, frame);
 
 		mRenderDevice.wait();
 		
@@ -36,9 +38,10 @@ void path_tracing::runtime::runtime_process::run_loop()
 		frame.frame_index++;
 	}
 
-	if (mScene.output_images.has_value() && !mScene.output_images->sdr_image.empty())
-		mRenderSystem.save_render_target_sdr(mRenderDevice, mScene.output_images->sdr_image);
-	
+	mRenderSystem.release(mRuntimeService);
+	mWindowSystem.release(mRuntimeService);
+	mOutputSystem.release(mRuntimeService);
+
 	mRenderDevice.wait();
 }
 
