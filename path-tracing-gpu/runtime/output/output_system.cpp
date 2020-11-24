@@ -14,7 +14,8 @@ void path_tracing::runtime::output::output_system::resolve(const runtime_service
 void path_tracing::runtime::output::output_system::release(const runtime_service& service)
 {
 	extensions::spdlog::info("finished rendering scene.");
-
+	extensions::spdlog::info("time cost : {0}s.", mTotalTime);
+	
 	// when scene.output_images is not null, we will output the images to files.
 	if (service.scene.output_images.has_value() && !service.scene.output_images->sdr_image.empty()) {
 		const auto render_target_sdr = service.resource_system.resource<
@@ -24,8 +25,22 @@ void path_tracing::runtime::output::output_system::release(const runtime_service
 		
 		extensions::spdlog::info("saved sdr image to file : {0}.", service.scene.output_images->sdr_image);
 	}
+
+	if (!service.window_system.active()) system("pause");
 }
 
 void path_tracing::runtime::output::output_system::update(const runtime_service& service, const runtime_frame& frame)
 {
+	if (service.window_system.active()) {
+		ImGui::SetNextWindowBgAlpha(0.25f);
+		ImGui::Begin("Basic Info");
+		ImGui::Text("Sample Index : %llu", frame.frame_index);
+		ImGui::Text("Delta Time : %f", frame.delta_time);
+		ImGui::Text("Total Time : %f", frame.total_time);
+		ImGui::End();
+	}
+	else extensions::spdlog::info("finished sample index {0} cost {1}s.", frame.frame_index, frame.delta_time);
+
+	// record the total time of rendering 
+	mTotalTime = frame.total_time;
 }

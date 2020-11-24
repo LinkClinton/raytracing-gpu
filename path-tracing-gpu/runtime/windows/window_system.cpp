@@ -50,3 +50,8 @@ bool path_tracing::runtime::windows::window_system::living() const noexcept
 {
 	return mViewWindow.living();
 }
+
+bool path_tracing::runtime::windows::window_system::active() const noexcept
+{
+	return mViewWindow.mHandle != nullptr;
+}

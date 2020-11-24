@@ -23,6 +23,8 @@ namespace path_tracing::runtime::output {
 		void release(const runtime_service& service);
 		
 		void update(const runtime_service& service, const runtime_frame& frame);
+	private:
+		real mTotalTime = 0;
 	};
 	
 }

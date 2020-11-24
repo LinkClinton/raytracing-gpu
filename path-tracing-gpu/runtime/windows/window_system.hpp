@@ -30,6 +30,8 @@ namespace path_tracing::runtime::windows {
 		void render(const runtime_service& service, const runtime_frame& frame);
 		
 		bool living() const noexcept;
+
+		bool active() const noexcept;
 	private:
 		imgui_renderer mImGuiRenderer;
 
