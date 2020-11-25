@@ -7,7 +7,7 @@ namespace path_tracing::renderers {
 
 	using runtime::runtime_service;
 	using runtime::runtime_frame;
-	
+
 	class renderer : public noncopyable {
 	public:
 		renderer(const runtime_service& service);

@@ -50,6 +50,9 @@
     <ClCompile Include="runtime\output\output_system.cpp">
       <Filter>runtime\output</Filter>
     </ClCompile>
+    <ClCompile Include="renderers\module_renderer.cpp">
+      <Filter>renderers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="extensions">
@@ -189,6 +192,9 @@
     </ClInclude>
     <ClInclude Include="extensions\spdlog\spdlog.hpp">
       <Filter>extensions\spdlog</Filter>
+    </ClInclude>
+    <ClInclude Include="renderers\module_renderer.hpp">
+      <Filter>renderers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
