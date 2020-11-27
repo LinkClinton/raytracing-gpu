@@ -98,7 +98,7 @@ void path_tracing::renderers::depth_renderer::build_acceleration(const runtime_s
 	for (const auto& entity : service.scene.entities) {
 		wrapper::directx12::raytracing_instance instance;
 
-		instance.geometry = service.meshes_system.geometry(entity.mesh);
+		instance.geometry = service.meshes_system.geometry(entity.mesh.value());
 
 		const auto matrix = glm::transpose(entity.transform.matrix());
 

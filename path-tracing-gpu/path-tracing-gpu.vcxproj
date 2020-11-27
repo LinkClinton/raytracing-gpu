@@ -175,6 +175,7 @@
     <ClCompile Include="extensions\imgui\imgui_impl_win32.cpp" />
     <ClCompile Include="extensions\imgui\imgui_renderer.cpp" />
     <ClCompile Include="extensions\json\json_scene_loader.cpp" />
+    <ClCompile Include="extensions\json\json_submodule_loader.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="renderers\depth_renderer.cpp" />
     <ClCompile Include="renderers\module_renderer.cpp" />
@@ -198,6 +199,7 @@
     <ClInclude Include="extensions\imgui\imgui_renderer.hpp" />
     <ClInclude Include="extensions\json\json.hpp" />
     <ClInclude Include="extensions\json\json_scene_loader.hpp" />
+    <ClInclude Include="extensions\json\json_submodule_loader.hpp" />
     <ClInclude Include="extensions\spdlog\spdlog.hpp" />
     <ClInclude Include="interfaces\noncopyable.hpp" />
     <ClInclude Include="renderers\depth_renderer.hpp" />

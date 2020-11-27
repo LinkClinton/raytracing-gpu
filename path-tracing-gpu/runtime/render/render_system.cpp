@@ -1,6 +1,7 @@
 #include "render_system.hpp"
 
 #include "../../extensions/images/image_stb.hpp"
+#include "../../renderers/module_renderer.hpp"
 #include "../../renderers/depth_renderer.hpp"
 
 #include "../runtime_service.hpp"
@@ -27,7 +28,13 @@ void path_tracing::runtime::render::render_system::resolve(const runtime_service
 	service.resource_system.add<wrapper::directx12::texture2d>("RenderSystem.RenderTarget.HDR", mRenderTargetHDR);
 	service.resource_system.add<wrapper::directx12::texture2d>("RenderSystem.RenderTarget.SDR", mRenderTargetSDR);
 
-	mRenderer = std::make_shared<renderers::depth_renderer>(service);
+	mRenderer = std::make_shared<renderers::module_renderer>(
+		std::vector<renderers::submodule>{
+			renderers::submodule{ "./materials/diffuse_material.hlsl", "diffuse_material" }
+		},
+		std::vector<renderers::submodule>{
+			renderers::submodule{ "./lights/surface_light.hlsl", "surface_light" }
+		}, service);
 }
 
 void path_tracing::runtime::render::render_system::release(const runtime_service& service)

@@ -1,5 +1,7 @@
 #include "json_scene_loader.hpp"
 
+#include "json_submodule_loader.hpp"
+
 #include <filesystem>
 #include <fstream>
 
@@ -102,12 +104,17 @@ void path_tracing::extensions::json::json_scene_loader::load(const runtime_servi
 	}
 
 	for (const auto& entity : scene["entities"]) {
-		service.scene.entities.push_back({
-			submodule_data(),
-			submodule_data(),
-			load_transform_from_property(service.scene.camera_system, entity["transform"]),
-			load_mesh_from_property(service.meshes_system, entity["shape"])
-		});
+		const auto transform = load_transform_from_property(service.scene.camera_system, entity["transform"]);
+
+		std::optional<submodule_data> material = std::nullopt;
+		std::optional<submodule_data> light = std::nullopt;
+		std::optional<mesh_info> mesh = std::nullopt;
+
+		if (entity.contains("material")) material = load_material_from_json(entity["material"]);
+		if (entity.contains("shape")) mesh = load_mesh_from_property(service.meshes_system, entity["shape"]);
+		if (entity.contains("emitter")) light = load_light_from_json(entity["emitter"], mesh);
+
+		service.scene.entities.push_back({ material, light, mesh, transform });
 	}
 	
 	service.meshes_system.upload_cached_buffers(service.render_device);
