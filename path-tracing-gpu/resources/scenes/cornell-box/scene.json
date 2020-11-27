@@ -1,14 +1,14 @@
 {
     "config": {
         "camera_system": "left_hand",
+        "output_images": {
+            "hdr": "image.hdr",
+            "sdr": ""
+        },
         "output_window": {
             "enable": true,
-            "name": "view_window",
-            "font": 20
-        },
-        "output_images": {
-            "sdr": "",
-            "hdr": "image.hdr"
+            "font": 20,
+            "name": "view_window"
         },
         "sample_count": 1024
     },
@@ -43,6 +43,14 @@
     },
     "entities": [
         {
+            "material": {
+                "diffuse": [
+                    0.7250000238418579,
+                    0.7099999785423279,
+                    0.6800000071525574
+                ],
+                "type": "diffuse"
+            },
             "name": "entity0",
             "shape": {
                 "data": {
@@ -121,6 +129,14 @@
             }
         },
         {
+            "material": {
+                "diffuse": [
+                    0.7250000238418579,
+                    0.7099999785423279,
+                    0.6800000071525574
+                ],
+                "type": "diffuse"
+            },
             "name": "entity1",
             "shape": {
                 "data": {
@@ -199,6 +215,14 @@
             }
         },
         {
+            "material": {
+                "diffuse": [
+                    0.7250000238418579,
+                    0.7099999785423279,
+                    0.6800000071525574
+                ],
+                "type": "diffuse"
+            },
             "name": "entity2",
             "shape": {
                 "data": {
@@ -277,6 +301,14 @@
             }
         },
         {
+            "material": {
+                "diffuse": [
+                    0.14000000059604645,
+                    0.44999998807907104,
+                    0.09099999815225601
+                ],
+                "type": "diffuse"
+            },
             "name": "entity3",
             "shape": {
                 "data": {
@@ -355,6 +387,14 @@
             }
         },
         {
+            "material": {
+                "diffuse": [
+                    0.6299999952316284,
+                    0.06499999761581421,
+                    0.05000000074505806
+                ],
+                "type": "diffuse"
+            },
             "name": "entity4",
             "shape": {
                 "data": {
@@ -433,6 +473,14 @@
             }
         },
         {
+            "material": {
+                "diffuse": [
+                    0.7250000238418579,
+                    0.7099999785423279,
+                    0.6800000071525574
+                ],
+                "type": "diffuse"
+            },
             "name": "entity5",
             "shape": {
                 "data": {
@@ -721,6 +769,14 @@
             }
         },
         {
+            "material": {
+                "diffuse": [
+                    0.7250000238418579,
+                    0.7099999785423279,
+                    0.6800000071525574
+                ],
+                "type": "diffuse"
+            },
             "name": "entity6",
             "shape": {
                 "data": {
@@ -1016,6 +1072,14 @@
                     4.0
                 ],
                 "type": "surface"
+            },
+            "material": {
+                "diffuse": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "type": "diffuse"
             },
             "name": "entity7",
             "shape": {

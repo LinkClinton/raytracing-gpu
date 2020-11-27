@@ -196,6 +196,9 @@
     <ClInclude Include="renderers\module_renderer.hpp">
       <Filter>renderers</Filter>
     </ClInclude>
+    <ClInclude Include="scenes\components\submodule_data.hpp">
+      <Filter>scenes\components</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <CopyFileToFolders Include="resources\shaders\depth_renderer\depth_types.hlsl">

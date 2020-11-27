@@ -214,6 +214,7 @@
     <ClInclude Include="runtime\windows\view_window.hpp" />
     <ClInclude Include="runtime\windows\window_system.hpp" />
     <ClInclude Include="scenes\components\perspective_camera.hpp" />
+    <ClInclude Include="scenes\components\submodule_data.hpp" />
     <ClInclude Include="scenes\components\transform.hpp" />
     <ClInclude Include="scenes\entity.hpp" />
     <ClInclude Include="scenes\scene.hpp" />

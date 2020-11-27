@@ -103,6 +103,8 @@ void path_tracing::extensions::json::json_scene_loader::load(const runtime_servi
 
 	for (const auto& entity : scene["entities"]) {
 		service.scene.entities.push_back({
+			submodule_data(),
+			submodule_data(),
 			load_transform_from_property(service.scene.camera_system, entity["transform"]),
 			load_mesh_from_property(service.meshes_system, entity["shape"])
 		});

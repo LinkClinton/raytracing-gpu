@@ -13,6 +13,17 @@ namespace path_tracing::runtime {
 
 namespace path_tracing::runtime::resources {
 
+	// indexed texture2d is used for material of entity
+	// we will submit the texture2d to GPU and use it as material property
+	// so we need a index to find texture in texture array
+	struct indexed_texture2d {
+		wrapper::directx12::texture2d texture;
+		
+		uint32 index = 0;
+
+		indexed_texture2d() = default;
+	};
+	
 	class resource_system final : public noncopyable {
 	public:
 		resource_system() = default;
@@ -41,6 +52,7 @@ namespace path_tracing::runtime::resources {
 		mapping<std::string, Resource>& resource_pool();
 
 		mapping<std::string, wrapper::directx12::texture2d> mTextures;
+		mapping<std::string, indexed_texture2d> mIndexedTextures;
 	};
 
 	template <typename Resource>
@@ -83,6 +95,12 @@ namespace path_tracing::runtime::resources {
 	inline mapping<std::string, wrapper::directx12::texture2d>& resource_system::resource_pool()
 	{
 		return mTextures;
+	}
+
+	template <>
+	inline mapping<std::string, indexed_texture2d>& resource_system::resource_pool()
+	{
+		return mIndexedTextures;
 	}
 
 }
