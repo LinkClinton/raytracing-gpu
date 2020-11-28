@@ -100,9 +100,6 @@
     <Filter Include="resources\shaders">
       <UniqueIdentifier>{b87c4413-0d9a-4846-8ca9-7be537512923}</UniqueIdentifier>
     </Filter>
-    <Filter Include="resources\shaders\depth_renderer">
-      <UniqueIdentifier>{e10a9001-abe7-44e5-9d9f-3f7b33a4dbe7}</UniqueIdentifier>
-    </Filter>
     <Filter Include="resources\fonts">
       <UniqueIdentifier>{b30bb9c3-4b87-40c0-b182-b5c6f0abf0b3}</UniqueIdentifier>
     </Filter>
@@ -117,6 +114,24 @@
     </Filter>
     <Filter Include="extensions\spdlog">
       <UniqueIdentifier>{302ab170-540e-4ad7-aa1c-8cd9fe3ee8be}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="resources\shaders\module_renderer">
+      <UniqueIdentifier>{ddd4caac-fe49-47dc-a926-11733f8de960}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="resources\shaders\shared">
+      <UniqueIdentifier>{a9110559-f353-4c56-bdcb-a7f20fff86c6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="resources\shaders\scatterings">
+      <UniqueIdentifier>{977fb616-cda5-409b-9ee5-f5ec587a6111}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="resources\shaders\module_renderer\materials">
+      <UniqueIdentifier>{4fbf0e18-3d70-458e-a401-9b4455907f60}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="resources\shaders\module_renderer\lights">
+      <UniqueIdentifier>{9c29ee98-5224-4c72-afa7-e80735128805}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="resources\shaders\depth_renderer">
+      <UniqueIdentifier>{e10a9001-abe7-44e5-9d9f-3f7b33a4dbe7}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -234,5 +249,40 @@
     <CopyFileToFolders Include="resources\shaders\samplers\random_sampler.hlsl">
       <Filter>resources\shaders\samplers</Filter>
     </CopyFileToFolders>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="resources\shaders\module_renderer\module_types.hlsl">
+      <Filter>resources\shaders\module_renderer</Filter>
+    </FxCompile>
+    <FxCompile Include="resources\shaders\shared\interaction.hlsl">
+      <Filter>resources\shaders\shared</Filter>
+    </FxCompile>
+    <FxCompile Include="resources\shaders\scatterings\scattering.hlsl">
+      <Filter>resources\shaders\scatterings</Filter>
+    </FxCompile>
+    <FxCompile Include="resources\shaders\scatterings\scattering_lambertian.hlsl">
+      <Filter>resources\shaders\scatterings</Filter>
+    </FxCompile>
+    <FxCompile Include="resources\shaders\module_renderer\materials\material.hlsl">
+      <Filter>resources\shaders\module_renderer\materials</Filter>
+    </FxCompile>
+    <FxCompile Include="resources\shaders\module_renderer\materials\material_diffuse.hlsl">
+      <Filter>resources\shaders\module_renderer\materials</Filter>
+    </FxCompile>
+    <FxCompile Include="resources\shaders\module_renderer\lights\light.hlsl">
+      <Filter>resources\shaders\module_renderer\lights</Filter>
+    </FxCompile>
+    <FxCompile Include="resources\shaders\module_renderer\lights\light_surface.hlsl">
+      <Filter>resources\shaders\module_renderer\lights</Filter>
+    </FxCompile>
+    <FxCompile Include="resources\shaders\module_renderer\ray_generation.hlsl">
+      <Filter>resources\shaders\module_renderer</Filter>
+    </FxCompile>
+    <FxCompile Include="resources\shaders\module_renderer\closest_hits.hlsl">
+      <Filter>resources\shaders\module_renderer</Filter>
+    </FxCompile>
+    <FxCompile Include="resources\shaders\module_renderer\miss_shaders.hlsl">
+      <Filter>resources\shaders\module_renderer</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>
