@@ -1,17 +1,7 @@
 #ifndef __LIGHT_HLSL__
 #define __LIGHT_HLSL__
 
-#include "../../shared/interaction.hlsl"
-#include "../../types.hlsl"
-
-struct light_sample {
-	interaction interaction;
-
-	float3 intensity;
-	real pdf;
-
-	float3 wi;
-};
+#include "../module_types.hlsl"
 
 struct light_search_result {
 	surface_interaction interaction;
@@ -48,6 +38,15 @@ light_search_result search_light(interaction interaction, float3 wi)
 // only used for coding, when we compile the ray generation shader
 // we will define __HLSL_SHADER__ and write the real light structure
 #ifndef __HLSL_SHADER__
+
+struct light_sample {
+	interaction interaction;
+
+	float3 intensity;
+	real pdf;
+
+	float3 wi;
+};
 
 struct light {
 	float3 intensity;

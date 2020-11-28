@@ -4,6 +4,12 @@
 #include "lights/light.hlsl"
 #include "module_types.hlsl"
 
+// [material_submodule]
+// [material_submodule]
+
+// [light_submodule]
+// [light_submodule]
+
 void uniform_sample_one_light(real value, uint lights, out uint which, out real pdf)
 {
 	if (lights == 0) { which = 0; pdf = 0; return; }

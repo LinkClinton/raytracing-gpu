@@ -17,4 +17,6 @@ namespace path_tracing::scenes::components {
 		submodule_data() = default;
 	};
 
+	size_t size_of_submodule_data_type(const std::string& type);
+	
 }

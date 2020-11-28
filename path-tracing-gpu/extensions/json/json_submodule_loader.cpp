@@ -20,17 +20,13 @@ namespace path_tracing::extensions::json {
 		return {};
 	}
 
-	submodule_data load_surface_light_from_json(const nlohmann::json& light, const std::optional<mesh_info>& mesh)
-	{
-		assert(mesh.has_value());
-		
+	submodule_data load_surface_light_from_json(const nlohmann::json& light, uint32 index)
+	{	
 		submodule_data submodule;
 
 		submodule.float3.insert({ "intensity", light["radiance"] });
 
-		submodule.uint.insert({ "idx_location", mesh->idx_location });
-		submodule.uint.insert({ "vtx_location", mesh->vtx_location });
-		submodule.uint.insert({ "idx_count", mesh->idx_count });
+		submodule.uint.insert({ "entity", index });
 		submodule.uint.insert({ "delta", 0 });
 		
 		submodule.submodule = "surface_light";
@@ -38,9 +34,9 @@ namespace path_tracing::extensions::json {
 		return submodule;
 	}
 	
-	submodule_data load_light_from_json(const nlohmann::json& light, const std::optional<mesh_info>& mesh)
+	submodule_data load_light_from_json(const nlohmann::json& light, uint32 index)
 	{
-		if (light["type"] == "surface") return load_surface_light_from_json(light, mesh);
+		if (light["type"] == "surface") return load_surface_light_from_json(light, index);
 
 		return {};
 	}

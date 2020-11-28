@@ -103,6 +103,8 @@ void path_tracing::extensions::json::json_scene_loader::load(const runtime_servi
 		service.scene.camera = load_perspective_camera(service.scene.camera_system, camera);
 	}
 
+	uint32 index = 0;
+	
 	for (const auto& entity : scene["entities"]) {
 		const auto transform = load_transform_from_property(service.scene.camera_system, entity["transform"]);
 
@@ -111,8 +113,8 @@ void path_tracing::extensions::json::json_scene_loader::load(const runtime_servi
 		std::optional<mesh_info> mesh = std::nullopt;
 
 		if (entity.contains("material")) material = load_material_from_json(entity["material"]);
+		if (entity.contains("emitter")) light = load_light_from_json(entity["emitter"], index++);
 		if (entity.contains("shape")) mesh = load_mesh_from_property(service.meshes_system, entity["shape"]);
-		if (entity.contains("emitter")) light = load_light_from_json(entity["emitter"], mesh);
 
 		service.scene.entities.push_back({ material, light, mesh, transform });
 	}

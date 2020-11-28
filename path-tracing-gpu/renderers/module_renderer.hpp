@@ -16,7 +16,34 @@ namespace path_tracing::renderers {
 
 		uint32 sample_index = 0;
 
+		uint32 max_depth = 5;
+		uint32 lights = 0;
+		uint32 unused0 = 0;
+		uint32 unused1 = 0;
+
 		module_renderer_scene_config() = default;
+	};
+
+	struct module_renderer_mesh_info {
+		uint32 triangle_count;
+
+		uint32 vtx_location;
+		uint32 idx_location;
+
+		uint32 reverse;
+		uint32 normals;
+		uint32 uvs;
+	};
+	
+	struct module_renderer_entity_info {
+		matrix4x4 local_to_world;
+		matrix4x4 world_to_local;
+
+		module_renderer_mesh_info mesh;
+
+		uint32 material;
+		uint32 light;
+		real area;
 	};
 	
 	struct submodule final {
@@ -41,10 +68,16 @@ namespace path_tracing::renderers {
 	private:
 		void build_material_submodule(const runtime_service& service, const std::vector<submodule>& materials);
 
+		void build_light_submodule(const runtime_service& service, const std::vector<submodule>& lights);
+		
 		void build_acceleration(const runtime_service& service);
 
 		void build_shader_libraries(const runtime_service& service);
 
+		void build_hit_groups(const runtime_service& service);
+
+		void build_descriptor_heap(const runtime_service& service);
+		
 		wrapper::directx12::command_allocator mCommandAllocator;
 		wrapper::directx12::graphics_command_list mCommandList;
 
@@ -68,11 +101,26 @@ namespace path_tracing::renderers {
 		wrapper::directx12::buffer mRaytracingShaderTableCpuBuffer;
 
 		wrapper::directx12::buffer mSceneConfigCpuBuffer;
+		
+		wrapper::directx12::buffer mEntityInfoCpuBuffer;
+		wrapper::directx12::buffer mEntityInfoGpuBuffer;
+		
+		wrapper::directx12::buffer mMaterialCpuBuffer;
+		wrapper::directx12::buffer mMaterialGpuBuffer;
 
+		wrapper::directx12::buffer mLightCpuBuffer;
+		wrapper::directx12::buffer mLightGpuBuffer;
+
+		mapping<std::string, uint32> mMaterialValuesMemoryAddress;
+		mapping<std::string, uint32> mLightValuesMemoryAddress;
+		
 		mapping<std::string, uint32> mMaterialTypes;
 		mapping<std::string, uint32> mLightTypes;
 		
 		module_renderer_scene_config mSceneConfig;
+
+		size_t mMaterialSubmoduleTypeSize = 0;
+		size_t mLightSubmoduleTypeSize;
 	};
 	
 }

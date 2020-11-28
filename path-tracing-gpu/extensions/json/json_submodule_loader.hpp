@@ -14,6 +14,6 @@ namespace path_tracing::extensions::json {
 	
 	submodule_data load_material_from_json(const nlohmann::json& material);
 
-	submodule_data load_light_from_json(const nlohmann::json& light, const std::optional<mesh_info>& mesh);
+	submodule_data load_light_from_json(const nlohmann::json& light, uint32 index);
 	
 }
