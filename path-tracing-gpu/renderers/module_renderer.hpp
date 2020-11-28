@@ -33,6 +33,8 @@ namespace path_tracing::renderers {
 		uint32 reverse;
 		uint32 normals;
 		uint32 uvs;
+
+		real area;
 	};
 	
 	struct module_renderer_entity_info {
@@ -43,7 +45,6 @@ namespace path_tracing::renderers {
 
 		uint32 material;
 		uint32 light;
-		real area;
 	};
 	
 	struct submodule final {
@@ -76,7 +77,17 @@ namespace path_tracing::renderers {
 
 		void build_hit_groups(const runtime_service& service);
 
+		void build_structured_buffer(const runtime_service& service);
+		
 		void build_descriptor_heap(const runtime_service& service);
+
+		void build_root_signature(const runtime_service& service);
+
+		void build_shader_association(const runtime_service& service);
+
+		void build_raytracing_pipeline(const runtime_service& service);
+
+		void build_raytracing_shader_table(const runtime_service& service);
 		
 		wrapper::directx12::command_allocator mCommandAllocator;
 		wrapper::directx12::graphics_command_list mCommandList;
@@ -101,16 +112,16 @@ namespace path_tracing::renderers {
 		wrapper::directx12::buffer mRaytracingShaderTableCpuBuffer;
 
 		wrapper::directx12::buffer mSceneConfigCpuBuffer;
-		
-		wrapper::directx12::buffer mEntityInfoCpuBuffer;
+
 		wrapper::directx12::buffer mEntityInfoGpuBuffer;
-		
-		wrapper::directx12::buffer mMaterialCpuBuffer;
+		wrapper::directx12::buffer mEntityInfoCpuBuffer;
+
 		wrapper::directx12::buffer mMaterialGpuBuffer;
+		wrapper::directx12::buffer mMaterialCpuBuffer;
 
-		wrapper::directx12::buffer mLightCpuBuffer;
 		wrapper::directx12::buffer mLightGpuBuffer;
-
+		wrapper::directx12::buffer mLightCpuBuffer;
+		
 		mapping<std::string, uint32> mMaterialValuesMemoryAddress;
 		mapping<std::string, uint32> mLightValuesMemoryAddress;
 		

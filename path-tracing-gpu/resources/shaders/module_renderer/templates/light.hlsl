@@ -1,7 +1,6 @@
 #ifndef __HLSL_SHADER__
 #include "../../shared/interaction.hlsl"
 #include "../../types.hlsl"
-
 #endif
 
 struct light_sample {

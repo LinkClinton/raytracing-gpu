@@ -44,6 +44,8 @@ struct mesh_info {
 	uint reverse;
 	uint normals;
 	uint uvs;
+	
+	real area;
 };
 
 struct entity_info {
@@ -54,7 +56,6 @@ struct entity_info {
 	
 	uint material;
 	uint light;
-	real area;
 };
 
 SHADER_CONSTANT_BUFFER_DEFINE(scene_config, config, b0, space0);

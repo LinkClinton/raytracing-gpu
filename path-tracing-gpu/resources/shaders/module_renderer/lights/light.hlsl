@@ -20,12 +20,12 @@ light_search_result search_light(interaction interaction, float3 wi)
 
 	tracing_payload light_payload;
 
-	light_payload.missed = false;
+	light_payload.missed = 0;
 
 	TraceRay(acceleration, RAY_FLAG_FORCE_OPAQUE, 0xFF, 0,
 		1, 0, light_ray, light_payload);
 
-	if (light_payload.missed == true || entities[light_payload.entity].light == INDEX_NUll)
+	if (light_payload.missed == 1 || entities[light_payload.entity].light == INDEX_NUll)
 		return result;
 
 	result.interaction = light_payload.interaction;
@@ -58,12 +58,14 @@ struct light {
 
 float3 evaluate_light(light light, interaction interaction, float3 wi)
 {
-	return float3();
+	return float3(0, 0, 0);
 }
 
 light_sample sample_light(light light, interaction reference, float2 value)
 {
-	return light_sample();
+	light_sample sample;
+
+	return sample;
 }
 
 real pdf_light(light light, interaction reference, float3 wi)

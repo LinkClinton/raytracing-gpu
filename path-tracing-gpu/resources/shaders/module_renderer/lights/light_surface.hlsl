@@ -44,7 +44,7 @@ triangle_sample sample_triangles(uint entity, float2 value)
 	sample.interaction.position = mul(float4(sample.interaction.position, 1), info.local_to_world).xyz;
 	sample.interaction.normal = normalize(mul(float4(sample.interaction.normal, 0), transpose(info.world_to_local)).xyz);
 
-	sample.pdf = 1 / info.area;
+	sample.pdf = 1 / info.mesh.area;
 
 	return sample;
 }
@@ -80,7 +80,7 @@ real pdf_triangles_with_reference(uint entity, interaction reference, float3 wi)
 	if (payload.missed != 0) return 0;
 
 	real pdf = distance_squared(reference.position, payload.interaction.position) /
-		(abs(dot(payload.interaction.normal, -wi)) * entities[entity].area);
+		(abs(dot(payload.interaction.normal, -wi)) * entities[entity].mesh.area);
 
 	if (isinf(pdf)) return 0;
 

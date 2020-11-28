@@ -10,7 +10,7 @@
 namespace path_tracing::scenes {
 
 	using namespace components;
-	
+
 	using runtime::resources::mesh_info;
 	
 	struct entity final {
@@ -23,5 +23,8 @@ namespace path_tracing::scenes {
 		
 		entity() = default;
 	};
+
+	real compute_mesh_area_with_transform(const runtime::resources::meshes_system& system, 
+		const transform& transform, const mesh_info& info);
 	
 }

@@ -140,8 +140,7 @@ void path_tracing::renderers::depth_renderer::build_shader_libraries(const runti
 		.set_miss_shaders({ depth_renderer_miss_shader });
 }
 
-void path_tracing::renderers::depth_renderer::build_hit_groups(
-	const runtime_service& service)
+void path_tracing::renderers::depth_renderer::build_hit_groups(const runtime_service& service)
 {
 	std::vector<wrapper::directx12::raytracing_hit_group> hit_groups;
 	

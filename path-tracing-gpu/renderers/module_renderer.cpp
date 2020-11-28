@@ -5,6 +5,8 @@
 namespace path_tracing::renderers {
 
 	using scenes::components::submodule_data;
+	using scenes::components::transform;
+	using runtime::resources::mesh_info;
 	
 	const wchar_t* module_renderer_ray_generation = L"ray_generation";
 	const wchar_t* module_renderer_closest_hit = L"closest_hit";
@@ -73,7 +75,31 @@ namespace path_tracing::renderers {
 
 		return packing_layout;
 	}
+
+	module_renderer_mesh_info allocate_mesh_info(const runtime_service& service, const transform& transform, const mesh_info& info)
+	{
+		const auto property = service.meshes_system.property(info);
+		
+		return {
+			info.idx_count / 3, info.vtx_location, info.idx_location / 3,
+			0, property.normals ? 1u : 0u, property.uvs ? 1u : 0u,
+			scenes::compute_mesh_area_with_transform(service.meshes_system, transform, info)
+		};
+	}
+
+	template <typename T>
+	void copy_submodule_data_to(byte* target, const mapping<std::string, T>& elements, const mapping<std::string, uint32>& addresses)
+	{
+		for (const auto& element : elements) 
+			std::memcpy(target + addresses.at(element.first), &element.second, sizeof(T));
+	}
 	
+	void copy_submodule_data_to(byte* target, const submodule_data& data, const mapping<std::string, uint32>& addresses)
+	{
+		copy_submodule_data_to(target, data.float3, addresses);
+		copy_submodule_data_to(target, data.uint, addresses);
+		copy_submodule_data_to(target, data.real, addresses);
+	}
 }
 
 path_tracing::renderers::module_renderer::module_renderer(
@@ -90,7 +116,13 @@ path_tracing::renderers::module_renderer::module_renderer(
 	build_material_submodule(service, materials);
 	build_light_submodule(service, lights);
 	build_shader_libraries(service);
+	build_hit_groups(service);
+	//build_structured_buffer(service);
 	build_descriptor_heap(service);
+	build_root_signature(service);
+	build_shader_association(service);
+	build_raytracing_pipeline(service);
+	//build_raytracing_shader_table(service);
 	
 	mCommandList.close();
 
@@ -300,21 +332,21 @@ void path_tracing::renderers::module_renderer::build_shader_libraries(const runt
 	std::vector<wrapper::directx12::shader_library> libraries = {
 		wrapper::directx12::shader_library::create(
 			wrapper::directx12::extensions::compile_from_source_using_dxc(ray_generation_submodule.source(),
-				L"./resources/shaders/module_renderer/ray_generation.hlsl", L"", L"lib_6_4"),
+			L"./resources/shaders/module_renderer/ray_generation.hlsl", L"", L"lib_6_4"),
 			{ module_renderer_ray_generation }
 		),
 		wrapper::directx12::shader_library::create(
 			wrapper::directx12::extensions::compile_from_file_using_dxc(
-			L"./resources/shaders/depth_renderer/closest_hits.hlsl", L"", L"lib_6_4"),
+			L"./resources/shaders/module_renderer/closest_hits.hlsl", L"", L"lib_6_4"),
 			{ module_renderer_closest_hit }
 		),
 		wrapper::directx12::shader_library::create(
 			wrapper::directx12::extensions::compile_from_file_using_dxc(
-			L"./resources/shaders/depth_renderer/miss_shaders.hlsl", L"", L"lib_6_4"),
+			L"./resources/shaders/module_renderer/miss_shaders.hlsl", L"", L"lib_6_4"),
 			{ module_renderer_miss_shader }
 		)
 	};
-
+	
 	mRaytracingPipelineInfo
 		.set_shader_libraries(libraries)
 		.set_ray_generation(module_renderer_ray_generation)
@@ -334,6 +366,91 @@ void path_tracing::renderers::module_renderer::build_hit_groups(const runtime_se
 	}
 
 	mRaytracingPipelineInfo.set_raytracing_hit_groups(hit_groups);
+}
+
+void path_tracing::renderers::module_renderer::build_structured_buffer(const runtime_service& service)
+{
+	std::vector<module_renderer_entity_info> entities;
+	
+	uint32 material_count = 0;
+	uint32 light_count = 0;
+	
+	for (const auto& entity : service.scene.entities) {
+		module_renderer_entity_info info;
+
+		info.local_to_world = transpose(entity.transform.matrix());
+		info.world_to_local = transpose(entity.transform.inverse().matrix());
+
+		if (entity.mesh.has_value()) info.mesh = allocate_mesh_info(service, entity.transform, entity.mesh.value());
+		if (entity.material.has_value()) info.material = material_count++;
+		if (entity.light.has_value()) info.light = light_count++;
+
+		entities.push_back(info);
+	}
+
+	auto materials = std::vector<byte>(mMaterialSubmoduleTypeSize * material_count);
+	auto lights = std::vector<byte>(mLightSubmoduleTypeSize * light_count);
+
+	material_count = 0;
+	light_count = 0;
+
+	for (const auto& entity : service.scene.entities) {
+		if (entity.material.has_value()) copy_submodule_data_to(
+			materials.data() + material_count++ * mMaterialSubmoduleTypeSize,
+			entity.material.value(), mMaterialValuesMemoryAddress);
+
+		if (entity.light.has_value()) copy_submodule_data_to(
+			lights.data() + light_count++ * mLightSubmoduleTypeSize,
+			entity.light.value(), mLightValuesMemoryAddress);
+	}
+
+	mEntityInfoCpuBuffer = wrapper::directx12::buffer::create(
+		service.render_device.device(),
+		wrapper::directx12::resource_info::upload(),
+		std::max(entities.size() * sizeof(module_renderer_entity_info), static_cast<size_t>(256))
+	);
+
+	mMaterialCpuBuffer = wrapper::directx12::buffer::create(
+		service.render_device.device(),
+		wrapper::directx12::resource_info::upload(),
+		std::max(materials.size(), static_cast<size_t>(256))
+	);
+
+	mLightCpuBuffer = wrapper::directx12::buffer::create(
+		service.render_device.device(),
+		wrapper::directx12::resource_info::upload(),
+		std::max(lights.size(), static_cast<size_t>(256))
+	);
+	
+	mEntityInfoGpuBuffer = wrapper::directx12::buffer::create(
+		service.render_device.device(),
+		wrapper::directx12::resource_info::common(D3D12_RESOURCE_STATE_COPY_DEST),
+		mEntityInfoCpuBuffer.size_in_bytes()
+	);
+
+	mMaterialGpuBuffer = wrapper::directx12::buffer::create(
+		service.render_device.device(),
+		wrapper::directx12::resource_info::common(D3D12_RESOURCE_STATE_COPY_DEST),
+		mMaterialCpuBuffer.size_in_bytes()
+	);
+
+	mLightGpuBuffer = wrapper::directx12::buffer::create(
+		service.render_device.device(),
+		wrapper::directx12::resource_info::common(D3D12_RESOURCE_STATE_COPY_DEST),
+		mLightCpuBuffer.size_in_bytes()
+	);
+
+	mEntityInfoCpuBuffer.copy_from_cpu(entities.data(), entities.size() * sizeof(module_renderer_entity_info));
+	mMaterialCpuBuffer.copy_from_cpu(materials.data(), materials.size());
+	mLightCpuBuffer.copy_from_cpu(lights.data(), lights.size());
+
+	mEntityInfoGpuBuffer.copy_from(mCommandList, mEntityInfoCpuBuffer);
+	mMaterialGpuBuffer.copy_from(mCommandList, mMaterialCpuBuffer);
+	mLightGpuBuffer.copy_from(mCommandList, mLightCpuBuffer);
+
+	mEntityInfoGpuBuffer.barrier(mCommandList, D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_GENERIC_READ);
+	mMaterialGpuBuffer.barrier(mCommandList, D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_GENERIC_READ);
+	mLightGpuBuffer.barrier(mCommandList, D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_GENERIC_READ);
 }
 
 void path_tracing::renderers::module_renderer::build_descriptor_heap(const runtime_service& service)
@@ -377,7 +494,22 @@ void path_tracing::renderers::module_renderer::build_descriptor_heap(const runti
 		mDescriptorHeap.cpu_handle(mDescriptorTable.index("render_target_sdr")),
 		render_target_sdr);
 
-	const auto mesh_gpu_buffer = service.meshes_system.gpu_buffer();
+	/*service.render_device.device().create_shader_resource_view(
+		wrapper::directx12::resource_view::structured_buffer(sizeof(module_renderer_entity_info), mEntityInfoGpuBuffer.size_in_bytes()),
+		mDescriptorHeap.cpu_handle(mDescriptorTable.index("entity_info"))
+	);
+
+	service.render_device.device().create_shader_resource_view(
+		wrapper::directx12::resource_view::structured_buffer(mMaterialSubmoduleTypeSize, mMaterialGpuBuffer.size_in_bytes()),
+		mDescriptorHeap.cpu_handle(mDescriptorTable.index("materials"))
+	);
+
+	service.render_device.device().create_shader_resource_view(
+		wrapper::directx12::resource_view::structured_buffer(mLightSubmoduleTypeSize, mLightGpuBuffer.size_in_bytes()),
+		mDescriptorHeap.cpu_handle(mDescriptorTable.index("lights"))
+	);*/
+	
+	/*const auto mesh_gpu_buffer = service.meshes_system.gpu_buffer();
 	
 	service.render_device.device().create_shader_resource_view(
 		wrapper::directx12::resource_view::structured_buffer(sizeof(vector3), mesh_gpu_buffer.positions.size_in_bytes()),
@@ -397,5 +529,85 @@ void path_tracing::renderers::module_renderer::build_descriptor_heap(const runti
 	service.render_device.device().create_shader_resource_view(
 		wrapper::directx12::resource_view::structured_buffer(sizeof(unsigned) * 3, mesh_gpu_buffer.indices.size_in_bytes()),
 		mDescriptorHeap.cpu_handle(mDescriptorTable.index("indices"))
+	);*/
+}
+
+void path_tracing::renderers::module_renderer::build_root_signature(const runtime_service& service)
+{
+	mRootSignatureInfo[0]
+		.add_descriptor_table("descriptor_table", mDescriptorTable);
+
+	mRootSignatureInfo[1]
+		.add_constants("hit_group_info", 0, 100, 1);
+	
+	mRootSignature[0] = wrapper::directx12::root_signature::create(service.render_device.device(), mRootSignatureInfo[0], false);
+	mRootSignature[1] = wrapper::directx12::root_signature::create(service.render_device.device(), mRootSignatureInfo[1], true);
+
+	mRaytracingPipelineInfo.set_root_signature(mRootSignature[0]);
+}
+
+void path_tracing::renderers::module_renderer::build_shader_association(const runtime_service& service)
+{
+	const wrapper::directx12::raytracing_shader_config config = {
+		8,
+		128
+	};
+
+	std::vector<wrapper::directx12::raytracing_shader_association> associations;
+
+	// association of shaders(ray_generation, miss_shaders, closest_hit_shader)
+	associations.push_back({ std::nullopt, config, module_renderer_ray_generation });
+	associations.push_back({ std::nullopt, config, module_renderer_closest_hit });
+	associations.push_back({ std::nullopt, config, module_renderer_miss_shader });
+
+	for (const auto& hit_group : mRaytracingPipelineInfo.hit_groups()) {
+		associations.push_back({
+			wrapper::directx12::raytracing_shader_root_signature{
+				mRootSignature[1], mRootSignatureInfo[1].size()
+			}, std::nullopt, hit_group.name
+			});
+	}
+
+	mRaytracingPipelineInfo.set_raytracing_shader_associations(associations);
+}
+
+void path_tracing::renderers::module_renderer::build_raytracing_pipeline(const runtime_service& service)
+{
+	mRaytracingPipeline = wrapper::directx12::raytracing_pipeline::create(service.render_device.device(), mRaytracingPipelineInfo);
+}
+
+void path_tracing::renderers::module_renderer::build_raytracing_shader_table(const runtime_service& service)
+{
+	std::vector<std::wstring> names;
+
+	for (const auto& hit_group : mRaytracingPipelineInfo.hit_groups())
+		names.push_back(hit_group.name);
+
+	mRaytracingShaderTable = wrapper::directx12::raytracing_shader_table::create(
+		mRaytracingPipelineInfo.associations(),
+		{ module_renderer_miss_shader },
+		names, module_renderer_ray_generation
 	);
+
+	for (const auto& record : mRaytracingShaderTable.records()) {
+		std::memcpy(mRaytracingShaderTable.data() + record.second.address,
+			mRaytracingPipeline.shader_identifier(record.first),
+			D3D12_SHADER_IDENTIFIER_SIZE_IN_BYTES);
+	}
+
+	mRaytracingShaderTableCpuBuffer = wrapper::directx12::buffer::create(
+		service.render_device.device(),
+		wrapper::directx12::resource_info::upload(),
+		mRaytracingShaderTable.size()
+	);
+
+	mRaytracingShaderTableGpuBuffer = wrapper::directx12::buffer::create(
+		service.render_device.device(),
+		wrapper::directx12::resource_info::common(D3D12_RESOURCE_STATE_COPY_DEST),
+		mRaytracingShaderTable.size()
+	);
+
+	mRaytracingShaderTableCpuBuffer.copy_from_cpu(mRaytracingShaderTable.data(), mRaytracingShaderTable.size());
+	mRaytracingShaderTableGpuBuffer.copy_from(mCommandList, mRaytracingShaderTableCpuBuffer);
+	mRaytracingShaderTableGpuBuffer.barrier(mCommandList, D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_GENERIC_READ);
 }

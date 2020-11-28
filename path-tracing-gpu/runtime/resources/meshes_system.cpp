@@ -66,6 +66,8 @@ path_tracing::runtime::resources::mesh_info path_tracing::runtime::resources::me
 		static_cast<uint32>(mIdxBaseCount), static_cast<uint32>(mesh.indices.size())
 	} });
 
+	mMeshProperties.insert({ static_cast<uint32>(mIdxBaseCount), { !mesh.normals.empty(), !mesh.uvs.empty() } });
+	
 	mVtxBaseCount += mesh.positions.size();
 	mIdxBaseCount += mesh.indices.size();
 
@@ -82,6 +84,8 @@ path_tracing::runtime::resources::mesh_info path_tracing::runtime::resources::me
 		static_cast<uint32>(mIdxBaseCount), static_cast<uint32>(mesh.indices.size())
 	} });
 
+	mMeshProperties.insert({ static_cast<uint32>(mIdxBaseCount), { !mesh.normals.empty(), !mesh.uvs.empty() } });
+
 	mVtxBaseCount += mesh.positions.size();
 	mIdxBaseCount += mesh.indices.size();
 
@@ -93,6 +97,12 @@ path_tracing::runtime::resources::mesh_info path_tracing::runtime::resources::me
 path_tracing::runtime::resources::mesh_info path_tracing::runtime::resources::meshes_system::info(const std::string& name) const
 {
 	return mMeshInfos.at(name);
+}
+
+path_tracing::runtime::resources::mesh_property path_tracing::runtime::resources::meshes_system::property(
+	const mesh_info& info) const
+{
+	return mMeshProperties.at(info.idx_location);
 }
 
 wrapper::directx12::raytracing_geometry path_tracing::runtime::resources::meshes_system::geometry(const mesh_info& info) const

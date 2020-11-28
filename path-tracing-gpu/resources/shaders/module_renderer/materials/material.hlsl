@@ -17,7 +17,9 @@ struct material {
 
 material unpacking_material(packed_material m, float2 uv)
 {
-	return material();
+	material material;
+	
+	return material;
 }
 
 float3 evaluate_material(material material, float3 wo, float3 wi)
@@ -32,7 +34,9 @@ real pdf_material(material material, float3 wo, float3 wi)
 
 scattering_sample sample_material(material material, float3 wo, float2 value)
 {
-	return scattering_sample();
+	scattering_sample sample;
+
+	return sample;
 }
 
 SHADER_STRUCTURED_BUFFER_DEFINE(packed_material, materials, t2, space3);

@@ -59,6 +59,9 @@
     <ClCompile Include="scenes\components\submodule_data.cpp">
       <Filter>scenes\components</Filter>
     </ClCompile>
+    <ClCompile Include="scenes\entity.cpp">
+      <Filter>scenes</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="extensions">
@@ -255,24 +258,44 @@
     <CopyFileToFolders Include="resources\shaders\samplers\random_sampler.hlsl">
       <Filter>resources\shaders\samplers</Filter>
     </CopyFileToFolders>
-    <CopyFileToFolders Include="resources\shaders\module_renderer\module_types.hlsl" />
-    <CopyFileToFolders Include="resources\shaders\shared\interaction.hlsl" />
-    <CopyFileToFolders Include="resources\shaders\scatterings\scattering.hlsl" />
-    <CopyFileToFolders Include="resources\shaders\scatterings\scattering_lambertian.hlsl" />
-    <CopyFileToFolders Include="resources\shaders\module_renderer\materials\material.hlsl" />
-    <CopyFileToFolders Include="resources\shaders\module_renderer\materials\material_diffuse.hlsl" />
-    <CopyFileToFolders Include="resources\shaders\module_renderer\lights\light.hlsl" />
-    <CopyFileToFolders Include="resources\shaders\module_renderer\lights\light_surface.hlsl" />
-    <CopyFileToFolders Include="resources\shaders\module_renderer\ray_generation.hlsl" />
-    <CopyFileToFolders Include="resources\shaders\module_renderer\closest_hits.hlsl" />
-    <CopyFileToFolders Include="resources\shaders\module_renderer\miss_shaders.hlsl" />
-  </ItemGroup>
-  <ItemGroup>
-    <FxCompile Include="resources\shaders\module_renderer\templates\material.hlsl">
+    <CopyFileToFolders Include="resources\shaders\module_renderer\closest_hits.hlsl">
+      <Filter>resources\shaders\module_renderer</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="resources\shaders\shared\interaction.hlsl">
+      <Filter>resources\shaders\shared</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="resources\shaders\module_renderer\lights\light.hlsl">
+      <Filter>resources\shaders\module_renderer\lights</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="resources\shaders\module_renderer\lights\light_surface.hlsl">
+      <Filter>resources\shaders\module_renderer\lights</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="resources\shaders\module_renderer\materials\material.hlsl">
+      <Filter>resources\shaders\module_renderer\materials</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="resources\shaders\module_renderer\materials\material_diffuse.hlsl">
+      <Filter>resources\shaders\module_renderer\materials</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="resources\shaders\module_renderer\miss_shaders.hlsl">
+      <Filter>resources\shaders\module_renderer</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="resources\shaders\module_renderer\module_types.hlsl">
+      <Filter>resources\shaders\module_renderer</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="resources\shaders\module_renderer\ray_generation.hlsl">
+      <Filter>resources\shaders\module_renderer</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="resources\shaders\scatterings\scattering.hlsl">
+      <Filter>resources\shaders\scatterings</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="resources\shaders\scatterings\scattering_lambertian.hlsl">
+      <Filter>resources\shaders\scatterings</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="resources\shaders\module_renderer\templates\light.hlsl">
       <Filter>resources\shaders\module_renderer\templates</Filter>
-    </FxCompile>
-    <FxCompile Include="resources\shaders\module_renderer\templates\light.hlsl">
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="resources\shaders\module_renderer\templates\material.hlsl">
       <Filter>resources\shaders\module_renderer\templates</Filter>
-    </FxCompile>
+    </CopyFileToFolders>
   </ItemGroup>
 </Project>

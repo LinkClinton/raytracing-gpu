@@ -190,6 +190,7 @@
     <ClCompile Include="runtime\windows\window_system.cpp" />
     <ClCompile Include="scenes\components\submodule_data.cpp" />
     <ClCompile Include="scenes\components\transform.cpp" />
+    <ClCompile Include="scenes\entity.cpp" />
     <ClCompile Include="scenes\scene.cpp" />
   </ItemGroup>
   <ItemGroup>

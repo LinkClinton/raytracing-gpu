@@ -14,7 +14,7 @@ void uniform_sample_one_light(real value, uint lights, out uint which, out real 
 {
 	if (lights == 0) { which = 0; pdf = 0; return; }
 
-	which = min(floor(value * config.lights), lights - 1);
+	which = min(floor(value * lights), lights - 1);
 	pdf = 1.0 / lights;
 }
 
@@ -28,31 +28,31 @@ float3 uniform_sample_one_light(material material, tracing_payload payload, inou
 
 		uniform_sample_one_light(next_sample1d(sampler), config.lights, which, pdf);
 
-		light_sample emitter_sample = sample_light(lights[which], payload.interaction.base_type(), next_sample2d(sampler));
+		light_sample light_sample = sample_light(lights[which], payload.interaction.base_type(), next_sample2d(sampler));
 
-		emitter_sample.pdf = emitter_sample.pdf * pdf;
+		light_sample.pdf = light_sample.pdf * pdf;
 
-		if (!is_black(emitter_sample.intensity) && emitter_sample.pdf > 0) {
-			float3 wi = world_to_local(payload.interaction.shading_space, emitter_sample.wi);
+		if (!is_black(light_sample.intensity) && light_sample.pdf > 0) {
+			float3 wi = world_to_local(payload.interaction.shading_space, light_sample.wi);
 
 			float3 function_value = evaluate_material(material, wo, wi);
 			float function_pdf = pdf_material(material, wo, wi);
 
-			function_value = function_value * abs(dot(emitter_sample.wi, payload.interaction.shading_space.z()));
+			function_value = function_value * abs(dot(light_sample.wi, payload.interaction.shading_space.z()));
 
 			if (!is_black(function_value) && function_pdf > 0) {
-				ray_desc shadow_ray = payload.interaction.spawn_ray_to(emitter_sample.interaction);
+				ray_desc shadow_ray = payload.interaction.spawn_ray_to(light_sample.interaction);
 				tracing_payload shadow_payload;
 
-				shadow_payload.missed = false;
+				shadow_payload.missed = 0;
 
 				TraceRay(acceleration, SHADOW_FLAG, 0xFF, 0,
 					1, 0, shadow_ray, shadow_payload);
 
-				float weight = lights[which].delta == 1 ? 1 : power_heuristic(emitter_sample.pdf, function_pdf);
+				float weight = lights[which].delta == 1 ? 1 : power_heuristic(light_sample.pdf, function_pdf);
 
-				if (shadow_payload.missed == true)
-					L += function_value * emitter_sample.intensity * weight / emitter_sample.pdf;
+				if (shadow_payload.missed != 0)
+					L += function_value * light_sample.intensity * weight / light_sample.pdf;
 			}
 		}
 	}
@@ -100,7 +100,7 @@ float3 trace(ray_desc first, inout random_sampler sampler)
 
 	payload.entity = INDEX_NUll;
 	payload.missed = 0;
-	
+
 	for (int bounces = 0; bounces < config.max_depth; bounces++) {
 		TraceRay(acceleration, RAY_FLAG_FORCE_OPAQUE, 0xFF, 0,
 			1, 0, tracing_info.ray, payload);

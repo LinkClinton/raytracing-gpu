@@ -7,7 +7,7 @@
 namespace path_tracing::runtime::resources {
 
 	using render::render_device;
-	
+
 	struct mesh_info {
 		uint32 vtx_location = 0;
 		uint32 vtx_count = 0;
@@ -18,6 +18,13 @@ namespace path_tracing::runtime::resources {
 		mesh_info() = default;
 	};
 
+	struct mesh_property {
+		bool normals = false;
+		bool uvs = false;
+
+		mesh_property() = default;
+	};
+	
 	struct mesh_cpu_buffer {
 		std::vector<vector3> positions;
 		std::vector<vector3> normals;
@@ -52,6 +59,8 @@ namespace path_tracing::runtime::resources {
 
 		mesh_info info(const std::string& name) const;
 
+		mesh_property property(const mesh_info& info) const;
+		
 		wrapper::directx12::raytracing_geometry geometry(const mesh_info& info) const;
 		
 		const mesh_cpu_buffer& cpu_buffer() const noexcept;
@@ -69,6 +78,7 @@ namespace path_tracing::runtime::resources {
 		std::vector<std::pair<std::string, mesh_cpu_buffer>> mCachedMeshes;
 
 		mapping<uint32, wrapper::directx12::raytracing_geometry> mGeometries;
+		mapping<uint32, mesh_property> mMeshProperties;
 		mapping<std::string, mesh_info> mMeshInfos;
 
 		mesh_cpu_buffer mCpuBuffers;
