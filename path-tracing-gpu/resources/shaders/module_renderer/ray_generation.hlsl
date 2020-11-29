@@ -184,5 +184,5 @@ void ray_generation()
 	value = lerp(value, L, t);
 
 	render_target_hdr[DispatchRaysIndex().xy] = float4(value, 1);
-	render_target_sdr[DispatchRaysIndex().xy] = float4(value, 1);
+	render_target_sdr[DispatchRaysIndex().xy] = float4(gamma_correct(value), 1);
 }

@@ -113,10 +113,12 @@ void path_tracing::extensions::json::json_scene_loader::load(const runtime_servi
 		std::optional<mesh_info> mesh = std::nullopt;
 
 		if (entity.contains("material")) material = load_material_from_json(entity["material"]);
-		if (entity.contains("emitter")) light = load_light_from_json(entity["emitter"], index++);
+		if (entity.contains("emitter")) light = load_light_from_json(entity["emitter"], index);
 		if (entity.contains("shape")) mesh = load_mesh_from_property(service.meshes_system, entity["shape"]);
 
 		service.scene.entities.push_back({ material, light, mesh, transform });
+
+		index++;
 	}
 	
 	service.meshes_system.upload_cached_buffers(service.render_device);

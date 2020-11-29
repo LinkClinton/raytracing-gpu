@@ -18,7 +18,7 @@ void path_tracing::runtime::runtime_process::run_loop()
 
 	runtime_frame frame;
 	
-	while (mWindowSystem.living() || frame.frame_index < mRuntimeService.scene.sample_count) {
+	while (mWindowSystem.living() || (!mWindowSystem.active() && frame.frame_index < mRuntimeService.scene.sample_count)) {
 		auto duration = std::chrono::duration_cast<std::chrono::duration<float>>(time_point::now() - current);
 
 		current = time_point::now();

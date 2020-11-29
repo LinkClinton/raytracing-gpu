@@ -117,12 +117,12 @@ path_tracing::renderers::module_renderer::module_renderer(
 	build_light_submodule(service, lights);
 	build_shader_libraries(service);
 	build_hit_groups(service);
-	//build_structured_buffer(service);
+	build_structured_buffer(service);
 	build_descriptor_heap(service);
 	build_root_signature(service);
 	build_shader_association(service);
 	build_raytracing_pipeline(service);
-	//build_raytracing_shader_table(service);
+	build_raytracing_shader_table(service);
 	
 	mCommandList.close();
 
@@ -132,10 +132,54 @@ path_tracing::renderers::module_renderer::module_renderer(
 
 void path_tracing::renderers::module_renderer::update(const runtime_service& service, const runtime_frame& frame)
 {
+	const auto [raster_to_camera, camera_to_world] = compute_camera_matrix(
+		service.scene);
+
+	mSceneConfig.raster_to_camera = raster_to_camera;
+	mSceneConfig.camera_to_world = camera_to_world;
+	mSceneConfig.camera_position = transform_point(service.scene.camera.transform, vector3(0));
+	mSceneConfig.sample_index = static_cast<uint32>(frame.frame_index);
+	mSceneConfig.max_depth = 3;
 }
 
 void path_tracing::renderers::module_renderer::render(const runtime_service& service, const runtime_frame& frame)
 {
+	const auto render_target = service.resource_system.resource<wrapper::directx12::texture2d>(
+		"RenderSystem.RenderTarget.HDR");
+
+	mSceneConfigCpuBuffer.copy_from_cpu(&mSceneConfig, sizeof(module_renderer_entity_info));
+
+	const auto table_address = mRaytracingShaderTableGpuBuffer->GetGPUVirtualAddress();
+
+	mCommandAllocator->Reset();
+	mCommandList->Reset(mCommandAllocator.get(), nullptr);
+
+	mCommandList->SetPipelineState1(mRaytracingPipeline.get());
+	mCommandList->SetComputeRootSignature(mRootSignature[0].get());
+
+	mCommandList.set_descriptor_heaps({ mDescriptorHeap.get() });
+	mCommandList.set_compute_descriptor_table(mRootSignatureInfo->index("descriptor_table"), mDescriptorHeap.gpu_handle());
+
+	D3D12_DISPATCH_RAYS_DESC desc = {};
+
+	desc.Width = static_cast<UINT>(render_target.size_x());
+	desc.Height = static_cast<UINT>(render_target.size_y());
+	desc.Depth = 1;
+
+	desc.RayGenerationShaderRecord.StartAddress = table_address + mRaytracingShaderTable.ray_generation().address;
+	desc.RayGenerationShaderRecord.SizeInBytes = mRaytracingShaderTable.ray_generation().size;
+	desc.MissShaderTable.StartAddress = table_address + mRaytracingShaderTable.miss_shaders().address;
+	desc.MissShaderTable.StrideInBytes = mRaytracingShaderTable.miss_shaders().size;
+	desc.MissShaderTable.SizeInBytes = mRaytracingShaderTable.miss_shaders().size * mRaytracingPipelineInfo.miss_shaders().size();
+	desc.HitGroupTable.StartAddress = table_address + mRaytracingShaderTable.hit_groups().address;
+	desc.HitGroupTable.StrideInBytes = mRaytracingShaderTable.hit_groups().size;
+	desc.HitGroupTable.SizeInBytes = mRaytracingShaderTable.hit_groups().size * mRaytracingPipelineInfo.hit_groups().size();
+
+	mCommandList->DispatchRays(&desc);
+
+	mCommandList.close();
+
+	service.render_device.queue().execute({ mCommandList });
 }
 
 void path_tracing::renderers::module_renderer::build_material_submodule(const runtime_service& service,
@@ -200,17 +244,17 @@ void path_tracing::renderers::module_renderer::build_material_submodule(const ru
 			"material." + variable.name + " = packed_material." + variable.name + ";", 1);
 
 	for (const auto& material : mMaterialTypes) {
-		material_functions_sentences["evaluate"].add_sentence("case " + std::to_string(material.second) + ": evaluate_" + 
+		material_functions_sentences["evaluate"].add_sentence("case " + std::to_string(material.second) + ": return evaluate_" + 
 			material.first + "(material, wo, wi);", 1);
 	}
 
 	for (const auto& material : mMaterialTypes) {
-		material_functions_sentences["sample"].add_sentence("case " + std::to_string(material.second) + ": sample_" +
+		material_functions_sentences["sample"].add_sentence("case " + std::to_string(material.second) + ": return sample_" +
 			material.first + "(material, wo, value);", 1);
 	}
 
 	for (const auto& material : mMaterialTypes) {
-		material_functions_sentences["pdf"].add_sentence("case " + std::to_string(material.second) + ": pdf_" +
+		material_functions_sentences["pdf"].add_sentence("case " + std::to_string(material.second) + ": return pdf_" +
 			material.first + "(material, wo, wi);", 1);
 	}
 	
@@ -274,17 +318,17 @@ void path_tracing::renderers::module_renderer::build_light_submodule(const runti
 	};
 
 	for (const auto& light : mLightTypes) {
-		light_functions_sentences["evaluate"].add_sentence("case " + std::to_string(light.second) + ": evaluate_" +
+		light_functions_sentences["evaluate"].add_sentence("case " + std::to_string(light.second) + ": return evaluate_" +
 			light.first + "(light, interaction, wi);", 1);
 	}
 
 	for (const auto& light : mLightTypes) {
-		light_functions_sentences["sample"].add_sentence("case " + std::to_string(light.second) + ": sample_" +
+		light_functions_sentences["sample"].add_sentence("case " + std::to_string(light.second) + ": return sample_" +
 			light.first + "(light, reference, value);", 1);
 	}
 
 	for (const auto& light : mLightTypes) {
-		light_functions_sentences["pdf"].add_sentence("case " + std::to_string(light.second) + ": pdf_" +
+		light_functions_sentences["pdf"].add_sentence("case " + std::to_string(light.second) + ": return pdf_" +
 			light.first + "(light, reference, wi);", 1);
 	}
 	
@@ -358,6 +402,11 @@ void path_tracing::renderers::module_renderer::build_hit_groups(const runtime_se
 	std::vector<wrapper::directx12::raytracing_hit_group> hit_groups;
 
 	for (size_t index = 0; index < service.scene.entities.size(); index++) {
+		if (!service.scene.entities[index].mesh.has_value()) continue;
+
+		// the index in the name of hit group is equal the entity index
+		// but the index of hit_groups is not equal th entity index
+		// because there are some entities that do not has meshes
 		hit_groups.push_back({
 			D3D12_HIT_GROUP_TYPE_TRIANGLES,
 			L"", module_renderer_closest_hit, L"",
@@ -404,6 +453,9 @@ void path_tracing::renderers::module_renderer::build_structured_buffer(const run
 			entity.light.value(), mLightValuesMemoryAddress);
 	}
 
+	// update light count
+	mSceneConfig.lights = light_count;
+	
 	mEntityInfoCpuBuffer = wrapper::directx12::buffer::create(
 		service.render_device.device(),
 		wrapper::directx12::resource_info::upload(),
@@ -494,42 +546,49 @@ void path_tracing::renderers::module_renderer::build_descriptor_heap(const runti
 		mDescriptorHeap.cpu_handle(mDescriptorTable.index("render_target_sdr")),
 		render_target_sdr);
 
-	/*service.render_device.device().create_shader_resource_view(
+	service.render_device.device().create_shader_resource_view(
 		wrapper::directx12::resource_view::structured_buffer(sizeof(module_renderer_entity_info), mEntityInfoGpuBuffer.size_in_bytes()),
-		mDescriptorHeap.cpu_handle(mDescriptorTable.index("entity_info"))
+		mDescriptorHeap.cpu_handle(mDescriptorTable.index("entity_info")),
+		mEntityInfoGpuBuffer
 	);
 
 	service.render_device.device().create_shader_resource_view(
 		wrapper::directx12::resource_view::structured_buffer(mMaterialSubmoduleTypeSize, mMaterialGpuBuffer.size_in_bytes()),
-		mDescriptorHeap.cpu_handle(mDescriptorTable.index("materials"))
+		mDescriptorHeap.cpu_handle(mDescriptorTable.index("materials")),
+		mMaterialGpuBuffer
 	);
 
 	service.render_device.device().create_shader_resource_view(
 		wrapper::directx12::resource_view::structured_buffer(mLightSubmoduleTypeSize, mLightGpuBuffer.size_in_bytes()),
-		mDescriptorHeap.cpu_handle(mDescriptorTable.index("lights"))
-	);*/
+		mDescriptorHeap.cpu_handle(mDescriptorTable.index("lights")),
+		mLightGpuBuffer
+	);
 	
-	/*const auto mesh_gpu_buffer = service.meshes_system.gpu_buffer();
+	const auto mesh_gpu_buffer = service.meshes_system.gpu_buffer();
 	
 	service.render_device.device().create_shader_resource_view(
 		wrapper::directx12::resource_view::structured_buffer(sizeof(vector3), mesh_gpu_buffer.positions.size_in_bytes()),
-		mDescriptorHeap.cpu_handle(mDescriptorTable.index("positions"))
+		mDescriptorHeap.cpu_handle(mDescriptorTable.index("positions")),
+		mesh_gpu_buffer.positions
 	);
 
 	service.render_device.device().create_shader_resource_view(
 		wrapper::directx12::resource_view::structured_buffer(sizeof(vector3), mesh_gpu_buffer.normals.size_in_bytes()),
-		mDescriptorHeap.cpu_handle(mDescriptorTable.index("normals"))
+		mDescriptorHeap.cpu_handle(mDescriptorTable.index("normals")),
+		mesh_gpu_buffer.normals
 	);
 
 	service.render_device.device().create_shader_resource_view(
 		wrapper::directx12::resource_view::structured_buffer(sizeof(vector3), mesh_gpu_buffer.uvs.size_in_bytes()),
-		mDescriptorHeap.cpu_handle(mDescriptorTable.index("uvs"))
+		mDescriptorHeap.cpu_handle(mDescriptorTable.index("uvs")),
+		mesh_gpu_buffer.uvs
 	);
 
 	service.render_device.device().create_shader_resource_view(
 		wrapper::directx12::resource_view::structured_buffer(sizeof(unsigned) * 3, mesh_gpu_buffer.indices.size_in_bytes()),
-		mDescriptorHeap.cpu_handle(mDescriptorTable.index("indices"))
-	);*/
+		mDescriptorHeap.cpu_handle(mDescriptorTable.index("indices")),
+		mesh_gpu_buffer.indices
+	);
 }
 
 void path_tracing::renderers::module_renderer::build_root_signature(const runtime_service& service)
@@ -593,6 +652,14 @@ void path_tracing::renderers::module_renderer::build_raytracing_shader_table(con
 		std::memcpy(mRaytracingShaderTable.data() + record.second.address,
 			mRaytracingPipeline.shader_identifier(record.first),
 			D3D12_SHADER_IDENTIFIER_SIZE_IN_BYTES);
+	}
+
+	for (uint32 index = 0; index < service.scene.entities.size(); index++) {
+		if (!service.scene.entities[index].mesh.has_value()) continue;
+
+		std::memcpy(mRaytracingShaderTable.shader_record_address(L"hit_group_" + std::to_wstring(index)) + 
+			D3D12_SHADER_IDENTIFIER_SIZE_IN_BYTES,
+			&index, sizeof(index));
 	}
 
 	mRaytracingShaderTableCpuBuffer = wrapper::directx12::buffer::create(
