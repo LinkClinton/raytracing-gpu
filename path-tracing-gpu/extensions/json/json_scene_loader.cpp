@@ -79,10 +79,12 @@ void path_tracing::extensions::json::json_scene_loader::load(const runtime_servi
 			config["camera_system"] == "right_hand" ? coordinate_system::right_hand : coordinate_system::left_hand;
 
 		if (config.contains("output_window")) {
+			const auto output_window = config["output_window"];
+			
 			service.scene.output_window = scenes::output_window_property{
-				config["output_window"]["name"],
-				config["output_window"]["font"],
-				config["output_window"]["enable"]
+				output_window["name"], output_window["font"],
+				output_window["size"][0], output_window["size"][1],
+				output_window["enable"]
 			};
 		}
 
@@ -95,6 +97,9 @@ void path_tracing::extensions::json::json_scene_loader::load(const runtime_servi
 		
 		if (config.contains("sample_count"))
 			service.scene.sample_count = config["sample_count"];
+
+		if (config.contains("max_depth"))
+			service.scene.max_depth = config["max_depth"];
 	}
 
 	if (scene.contains("camera") == true) {

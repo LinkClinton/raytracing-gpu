@@ -9,8 +9,8 @@ void path_tracing::runtime::windows::window_system::resolve(const runtime_servic
 		mViewWindow = view_window(
 			service.render_device.queue(), service.render_device.device(),
 			service.scene.output_window->name,
-			static_cast<uint32>(service.scene.camera.resolution.x),
-			static_cast<uint32>(service.scene.camera.resolution.y));
+			static_cast<uint32>(service.scene.output_window->size_x),
+			static_cast<uint32>(service.scene.output_window->size_y));
 
 		mImGuiRenderer.resolve(mViewWindow.mSwapChain, service.render_device, service.scene.output_window->font_size);
 

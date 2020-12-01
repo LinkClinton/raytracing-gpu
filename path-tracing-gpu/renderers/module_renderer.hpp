@@ -43,8 +43,8 @@ namespace path_tracing::renderers {
 
 		module_renderer_mesh_info mesh;
 
-		uint32 material;
-		uint32 light;
+		uint32 material = std::numeric_limits<uint32>::max();
+		uint32 light = std::numeric_limits<uint32>::max();
 	};
 	
 	struct submodule final {

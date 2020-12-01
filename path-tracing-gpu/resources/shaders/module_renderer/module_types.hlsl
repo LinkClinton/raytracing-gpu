@@ -45,7 +45,7 @@ struct mesh_info {
 	uint normals;
 	uint uvs;
 	
-	real area;
+	float area;
 };
 
 struct entity_info {

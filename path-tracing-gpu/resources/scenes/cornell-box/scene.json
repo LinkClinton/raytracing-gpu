@@ -8,16 +8,18 @@
         "output_window": {
             "enable": true,
             "font": 20,
-            "name": "view_window"
+            "name": "view_window",
+            "size": [ 1024, 1024 ]
         },
-        "sample_count": 1024
+        "sample_count": 1024,
+        "max_depth": 5
     },
     "camera": {
         "fov": 19.5,
         "name": "camera",
         "resolution": [
-            1024,
-            1024
+            512,
+            512
         ],
         "transform": {
             "matrix": [

@@ -139,7 +139,7 @@ void path_tracing::renderers::module_renderer::update(const runtime_service& ser
 	mSceneConfig.camera_to_world = camera_to_world;
 	mSceneConfig.camera_position = transform_point(service.scene.camera.transform, vector3(0));
 	mSceneConfig.sample_index = static_cast<uint32>(frame.frame_index);
-	mSceneConfig.max_depth = 3;
+	mSceneConfig.max_depth = service.scene.max_depth;
 }
 
 void path_tracing::renderers::module_renderer::render(const runtime_service& service, const runtime_frame& frame)
