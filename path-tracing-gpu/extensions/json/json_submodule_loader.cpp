@@ -6,7 +6,7 @@ namespace path_tracing::extensions::json {
 	{
 		submodule_data submodule;
 
-		submodule.float3.insert({ "diffuse", material["diffuse"] });
+		submodule.float3.insert({ "diffuse", material["properties"]["reflectance"]["constant"]["value"] });
 
 		submodule.submodule = "diffuse_material";
 
@@ -24,7 +24,7 @@ namespace path_tracing::extensions::json {
 	{	
 		submodule_data submodule;
 
-		submodule.float3.insert({ "intensity", light["radiance"] });
+		submodule.float3.insert({ "intensity", light["intensity"] });
 
 		submodule.uint.insert({ "entity", index });
 		submodule.uint.insert({ "delta", 0 });

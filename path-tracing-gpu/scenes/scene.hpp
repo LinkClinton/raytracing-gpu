@@ -2,6 +2,7 @@
 
 #include "components/perspective_camera.hpp"
 #include "components/transform.hpp"
+#include "components/film.hpp"
 
 #include "entity.hpp"
 
@@ -36,6 +37,7 @@ namespace path_tracing::scenes {
 		uint32 max_depth = 5;
 		
 		perspective_camera camera;
+		film film;
 		
 		std::vector<entity> entities;
 

@@ -43,8 +43,15 @@ namespace path_tracing::extensions::json {
 	{
 		return perspective_camera{
 			load_transform_from_property(system, json["transform"]),
-			json["resolution"].get<vector2>(),
-			json["fov"].get<real>()
+			json["perspective"]["fov"].get<real>()
+		};
+	}
+
+	film load_film(const nlohmann::json& json)
+	{
+		return film{
+			json["resolution"][0], json["resolution"][1],
+			json["scale"]
 		};
 	}
 
@@ -63,7 +70,7 @@ namespace path_tracing::extensions::json {
 
 	mesh_info load_mesh_from_property(meshes_system& system, const nlohmann::json& json)
 	{
-		if (json["type"] == "triangles") return load_mesh_from_data_property(system, json["data"]);
+		if (json["type"] == "triangles") return load_mesh_from_data_property(system, json["triangles"]);
 
 		throw "not implementation";
 	}
@@ -75,8 +82,12 @@ void path_tracing::extensions::json::json_scene_loader::load(const runtime_servi
 	if (scene.contains("config") == true) {
 		const auto config = scene["config"];
 
-		if (config.contains("camera_system")) service.scene.camera_system =
-			config["camera_system"] == "right_hand" ? coordinate_system::right_hand : coordinate_system::left_hand;
+		if (config.contains("coordinate_system")) {
+			service.scene.camera_system = config["coordinate_system"]["camera"] == "right_hand" ? 
+				coordinate_system::right_hand : coordinate_system::left_hand;
+			service.scene.texture_system = config["coordinate_system"]["texture"] == "right_hand" ?
+				coordinate_system::right_hand : coordinate_system::left_hand;
+		}
 
 		if (config.contains("output_window")) {
 			const auto output_window = config["output_window"];
@@ -102,11 +113,11 @@ void path_tracing::extensions::json::json_scene_loader::load(const runtime_servi
 			service.scene.max_depth = config["max_depth"];
 	}
 
-	if (scene.contains("camera") == true) {
-		const auto camera = scene["camera"];
-
-		service.scene.camera = load_perspective_camera(service.scene.camera_system, camera);
-	}
+	if (scene.contains("camera")) 
+		service.scene.camera = load_perspective_camera(service.scene.camera_system, scene["camera"]);
+	
+	if (scene.contains("film")) 
+		service.scene.film = load_film(scene["film"]);
 
 	uint32 index = 0;
 	
@@ -118,7 +129,7 @@ void path_tracing::extensions::json::json_scene_loader::load(const runtime_servi
 		std::optional<mesh_info> mesh = std::nullopt;
 
 		if (entity.contains("material")) material = load_material_from_json(entity["material"]);
-		if (entity.contains("emitter")) light = load_light_from_json(entity["emitter"], index);
+		if (entity.contains("light")) light = load_light_from_json(entity["light"], index);
 		if (entity.contains("shape")) mesh = load_mesh_from_property(service.meshes_system, entity["shape"]);
 
 		service.scene.entities.push_back({ material, light, mesh, transform });

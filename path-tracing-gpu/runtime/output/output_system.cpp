@@ -40,8 +40,8 @@ void path_tracing::runtime::output::output_system::update(const runtime_service&
 		ImGui::Text("FPS	      : %f", ImGui::GetIO().Framerate);
 		ImGui::Separator();
 		ImGui::Text("Max Depth    : %lu", service.scene.max_depth);
-		ImGui::Text("SizeX        : %lu", static_cast<uint32>(service.scene.camera.resolution.x));
-		ImGui::Text("SizeY        : %lu", static_cast<uint32>(service.scene.camera.resolution.y));
+		ImGui::Text("SizeX        : %lu", static_cast<uint32>(service.scene.film.size_x));
+		ImGui::Text("SizeY        : %lu", static_cast<uint32>(service.scene.film.size_y));
 		ImGui::End();
 	}
 	else extensions::spdlog::info("finished sample index {0} cost {1}s.", frame.frame_index, frame.delta_time);

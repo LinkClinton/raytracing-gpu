@@ -229,6 +229,9 @@
     <ClInclude Include="extensions\json\json_submodule_loader.hpp">
       <Filter>extensions\json</Filter>
     </ClInclude>
+    <ClInclude Include="scenes\components\film.hpp">
+      <Filter>scenes\components</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <CopyFileToFolders Include="resources\shaders\depth_renderer\depth_types.hlsl">

@@ -1,26 +1,13 @@
 {
-    "config": {
-        "camera_system": "left_hand",
-        "output_images": {
-            "hdr": "image.hdr",
-            "sdr": ""
-        },
-        "output_window": {
-            "enable": true,
-            "font": 20,
-            "name": "view_window",
-            "size": [ 1024, 1024 ]
-        },
-        "sample_count": 1024,
-        "max_depth": 5
-    },
     "camera": {
-        "fov": 19.5,
+        "depth_of_field": {
+            "focus": 1000000.0,
+            "lens": 0.0
+        },
         "name": "camera",
-        "resolution": [
-            512,
-            512
-        ],
+        "perspective": {
+            "fov": 19.5
+        },
         "transform": {
             "matrix": [
                 1.0,
@@ -43,19 +30,59 @@
         },
         "type": "perspective"
     },
+    "config": {
+        "coordinate_system": {
+            "camera": "left_hand",
+            "texture": "right_hand"
+        },
+        "max_depth": 5,
+        "output_images": {
+            "hdr": "image.hdr",
+            "sdr": "image.png"
+        },
+        "output_window": {
+            "enable": true,
+            "font": 20,
+            "name": "view_window",
+            "size": [
+                1024,
+                1024
+            ]
+        },
+        "sample_count": 16
+    },
     "entities": [
         {
             "material": {
-                "diffuse": [
-                    0.7250000238418579,
-                    0.7099999785423279,
-                    0.6800000071525574
-                ],
+                "properties": {
+                    "reflectance": {
+                        "constant": {
+                            "value": [
+                                0.7250000238418579,
+                                0.7099999785423279,
+                                0.6800000071525574
+                            ]
+                        },
+                        "type": "constant"
+                    },
+                    "sigma": {
+                        "constant": {
+                            "value": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        },
+                        "type": "constant"
+                    }
+                },
+                "remapping": true,
                 "type": "diffuse"
             },
             "name": "entity0",
             "shape": {
-                "data": {
+                "reverse_orientation": false,
+                "triangles": {
                     "indices": [
                         0,
                         1,
@@ -132,16 +159,35 @@
         },
         {
             "material": {
-                "diffuse": [
-                    0.7250000238418579,
-                    0.7099999785423279,
-                    0.6800000071525574
-                ],
+                "properties": {
+                    "reflectance": {
+                        "constant": {
+                            "value": [
+                                0.7250000238418579,
+                                0.7099999785423279,
+                                0.6800000071525574
+                            ]
+                        },
+                        "type": "constant"
+                    },
+                    "sigma": {
+                        "constant": {
+                            "value": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        },
+                        "type": "constant"
+                    }
+                },
+                "remapping": true,
                 "type": "diffuse"
             },
             "name": "entity1",
             "shape": {
-                "data": {
+                "reverse_orientation": false,
+                "triangles": {
                     "indices": [
                         0,
                         1,
@@ -218,16 +264,35 @@
         },
         {
             "material": {
-                "diffuse": [
-                    0.7250000238418579,
-                    0.7099999785423279,
-                    0.6800000071525574
-                ],
+                "properties": {
+                    "reflectance": {
+                        "constant": {
+                            "value": [
+                                0.7250000238418579,
+                                0.7099999785423279,
+                                0.6800000071525574
+                            ]
+                        },
+                        "type": "constant"
+                    },
+                    "sigma": {
+                        "constant": {
+                            "value": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        },
+                        "type": "constant"
+                    }
+                },
+                "remapping": true,
                 "type": "diffuse"
             },
             "name": "entity2",
             "shape": {
-                "data": {
+                "reverse_orientation": false,
+                "triangles": {
                     "indices": [
                         0,
                         1,
@@ -304,16 +369,35 @@
         },
         {
             "material": {
-                "diffuse": [
-                    0.14000000059604645,
-                    0.44999998807907104,
-                    0.09099999815225601
-                ],
+                "properties": {
+                    "reflectance": {
+                        "constant": {
+                            "value": [
+                                0.14000000059604645,
+                                0.44999998807907104,
+                                0.09099999815225601
+                            ]
+                        },
+                        "type": "constant"
+                    },
+                    "sigma": {
+                        "constant": {
+                            "value": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        },
+                        "type": "constant"
+                    }
+                },
+                "remapping": true,
                 "type": "diffuse"
             },
             "name": "entity3",
             "shape": {
-                "data": {
+                "reverse_orientation": false,
+                "triangles": {
                     "indices": [
                         0,
                         1,
@@ -390,16 +474,35 @@
         },
         {
             "material": {
-                "diffuse": [
-                    0.6299999952316284,
-                    0.06499999761581421,
-                    0.05000000074505806
-                ],
+                "properties": {
+                    "reflectance": {
+                        "constant": {
+                            "value": [
+                                0.6299999952316284,
+                                0.06499999761581421,
+                                0.05000000074505806
+                            ]
+                        },
+                        "type": "constant"
+                    },
+                    "sigma": {
+                        "constant": {
+                            "value": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        },
+                        "type": "constant"
+                    }
+                },
+                "remapping": true,
                 "type": "diffuse"
             },
             "name": "entity4",
             "shape": {
-                "data": {
+                "reverse_orientation": false,
+                "triangles": {
                     "indices": [
                         0,
                         1,
@@ -476,16 +579,35 @@
         },
         {
             "material": {
-                "diffuse": [
-                    0.7250000238418579,
-                    0.7099999785423279,
-                    0.6800000071525574
-                ],
+                "properties": {
+                    "reflectance": {
+                        "constant": {
+                            "value": [
+                                0.7250000238418579,
+                                0.7099999785423279,
+                                0.6800000071525574
+                            ]
+                        },
+                        "type": "constant"
+                    },
+                    "sigma": {
+                        "constant": {
+                            "value": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        },
+                        "type": "constant"
+                    }
+                },
+                "remapping": true,
                 "type": "diffuse"
             },
             "name": "entity5",
             "shape": {
-                "data": {
+                "reverse_orientation": false,
+                "triangles": {
                     "indices": [
                         0,
                         2,
@@ -772,16 +894,35 @@
         },
         {
             "material": {
-                "diffuse": [
-                    0.7250000238418579,
-                    0.7099999785423279,
-                    0.6800000071525574
-                ],
+                "properties": {
+                    "reflectance": {
+                        "constant": {
+                            "value": [
+                                0.7250000238418579,
+                                0.7099999785423279,
+                                0.6800000071525574
+                            ]
+                        },
+                        "type": "constant"
+                    },
+                    "sigma": {
+                        "constant": {
+                            "value": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        },
+                        "type": "constant"
+                    }
+                },
+                "remapping": true,
                 "type": "diffuse"
             },
             "name": "entity6",
             "shape": {
-                "data": {
+                "reverse_orientation": false,
+                "triangles": {
                     "indices": [
                         0,
                         2,
@@ -1067,8 +1208,8 @@
             }
         },
         {
-            "emitter": {
-                "radiance": [
+            "light": {
+                "intensity": [
                     17.0,
                     12.0,
                     4.0
@@ -1076,16 +1217,35 @@
                 "type": "surface"
             },
             "material": {
-                "diffuse": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
+                "properties": {
+                    "reflectance": {
+                        "constant": {
+                            "value": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        },
+                        "type": "constant"
+                    },
+                    "sigma": {
+                        "constant": {
+                            "value": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ]
+                        },
+                        "type": "constant"
+                    }
+                },
+                "remapping": true,
                 "type": "diffuse"
             },
             "name": "entity7",
             "shape": {
-                "data": {
+                "reverse_orientation": false,
+                "triangles": {
                     "indices": [
                         0,
                         1,
@@ -1160,5 +1320,13 @@
                 ]
             }
         }
-    ]
+    ],
+    "film": {
+        "name": "film",
+        "resolution": [
+            512,
+            512
+        ],
+        "scale": 1.0
+    }
 }
