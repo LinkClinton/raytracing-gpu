@@ -1,5 +1,7 @@
 #include "json_scene_loader.hpp"
 
+#include "../models/tiny_obj_loader.hpp"
+
 #include "json_submodule_loader.hpp"
 
 #include <filesystem>
@@ -68,10 +70,29 @@ namespace path_tracing::extensions::json {
 		return system.allocate("unknown" + std::to_string(system.count()), std::move(instance));
 	}
 
-	mesh_info load_mesh_from_property(meshes_system& system, const nlohmann::json& json)
+	mesh_info load_mesh_from_obj_property(meshes_system& system, const nlohmann::json& json, const std::string& directory)
+	{
+		const auto fullpath = directory + json["filename"].get<std::string>();
+
+		if (system.has(fullpath)) return system.info(fullpath);
+
+		auto buffer = models::load_obj_mesh(fullpath);
+
+		return system.allocate(fullpath, std::move(buffer));
+	}
+	
+	mesh_info load_mesh_from_file_property(meshes_system& system, const nlohmann::json& json, const std::string& directory)
+	{
+		if (json["type"] == "obj") return load_mesh_from_obj_property(system, json, directory);
+
+		throw "not implementation";
+	}
+	
+	mesh_info load_mesh_from_property(meshes_system& system, const nlohmann::json& json, const std::string& directory)
 	{
 		if (json["type"] == "triangles") return load_mesh_from_data_property(system, json["triangles"]);
-
+		if (json["type"] == "mesh") return load_mesh_from_file_property(system, json["mesh"], directory);
+		
 		throw "not implementation";
 	}
 }
@@ -130,7 +151,7 @@ void path_tracing::extensions::json::json_scene_loader::load(const runtime_servi
 
 		if (entity.contains("material")) material = load_material_from_json(entity["material"]);
 		if (entity.contains("light")) light = load_light_from_json(entity["light"], index);
-		if (entity.contains("shape")) mesh = load_mesh_from_property(service.meshes_system, entity["shape"]);
+		if (entity.contains("shape")) mesh = load_mesh_from_property(service.meshes_system, entity["shape"], directory);
 
 		service.scene.entities.push_back({ material, light, mesh, transform });
 

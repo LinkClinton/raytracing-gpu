@@ -7,7 +7,8 @@ std::tuple<path_tracing::matrix4x4, path_tracing::matrix4x4> path_tracing::scene
 	const auto screen_window_min = vector3(-1);
 
 	const auto camera_to_screen = perspective_fov(scene.camera_system, glm::radians(scene.camera.fov),
-		scene.film.size_x, scene.film.size_y,
+		static_cast<real>(scene.film.size_x), 
+		static_cast<real>(scene.film.size_y),
 		0.1f, 1000.f);
 	
 	auto screen_to_raster = scale(matrix4x4(1),

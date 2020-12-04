@@ -62,6 +62,9 @@
     <ClCompile Include="scenes\entity.cpp">
       <Filter>scenes</Filter>
     </ClCompile>
+    <ClCompile Include="extensions\models\tiny_obj_loader.cpp">
+      <Filter>extensions\models</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="extensions">
@@ -141,6 +144,9 @@
     </Filter>
     <Filter Include="resources\shaders\module_renderer\templates">
       <UniqueIdentifier>{433187a8-722c-42b0-aa53-7d4ba9a01542}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="extensions\models">
+      <UniqueIdentifier>{77a88481-c37f-4364-8ab1-b0c72118fc1e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -232,6 +238,9 @@
     <ClInclude Include="scenes\components\film.hpp">
       <Filter>scenes\components</Filter>
     </ClInclude>
+    <ClInclude Include="extensions\models\tiny_obj_loader.hpp">
+      <Filter>extensions\models</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <CopyFileToFolders Include="resources\shaders\depth_renderer\depth_types.hlsl">
@@ -300,5 +309,19 @@
     <CopyFileToFolders Include="resources\shaders\module_renderer\templates\material.hlsl">
       <Filter>resources\shaders\module_renderer\templates</Filter>
     </CopyFileToFolders>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="resources\shaders\module_renderer\lights\light_environment.hlsl">
+      <Filter>resources\shaders\module_renderer\lights</Filter>
+    </FxCompile>
+    <FxCompile Include="resources\shaders\scatterings\scattering_fresnel_specular.hlsl">
+      <Filter>resources\shaders\scatterings</Filter>
+    </FxCompile>
+    <FxCompile Include="resources\shaders\scatterings\scattering_fresnel_effect.hlsl">
+      <Filter>resources\shaders\scatterings</Filter>
+    </FxCompile>
+    <FxCompile Include="resources\shaders\module_renderer\materials\material_glass.hlsl">
+      <Filter>resources\shaders\module_renderer\materials</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

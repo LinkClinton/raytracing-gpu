@@ -115,6 +115,7 @@ path_tracing::renderers::module_renderer::module_renderer(
 	build_acceleration(service);
 	build_material_submodule(service, materials);
 	build_light_submodule(service, lights);
+	build_macro_submodule(service);
 	build_shader_libraries(service);
 	build_hit_groups(service);
 	build_structured_buffer(service);
@@ -340,6 +341,12 @@ void path_tracing::renderers::module_renderer::build_light_submodule(const runti
 		mLightSubmodule.replace("[" + function_sentences.first + "_light]", function_sentences.second);
 }
 
+void path_tracing::renderers::module_renderer::build_macro_submodule(const runtime_service& service)
+{
+	if (mLightTypes.find("environment_light") != mLightTypes.end())
+		mMacroSubmodule.add_sentence("#define __ENABLE_ENVIRONMENT_LIGHT__");
+}
+
 void path_tracing::renderers::module_renderer::build_acceleration(const runtime_service& service)
 {
 	std::vector<wrapper::directx12::raytracing_instance> instances;
@@ -372,6 +379,7 @@ void path_tracing::renderers::module_renderer::build_shader_libraries(const runt
 
 	ray_generation_submodule.replace("[material_submodule]", mMaterialSubmodule);
 	ray_generation_submodule.replace("[light_submodule]", mLightSubmodule);
+	ray_generation_submodule.replace("[macro_submodule]", mMacroSubmodule);
 
 	std::vector<wrapper::directx12::shader_library> libraries = {
 		wrapper::directx12::shader_library::create(
@@ -444,13 +452,27 @@ void path_tracing::renderers::module_renderer::build_structured_buffer(const run
 	light_count = 0;
 
 	for (const auto& entity : service.scene.entities) {
-		if (entity.material.has_value()) copy_submodule_data_to(
-			materials.data() + material_count++ * mMaterialSubmoduleTypeSize,
-			entity.material.value(), mMaterialValuesMemoryAddress);
+		if (entity.material.has_value()) {
+			const auto target = materials.data() + material_count++ * mMaterialSubmoduleTypeSize;
+			const auto type_index = mMaterialTypes.at(entity.material->submodule);
 
-		if (entity.light.has_value()) copy_submodule_data_to(
-			lights.data() + light_count++ * mLightSubmoduleTypeSize,
-			entity.light.value(), mLightValuesMemoryAddress);
+			copy_submodule_data_to(target, entity.material.value(), mMaterialValuesMemoryAddress);
+
+			std::memcpy(target + mMaterialValuesMemoryAddress.at("type"), &type_index, sizeof(uint32));
+		}
+
+		if (entity.light.has_value()) {
+			const auto target = lights.data() + light_count++ * mLightSubmoduleTypeSize;
+			const auto type_index = mLightTypes.at(entity.light->submodule);
+			
+			copy_submodule_data_to(target, entity.light.value(), mLightValuesMemoryAddress);
+
+			std::memcpy(target + mLightValuesMemoryAddress.at("type"), &type_index, sizeof(uint32));
+
+			// record the environment index
+			if (entity.light->submodule == "environment_light")
+				mSceneConfig.environment = light_count - 1;
+		}
 	}
 
 	// update light count
@@ -517,7 +539,8 @@ void path_tracing::renderers::module_renderer::build_descriptor_heap(const runti
 		.add_srv_range({ "acceleration" }, 0, 1)
 		.add_uav_range({ "render_target_hdr", "render_target_sdr" }, 0, 2)
 		.add_srv_range({ "entity_info", "lights", "materials" }, 0, 3)
-		.add_srv_range({ "positions", "normals", "uvs", "indices" }, 0, 4);
+		.add_srv_range({ "positions", "normals", "uvs", "indices" }, 0, 4)
+		.add_srv_range({ "environment" }, 0, 5);
 	
 	mDescriptorHeap = wrapper::directx12::descriptor_heap::create(service.render_device.device(), mDescriptorTable);
 
@@ -594,7 +617,8 @@ void path_tracing::renderers::module_renderer::build_descriptor_heap(const runti
 void path_tracing::renderers::module_renderer::build_root_signature(const runtime_service& service)
 {
 	mRootSignatureInfo[0]
-		.add_descriptor_table("descriptor_table", mDescriptorTable);
+		.add_descriptor_table("descriptor_table", mDescriptorTable)
+		.add_static_sampler("default_sampler", 0, 6);
 
 	mRootSignatureInfo[1]
 		.add_constants("hit_group_info", 0, 100, 1);

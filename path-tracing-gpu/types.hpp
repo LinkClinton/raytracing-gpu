@@ -19,4 +19,6 @@ namespace path_tracing {
 
 	template <typename Key, typename Value>
 	using mapping = std::unordered_map<Key, Value>;
+
+	constexpr uint32 index_null = std::numeric_limits<uint32>::max();
 }

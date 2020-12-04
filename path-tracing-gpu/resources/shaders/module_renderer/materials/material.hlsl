@@ -11,8 +11,14 @@
 struct packed_material {};
 
 struct material {
-	float3 diffuse;
+	float3 transmission;
 	uint type;
+	float3 reflectance;
+	uint unused0;
+	float3 diffuse;
+	uint unused1;
+	float3 eta;
+	uint unused2;
 };
 
 material unpacking_material(packed_material m, float2 uv)

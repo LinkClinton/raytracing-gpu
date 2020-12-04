@@ -16,9 +16,9 @@ namespace path_tracing::renderers {
 
 		uint32 sample_index = 0;
 
+		uint32 environment = index_null;
 		uint32 max_depth = 5;
 		uint32 lights = 0;
-		uint32 unused0 = 0;
 		uint32 unused1 = 0;
 
 		module_renderer_scene_config() = default;
@@ -70,6 +70,8 @@ namespace path_tracing::renderers {
 		void build_material_submodule(const runtime_service& service, const std::vector<submodule>& materials);
 
 		void build_light_submodule(const runtime_service& service, const std::vector<submodule>& lights);
+
+		void build_macro_submodule(const runtime_service& service);
 		
 		void build_acceleration(const runtime_service& service);
 
@@ -107,6 +109,7 @@ namespace path_tracing::renderers {
 
 		wrapper::directx12::shader_creator mMaterialSubmodule;
 		wrapper::directx12::shader_creator mLightSubmodule;
+		wrapper::directx12::shader_creator mMacroSubmodule;
 		
 		wrapper::directx12::buffer mRaytracingShaderTableGpuBuffer;
 		wrapper::directx12::buffer mRaytracingShaderTableCpuBuffer;

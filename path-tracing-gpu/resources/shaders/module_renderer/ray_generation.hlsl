@@ -1,5 +1,8 @@
 #include "../samplers/random_sampler.hlsl"
 
+// [macro_submodule]
+// [macro_submodule]
+
 #include "materials/material.hlsl"
 #include "lights/light.hlsl"
 #include "module_types.hlsl"
@@ -105,7 +108,19 @@ float3 trace(ray_desc first, inout random_sampler sampler)
 		TraceRay(acceleration, RAY_FLAG_FORCE_OPAQUE, 0xFF, 0,
 			1, 0, tracing_info.ray, payload);
 
-		if (payload.missed != 0) break;
+		if (payload.missed != 0) {
+			
+#ifdef __ENABLE_ENVIRONMENT_LIGHT__
+			if ((bounces != 0 && !tracing_info.specular) || config.environment == INDEX_NUll) break;
+
+			interaction interaction;
+
+			tracing_info.value += tracing_info.beta * evaluate_environment_light(lights[config.environment], interaction,
+				-tracing_info.ray.Direction);
+#endif
+			
+			break;
+		}
 
 		entity_info entity = entities[payload.entity];
 		
@@ -139,7 +154,14 @@ float3 trace(ray_desc first, inout random_sampler sampler)
 		tracing_info.specular = has(function_sample.type, scattering_specular);
 		tracing_info.ray = payload.interaction.spawn_ray(function_sample.wi);
 
-		float component = max_component(tracing_info.beta);
+		if (has(function_sample.type, scattering_type(scattering_specular | scattering_transmission))) {
+			float surface_eta = material.eta.x;
+			
+			tracing_info.eta = tracing_info.eta * ((dot(payload.interaction.wo, payload.interaction.normal) > 0) ?
+				(surface_eta * surface_eta) : (1 / (surface_eta * surface_eta)));
+		}
+		
+		float component = max_component(tracing_info.beta * tracing_info.eta);
 
 		if (component < 1 && bounces > 3) {
 			float q = max(0.05, 1 - component);

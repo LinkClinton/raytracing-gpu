@@ -30,9 +30,11 @@ void path_tracing::runtime::render::render_system::resolve(const runtime_service
 
 	mRenderer = std::make_shared<renderers::module_renderer>(
 		std::vector<renderers::submodule>{
-			renderers::submodule{ "./materials/material_diffuse.hlsl", "diffuse_material" }
+			renderers::submodule{ "./materials/material_diffuse.hlsl", "diffuse_material" },
+			renderers::submodule{ "./materials/material_glass.hlsl", "glass_material" }
 		},
 		std::vector<renderers::submodule>{
+			renderers::submodule{ "./lights/light_environment.hlsl", "environment_light" },
 			renderers::submodule{ "./lights/light_surface.hlsl", "surface_light" }
 		}, service);
 }

@@ -18,11 +18,11 @@ struct scene_config {
 	float3 camera_position;
 
 	uint sample_index;
-	
+
+	uint environment;
 	uint max_depth;
 	uint lights;
 	uint unused0;
-	uint unused1;
 };
 
 struct path_tracing_info {
@@ -72,5 +72,9 @@ SHADER_STRUCTURED_BUFFER_DEFINE(float3, normals, t1, space4);
 SHADER_STRUCTURED_BUFFER_DEFINE(float3, uvs, t2, space4);
 
 SHADER_STRUCTURED_BUFFER_DEFINE(uint3, indices, t3, space4);
+
+SHADER_RESOURCE_DEFINE(Texture2D, environment, t0, space5);
+
+SHADER_RESOURCE_DEFINE(SamplerState, default_sampler, s0, space6);
 
 #endif

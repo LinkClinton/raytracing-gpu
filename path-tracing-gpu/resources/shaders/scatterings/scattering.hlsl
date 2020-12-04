@@ -92,6 +92,20 @@ float3 not_default_reflect(float3 wi, float3 normal)
 	return -wi + 2 * dot(wi, normal) * normal;
 }
 
+float3 not_default_refract(float3 wi, float3 normal, float eta)
+{
+	float cos_theta_i = dot(wi, normal);
+	float sin_theta_i_pow2 = max(0, 1 - cos_theta_i * cos_theta_i);
+
+	float sin_theta_o_pow2 = sin_theta_i_pow2 * eta * eta;
+
+	if (sin_theta_o_pow2 >= 1) return 0;
+
+	float cos_theta_o = sqrt(1 - sin_theta_o_pow2);
+
+	return -wi * eta + (cos_theta_i * eta - cos_theta_o) * normal;
+}
+
 float roughness_to_alpha(float roughness)
 {
 	roughness = max(roughness, 1e-3);

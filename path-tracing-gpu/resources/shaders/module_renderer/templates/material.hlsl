@@ -34,6 +34,8 @@ material unpacking_material(packed_material packed_material, float2 uv)
 
 float3 evaluate_material(material material, float3 wo, float3 wi)
 {
+	if (wo.z == 0) return 0;
+	
 	switch (material.type) {
 	// [evaluate_material]
 	// [evaluate_material]
@@ -45,6 +47,8 @@ scattering_sample sample_material(material material, float3 wo, float2 value)
 {
 	scattering_sample sample; sample.type = scattering_unknown; sample.pdf = 0;
 
+	if (wo.z == 0) return sample;
+	
 	switch (material.type) {
 		// [sample_material]
 		// [sample_material]
@@ -54,6 +58,8 @@ scattering_sample sample_material(material material, float3 wo, float2 value)
 
 real pdf_material(material material, float3 wo, float3 wi)
 {
+	if (wo.z == 0) return 0;
+	
 	switch (material.type) {
 	// [pdf_material]
 	// [pdf_material]

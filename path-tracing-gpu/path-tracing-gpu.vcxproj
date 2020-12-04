@@ -176,6 +176,7 @@
     <ClCompile Include="extensions\imgui\imgui_renderer.cpp" />
     <ClCompile Include="extensions\json\json_scene_loader.cpp" />
     <ClCompile Include="extensions\json\json_submodule_loader.cpp" />
+    <ClCompile Include="extensions\models\tiny_obj_loader.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="renderers\depth_renderer.cpp" />
     <ClCompile Include="renderers\module_renderer.cpp" />
@@ -202,6 +203,7 @@
     <ClInclude Include="extensions\json\json.hpp" />
     <ClInclude Include="extensions\json\json_scene_loader.hpp" />
     <ClInclude Include="extensions\json\json_submodule_loader.hpp" />
+    <ClInclude Include="extensions\models\tiny_obj_loader.hpp" />
     <ClInclude Include="extensions\spdlog\spdlog.hpp" />
     <ClInclude Include="interfaces\noncopyable.hpp" />
     <ClInclude Include="renderers\depth_renderer.hpp" />
@@ -536,6 +538,42 @@
       <DestinationFolders Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(OutDir)/resources/shaders/module_renderer/templates</DestinationFolders>
       <DestinationFolders Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(OutDir)/resources/shaders/module_renderer/templates</DestinationFolders>
       <DestinationFolders Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(OutDir)/resources/shaders/module_renderer/templates</DestinationFolders>
+    </CopyFileToFolders>
+  </ItemGroup>
+  <ItemGroup>
+    <CopyFileToFolders Include="resources\shaders\module_renderer\lights\light_environment.hlsl">
+      <FileType>Document</FileType>
+      <DestinationFolders Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(OutDir)/resources/shaders/module_renderer/lights</DestinationFolders>
+      <DestinationFolders Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(OutDir)/resources/shaders/module_renderer/lights</DestinationFolders>
+      <DestinationFolders Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(OutDir)/resources/shaders/module_renderer/lights</DestinationFolders>
+      <DestinationFolders Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(OutDir)/resources/shaders/module_renderer/lights</DestinationFolders>
+    </CopyFileToFolders>
+  </ItemGroup>
+  <ItemGroup>
+    <CopyFileToFolders Include="resources\shaders\scatterings\scattering_fresnel_specular.hlsl">
+      <FileType>Document</FileType>
+      <DestinationFolders Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(OutDir)/resources/shaders/scatterings</DestinationFolders>
+      <DestinationFolders Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(OutDir)/resources/shaders/scatterings</DestinationFolders>
+      <DestinationFolders Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(OutDir)/resources/shaders/scatterings</DestinationFolders>
+      <DestinationFolders Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(OutDir)/resources/shaders/scatterings</DestinationFolders>
+    </CopyFileToFolders>
+  </ItemGroup>
+  <ItemGroup>
+    <CopyFileToFolders Include="resources\shaders\scatterings\scattering_fresnel_effect.hlsl">
+      <FileType>Document</FileType>
+      <DestinationFolders Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(OutDir)/resources/shaders/scatterings</DestinationFolders>
+      <DestinationFolders Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(OutDir)/resources/shaders/scatterings</DestinationFolders>
+      <DestinationFolders Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(OutDir)/resources/shaders/scatterings</DestinationFolders>
+      <DestinationFolders Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(OutDir)/resources/shaders/scatterings</DestinationFolders>
+    </CopyFileToFolders>
+  </ItemGroup>
+  <ItemGroup>
+    <CopyFileToFolders Include="resources\shaders\module_renderer\materials\material_glass.hlsl">
+      <FileType>Document</FileType>
+      <DestinationFolders Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(OutDir)/resources/shaders/module_renderer/materials</DestinationFolders>
+      <DestinationFolders Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(OutDir)/resources/shaders/module_renderer/materials</DestinationFolders>
+      <DestinationFolders Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(OutDir)/resources/shaders/module_renderer/materials</DestinationFolders>
+      <DestinationFolders Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(OutDir)/resources/shaders/module_renderer/materials</DestinationFolders>
     </CopyFileToFolders>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

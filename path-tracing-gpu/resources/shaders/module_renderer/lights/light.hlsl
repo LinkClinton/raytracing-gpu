@@ -25,6 +25,18 @@ light_search_result search_light(interaction interaction, float3 wi)
 	TraceRay(acceleration, RAY_FLAG_FORCE_OPAQUE, 0xFF, 0,
 		1, 0, light_ray, light_payload);
 
+#ifdef __ENABLE_ENVIRONMENT_LIGHT__
+	// if the ray does not intersect any entity and we enable and have environment light
+	// we will return environment as search result
+	if (light_payload.missed == 1 && config.environment != INDEX_NUll) {
+		result.interaction.position = interaction.position + wi * 2 * 1000;
+		result.light = config.environment;
+		result.pdf = 1.0 / config.lights;
+
+		return result;
+	}
+#endif
+
 	if (light_payload.missed == 1 || entities[light_payload.entity].light == INDEX_NUll)
 		return result;
 
@@ -55,6 +67,15 @@ struct light {
 	uint delta;
 	uint type;
 };
+
+#ifdef __ENABLE_ENVIRONMENT_LIGHT__
+
+float3 evaluate_environment_light(light light, interaction interaction, float3 wi)
+{
+	return float3(0, 0, 0);
+}
+
+#endif
 
 float3 evaluate_light(light light, interaction interaction, float3 wi)
 {
