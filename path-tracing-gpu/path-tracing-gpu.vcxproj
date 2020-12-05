@@ -185,6 +185,7 @@
     <ClCompile Include="runtime\render\render_device.cpp" />
     <ClCompile Include="runtime\render\render_system.cpp" />
     <ClCompile Include="runtime\resources\meshes_system.cpp" />
+    <ClCompile Include="runtime\resources\images_system.cpp" />
     <ClCompile Include="runtime\runtime_process.cpp" />
     <ClCompile Include="runtime\runtime_service.cpp" />
     <ClCompile Include="runtime\windows\view_window.cpp" />
@@ -214,6 +215,7 @@
     <ClInclude Include="runtime\render\render_system.hpp" />
     <ClInclude Include="runtime\resources\meshes_system.hpp" />
     <ClInclude Include="runtime\resources\resource_system.hpp" />
+    <ClInclude Include="runtime\resources\images_system.hpp" />
     <ClInclude Include="runtime\runtime_frame.hpp" />
     <ClInclude Include="runtime\runtime_process.hpp" />
     <ClInclude Include="runtime\runtime_service.hpp" />

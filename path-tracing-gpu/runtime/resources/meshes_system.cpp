@@ -137,39 +137,39 @@ size_t path_tracing::runtime::resources::meshes_system::count() const noexcept
 
 void path_tracing::runtime::resources::meshes_system::allocate_gpu_buffer_memory(const render_device& device)
 {
+	if (mCommandAllocator.get() == nullptr) {
+		mCommandAllocator = wrapper::directx12::command_allocator::create(device.device());
+		mCommandList = wrapper::directx12::graphics_command_list::create(device.device(), mCommandAllocator);
+	}
+	
 	const auto default_info = wrapper::directx12::resource_info::common(D3D12_RESOURCE_STATE_COPY_DEST);
 	const auto upload_info = wrapper::directx12::resource_info::upload();
 
 	const auto vtx_buffer_size = sizeof(vector3) * mVtxBaseCount;
 	const auto idx_buffer_size = sizeof(uint32) * mIdxBaseCount;
 
-	mesh_gpu_buffer mesh_upload_buffer;
+	mUploads.positions = wrapper::directx12::buffer::create(device.device(), upload_info, vtx_buffer_size);
+	mUploads.normals = wrapper::directx12::buffer::create(device.device(), upload_info, vtx_buffer_size);
+	mUploads.uvs = wrapper::directx12::buffer::create(device.device(), upload_info, vtx_buffer_size);
+	mUploads.indices = wrapper::directx12::buffer::create(device.device(), upload_info, idx_buffer_size);
 
-	mesh_upload_buffer.positions = wrapper::directx12::buffer::create(device.device(), upload_info, vtx_buffer_size);
-	mesh_upload_buffer.normals = wrapper::directx12::buffer::create(device.device(), upload_info, vtx_buffer_size);
-	mesh_upload_buffer.uvs = wrapper::directx12::buffer::create(device.device(), upload_info, vtx_buffer_size);
-	mesh_upload_buffer.indices = wrapper::directx12::buffer::create(device.device(), upload_info, idx_buffer_size);
-
-	mesh_upload_buffer.positions.copy_from_cpu(mCpuBuffers.positions.data(), vtx_buffer_size);
-	mesh_upload_buffer.normals.copy_from_cpu(mCpuBuffers.normals.data(), vtx_buffer_size);
-	mesh_upload_buffer.uvs.copy_from_cpu(mCpuBuffers.uvs.data(), vtx_buffer_size);
-	mesh_upload_buffer.indices.copy_from_cpu(mCpuBuffers.indices.data(), idx_buffer_size);
+	mUploads.positions.copy_from_cpu(mCpuBuffers.positions.data(), vtx_buffer_size);
+	mUploads.normals.copy_from_cpu(mCpuBuffers.normals.data(), vtx_buffer_size);
+	mUploads.uvs.copy_from_cpu(mCpuBuffers.uvs.data(), vtx_buffer_size);
+	mUploads.indices.copy_from_cpu(mCpuBuffers.indices.data(), idx_buffer_size);
 
 	mGpuBuffers.positions = wrapper::directx12::buffer::create(device.device(), default_info, vtx_buffer_size);
 	mGpuBuffers.normals = wrapper::directx12::buffer::create(device.device(), default_info, vtx_buffer_size);
 	mGpuBuffers.uvs = wrapper::directx12::buffer::create(device.device(), default_info, vtx_buffer_size);
 	mGpuBuffers.indices = wrapper::directx12::buffer::create(device.device(), default_info, idx_buffer_size);
 
-	auto command_allocator = wrapper::directx12::command_allocator::create(device.device());
-	auto command_list = wrapper::directx12::graphics_command_list::create(device.device(), command_allocator);
+	mCommandAllocator->Reset();
+	mCommandList->Reset(mCommandAllocator.get(), nullptr);
 
-	command_allocator->Reset();
-	command_list->Reset(command_allocator.get(), nullptr);
-
-	mGpuBuffers.positions.copy_from(command_list, mesh_upload_buffer.positions);
-	mGpuBuffers.normals.copy_from(command_list, mesh_upload_buffer.normals);
-	mGpuBuffers.uvs.copy_from(command_list, mesh_upload_buffer.uvs);
-	mGpuBuffers.indices.copy_from(command_list, mesh_upload_buffer.indices);
+	mGpuBuffers.positions.copy_from(mCommandList, mUploads.positions);
+	mGpuBuffers.normals.copy_from(mCommandList, mUploads.normals);
+	mGpuBuffers.uvs.copy_from(mCommandList, mUploads.uvs);
+	mGpuBuffers.indices.copy_from(mCommandList, mUploads.indices);
 
 	std::vector<D3D12_RESOURCE_BARRIER> barriers;
 
@@ -178,7 +178,7 @@ void path_tracing::runtime::resources::meshes_system::allocate_gpu_buffer_memory
 	barriers.push_back(mGpuBuffers.uvs.barrier(D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_GENERIC_READ));
 	barriers.push_back(mGpuBuffers.indices.barrier(D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_GENERIC_READ));
 
-	command_list.resource_barrier(barriers);
+	mCommandList.resource_barrier(barriers);
 
 	mGeometries.clear();
 
@@ -196,7 +196,7 @@ void path_tracing::runtime::resources::meshes_system::allocate_gpu_buffer_memory
 		
 		const auto geometry = wrapper::directx12::raytracing_geometry::create(
 			D3D12_RAYTRACING_ACCELERATION_STRUCTURE_BUILD_FLAG_PREFER_FAST_TRACE,
-			command_list, device.device(),
+			mCommandList, device.device(),
 			vtx_address, mesh_info.vtx_count,
 			idx_address, mesh_info.idx_count
 		);
@@ -206,8 +206,7 @@ void path_tracing::runtime::resources::meshes_system::allocate_gpu_buffer_memory
 		mGeometries.insert({ mesh_info.idx_location, geometry });
 	}
 	
-	command_list.close();
+	mCommandList.close();
 
-	device.queue().execute({ command_list });
-	device.wait();
+	device.queue().execute({ mCommandList });
 }

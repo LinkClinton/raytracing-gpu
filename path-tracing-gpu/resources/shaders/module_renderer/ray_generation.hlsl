@@ -154,12 +154,14 @@ float3 trace(ray_desc first, inout random_sampler sampler)
 		tracing_info.specular = has(function_sample.type, scattering_specular);
 		tracing_info.ray = payload.interaction.spawn_ray(function_sample.wi);
 
+#ifdef __ENABLE_SPECULAR_TRANSMISSION__
 		if (has(function_sample.type, scattering_type(scattering_specular | scattering_transmission))) {
 			float surface_eta = material.eta.x;
 			
 			tracing_info.eta = tracing_info.eta * ((dot(payload.interaction.wo, payload.interaction.normal) > 0) ?
 				(surface_eta * surface_eta) : (1 / (surface_eta * surface_eta)));
 		}
+#endif 
 		
 		float component = max_component(tracing_info.beta * tracing_info.eta);
 

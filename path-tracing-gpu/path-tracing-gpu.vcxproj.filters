@@ -65,6 +65,9 @@
     <ClCompile Include="extensions\models\tiny_obj_loader.cpp">
       <Filter>extensions\models</Filter>
     </ClCompile>
+    <ClCompile Include="runtime\resources\images_system.cpp">
+      <Filter>runtime\resources</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="extensions">
@@ -241,6 +244,9 @@
     <ClInclude Include="extensions\models\tiny_obj_loader.hpp">
       <Filter>extensions\models</Filter>
     </ClInclude>
+    <ClInclude Include="runtime\resources\images_system.hpp">
+      <Filter>runtime\resources</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <CopyFileToFolders Include="resources\shaders\depth_renderer\depth_types.hlsl">
@@ -309,19 +315,17 @@
     <CopyFileToFolders Include="resources\shaders\module_renderer\templates\material.hlsl">
       <Filter>resources\shaders\module_renderer\templates</Filter>
     </CopyFileToFolders>
-  </ItemGroup>
-  <ItemGroup>
-    <FxCompile Include="resources\shaders\module_renderer\lights\light_environment.hlsl">
+    <CopyFileToFolders Include="resources\shaders\module_renderer\lights\light_environment.hlsl">
       <Filter>resources\shaders\module_renderer\lights</Filter>
-    </FxCompile>
-    <FxCompile Include="resources\shaders\scatterings\scattering_fresnel_specular.hlsl">
-      <Filter>resources\shaders\scatterings</Filter>
-    </FxCompile>
-    <FxCompile Include="resources\shaders\scatterings\scattering_fresnel_effect.hlsl">
-      <Filter>resources\shaders\scatterings</Filter>
-    </FxCompile>
-    <FxCompile Include="resources\shaders\module_renderer\materials\material_glass.hlsl">
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="resources\shaders\module_renderer\materials\material_glass.hlsl">
       <Filter>resources\shaders\module_renderer\materials</Filter>
-    </FxCompile>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="resources\shaders\scatterings\scattering_fresnel_effect.hlsl">
+      <Filter>resources\shaders\scatterings</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="resources\shaders\scatterings\scattering_fresnel_specular.hlsl">
+      <Filter>resources\shaders\scatterings</Filter>
+    </CopyFileToFolders>
   </ItemGroup>
 </Project>

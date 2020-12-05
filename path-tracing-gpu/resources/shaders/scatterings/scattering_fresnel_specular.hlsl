@@ -3,6 +3,8 @@
 
 #include "scattering_fresnel_effect.hlsl"
 
+#define __ENABLE_SPECULAR_TRANSMISSION__
+
 float3 evaluate_fresnel_specular()
 {
 	return 0;

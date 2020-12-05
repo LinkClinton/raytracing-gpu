@@ -74,6 +74,9 @@ namespace path_tracing::runtime::resources {
 		size_t count() const noexcept;
 	private:
 		void allocate_gpu_buffer_memory(const render_device& device);
+
+		wrapper::directx12::command_allocator mCommandAllocator;
+		wrapper::directx12::graphics_command_list mCommandList;
 		
 		std::vector<std::pair<std::string, mesh_cpu_buffer>> mCachedMeshes;
 
@@ -83,6 +86,7 @@ namespace path_tracing::runtime::resources {
 
 		mesh_cpu_buffer mCpuBuffers;
 		mesh_gpu_buffer mGpuBuffers;
+		mesh_gpu_buffer mUploads;
 
 		size_t mVtxBaseCount = 0;
 		size_t mIdxBaseCount = 0;

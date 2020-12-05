@@ -20,5 +20,12 @@ namespace path_tracing {
 	template <typename Key, typename Value>
 	using mapping = std::unordered_map<Key, Value>;
 
+	using identity = uint32;
+	
 	constexpr uint32 index_null = std::numeric_limits<uint32>::max();
+
+	enum class coordinate_system : uint32 {
+		right_hand = 0, left_hand = 1
+	};
+	
 }

@@ -345,6 +345,9 @@ void path_tracing::renderers::module_renderer::build_macro_submodule(const runti
 {
 	if (mLightTypes.find("environment_light") != mLightTypes.end())
 		mMacroSubmodule.add_sentence("#define __ENABLE_ENVIRONMENT_LIGHT__");
+
+	if (service.images_system.has("environment"))
+		mMacroSubmodule.add_sentence("#define __ENABLE_ENVIRONMENT_IMAGE__");
 }
 
 void path_tracing::renderers::module_renderer::build_acceleration(const runtime_service& service)
@@ -612,6 +615,16 @@ void path_tracing::renderers::module_renderer::build_descriptor_heap(const runti
 		mDescriptorHeap.cpu_handle(mDescriptorTable.index("indices")),
 		mesh_gpu_buffer.indices
 	);
+
+	if (service.images_system.has("environment")) {
+		const auto environment = service.images_system.texture(service.images_system.info("environment"));
+
+		service.render_device.device().create_shader_resource_view(
+			wrapper::directx12::resource_view::texture2d(environment.format()),
+			mDescriptorHeap.cpu_handle(mDescriptorTable.index("environment")),
+			environment
+		);
+	}
 }
 
 void path_tracing::renderers::module_renderer::build_root_signature(const runtime_service& service)

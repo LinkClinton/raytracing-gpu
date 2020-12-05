@@ -1,5 +1,9 @@
 #include "json_submodule_loader.hpp"
 
+#include "../images/image_stb.hpp"
+
+using namespace path_tracing::runtime::resources;
+
 namespace path_tracing::extensions::json {
 
 	submodule_data load_diffuse_material_from_json(const nlohmann::json& material)
@@ -34,9 +38,15 @@ namespace path_tracing::extensions::json {
 		return {};
 	}
 
-	submodule_data load_environment_light_from_json(const nlohmann::json& light, uint32 index)
+	submodule_data load_environment_light_from_json(images_system& system, const nlohmann::json& light, 
+		const std::string& directory, uint32 index)
 	{
 		submodule_data submodule;
+
+		if (!light["environment"]["image"].get<std::string>().empty())
+			system.allocate("environment", images::read_image_hdr(
+				directory + light["environment"]["image"].get<std::string>(),
+				coordinate_system::left_hand, light["environment"]["gamma"]));
 
 		submodule.float3.insert({ "intensity", light["intensity"] });
 
@@ -62,9 +72,9 @@ namespace path_tracing::extensions::json {
 		return submodule;
 	}
 	
-	submodule_data load_light_from_json(const nlohmann::json& light, uint32 index)
+	submodule_data load_light_from_json(images_system& system, const nlohmann::json& light, const std::string& directory, uint32 index)
 	{
-		if (light["type"] == "environment") return load_environment_light_from_json(light, index);
+		if (light["type"] == "environment") return load_environment_light_from_json(system, light, directory, index);
 		if (light["type"] == "surface") return load_surface_light_from_json(light, index);
 		
 		return {};

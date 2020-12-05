@@ -2,6 +2,7 @@
 
 #include "resources/resource_system.hpp"
 #include "resources/meshes_system.hpp"
+#include "resources/images_system.hpp"
 
 #include "output/output_system.hpp"
 
@@ -19,6 +20,7 @@ namespace path_tracing::runtime {
 	struct runtime_service final {
 		resources::resource_system& resource_system;
 		resources::meshes_system& meshes_system;
+		resources::images_system& images_system;
 
 		output::output_system& output_system;
 		

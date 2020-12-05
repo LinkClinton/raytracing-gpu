@@ -7,10 +7,6 @@
 
 namespace path_tracing::scenes::components {
 
-	enum class coordinate_system : uint32 {
-		right_hand = 0, left_hand = 1
-	};
-
 	class transform final {
 	public:
 		transform() = default;

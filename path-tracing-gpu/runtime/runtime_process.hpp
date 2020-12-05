@@ -20,6 +20,7 @@ namespace path_tracing::runtime {
 
 		resources::resource_system mResourceSystem;
 		resources::meshes_system mMeshesSystem;
+		resources::images_system mImagesSystem;
 
 		output::output_system mOutputSystem;
 		

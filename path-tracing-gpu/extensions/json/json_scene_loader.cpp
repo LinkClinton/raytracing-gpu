@@ -150,7 +150,7 @@ void path_tracing::extensions::json::json_scene_loader::load(const runtime_servi
 		std::optional<mesh_info> mesh = std::nullopt;
 
 		if (entity.contains("material")) material = load_material_from_json(entity["material"]);
-		if (entity.contains("light")) light = load_light_from_json(entity["light"], index);
+		if (entity.contains("light")) light = load_light_from_json(service.images_system, entity["light"], directory, index);
 		if (entity.contains("shape")) mesh = load_mesh_from_property(service.meshes_system, entity["shape"], directory);
 
 		service.scene.entities.push_back({ material, light, mesh, transform });
@@ -159,6 +159,9 @@ void path_tracing::extensions::json::json_scene_loader::load(const runtime_servi
 	}
 	
 	service.meshes_system.upload_cached_buffers(service.render_device);
+	service.images_system.upload_cached_buffers(service.render_device);
+	
+	service.render_device.wait();
 }
 
 void path_tracing::extensions::json::json_scene_loader::load(const runtime_service& service, const std::string& filename)

@@ -13,6 +13,7 @@ int main()
 	auto process = path_tracing::runtime::runtime_process();
 
 	load_scene_from_file(process, "./resources/scenes/glass-plate/scene.json");
+	//load_scene_from_file(process, "./resources/scenes/cornell-box/scene.json");
 	
 	process.run_loop();
 }
