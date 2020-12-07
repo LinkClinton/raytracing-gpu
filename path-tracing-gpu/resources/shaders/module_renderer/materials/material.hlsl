@@ -14,11 +14,11 @@ struct material {
 	float3 transmission;
 	uint type;
 	float3 reflectance;
-	uint unused0;
 	float3 diffuse;
-	uint unused1;
+	float3 specular;
 	float3 eta;
-	uint unused2;
+	float3 k;
+	float3 roughness;
 };
 
 material unpacking_material(packed_material m, float2 uv)

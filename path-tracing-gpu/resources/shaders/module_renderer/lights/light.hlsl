@@ -63,9 +63,12 @@ struct light_sample {
 struct light {
 	float3 intensity;
 	uint entity;
-	
+
+	float3 direction;
 	uint delta;
+
 	uint type;
+	float3 unused;
 };
 
 #ifdef __ENABLE_ENVIRONMENT_LIGHT__

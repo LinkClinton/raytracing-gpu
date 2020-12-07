@@ -240,10 +240,20 @@ void path_tracing::renderers::module_renderer::build_material_submodule(const ru
 	};
 
 	// todo : unpacking material with texture 
-	for (const auto& variable : common_material_layout)
+	for (const auto& variable : common_material_layout) {
 		material_functions_sentences["unpacking"].add_sentence(
 			"material." + variable.name + " = packed_material." + variable.name + ";", 1);
+	}
 
+	if (mMaterialValuesMemoryAddress.find("roughness") != mMaterialValuesMemoryAddress.end() &&
+		mMaterialValuesMemoryAddress.find("remapping") != mMaterialValuesMemoryAddress.end()) {
+
+		material_functions_sentences["unpacking"].add_sentence("if (material.remapping != 0) {");
+		material_functions_sentences["unpacking"].add_sentence("material.roughness.x = roughness_to_alpha(material.roughness.x);");
+		material_functions_sentences["unpacking"].add_sentence("material.roughness.y = roughness_to_alpha(material.roughness.y);");
+		material_functions_sentences["unpacking"].add_sentence("}");
+	}
+		
 	for (const auto& material : mMaterialTypes) {
 		material_functions_sentences["evaluate"].add_sentence("case " + std::to_string(material.second) + ": return evaluate_" + 
 			material.first + "(material, wo, wi);", 1);

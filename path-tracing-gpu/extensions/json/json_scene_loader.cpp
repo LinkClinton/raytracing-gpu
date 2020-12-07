@@ -1,6 +1,7 @@
 #include "json_scene_loader.hpp"
 
 #include "../models/tiny_obj_loader.hpp"
+#include "../models/tiny_ply_loader.hpp"
 
 #include "json_submodule_loader.hpp"
 
@@ -80,11 +81,23 @@ namespace path_tracing::extensions::json {
 
 		return system.allocate(fullpath, std::move(buffer));
 	}
+
+	mesh_info load_mesh_from_ply_property(meshes_system& system, const nlohmann::json& json, const std::string& directory)
+	{
+		const auto fullpath = directory + json["filename"].get<std::string>();
+
+		if (system.has(fullpath)) return system.info(fullpath);
+
+		auto buffer = models::load_ply_mesh(fullpath);
+
+		return system.allocate(fullpath, std::move(buffer));
+	}
 	
 	mesh_info load_mesh_from_file_property(meshes_system& system, const nlohmann::json& json, const std::string& directory)
 	{
 		if (json["type"] == "obj") return load_mesh_from_obj_property(system, json, directory);
-
+		if (json["type"] == "ply") return load_mesh_from_ply_property(system, json, directory);
+		
 		throw "not implementation";
 	}
 	
