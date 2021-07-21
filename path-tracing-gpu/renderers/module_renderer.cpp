@@ -136,10 +136,14 @@ void path_tracing::renderers::module_renderer::update(const runtime_service& ser
 	const auto [raster_to_camera, camera_to_world] = compute_camera_matrix(
 		service.scene);
 
+	// when camera changed, renderer will reset sample count and re-render 
+	if (mSceneConfig.raster_to_camera != raster_to_camera || mSceneConfig.camera_to_world != camera_to_world)
+		mSampleIndex = 0;
+	
 	mSceneConfig.raster_to_camera = raster_to_camera;
 	mSceneConfig.camera_to_world = camera_to_world;
 	mSceneConfig.camera_position = transform_point(service.scene.camera.transform, vector3(0));
-	mSceneConfig.sample_index = static_cast<uint32>(frame.frame_index);
+	mSceneConfig.sample_index = mSampleIndex++;
 	mSceneConfig.max_depth = service.scene.max_depth;
 }
 

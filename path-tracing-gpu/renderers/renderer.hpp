@@ -17,6 +17,10 @@ namespace path_tracing::renderers {
 		virtual void update(const runtime_service& service, const runtime_frame& frame) = 0;
 
 		virtual void render(const runtime_service& service, const runtime_frame& frame) = 0;
+
+		uint32 sample_index() const noexcept;
+	protected:
+		uint32 mSampleIndex = 0;
 	};
 	
 }

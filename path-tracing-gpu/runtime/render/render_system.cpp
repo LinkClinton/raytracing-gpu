@@ -59,3 +59,8 @@ void path_tracing::runtime::render::render_system::render(const runtime_service&
 	
 	mRenderer->render(service, frame);
 }
+
+path_tracing::uint32 path_tracing::runtime::render::render_system::sample_index() const noexcept
+{
+	return mRenderer->sample_index();
+}

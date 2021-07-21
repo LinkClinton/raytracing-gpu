@@ -17,6 +17,8 @@ namespace path_tracing {
 
 	using matrix4x4 = glm::mat<4, 4, real>;
 
+	using quaternion = glm::qua<real>;
+	
 	template <typename Key, typename Value>
 	using mapping = std::unordered_map<Key, Value>;
 

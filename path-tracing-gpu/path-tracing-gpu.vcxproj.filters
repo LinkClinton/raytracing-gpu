@@ -71,6 +71,9 @@
     <ClCompile Include="extensions\models\tiny_ply_loader.cpp">
       <Filter>extensions\models</Filter>
     </ClCompile>
+    <ClCompile Include="runtime\inputs\inputs_system.cpp">
+      <Filter>runtime\inputs</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="extensions">
@@ -153,6 +156,9 @@
     </Filter>
     <Filter Include="extensions\models">
       <UniqueIdentifier>{77a88481-c37f-4364-8ab1-b0c72118fc1e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="runtime\inputs">
+      <UniqueIdentifier>{50bb32a2-69c8-4503-8c91-65fa03261d17}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -253,6 +259,9 @@
     <ClInclude Include="extensions\models\tiny_ply_loader.hpp">
       <Filter>extensions\models</Filter>
     </ClInclude>
+    <ClInclude Include="runtime\inputs\inputs_system.hpp">
+      <Filter>runtime\inputs</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <CopyFileToFolders Include="resources\shaders\depth_renderer\depth_types.hlsl">
@@ -333,25 +342,23 @@
     <CopyFileToFolders Include="resources\shaders\scatterings\scattering_fresnel_specular.hlsl">
       <Filter>resources\shaders\scatterings</Filter>
     </CopyFileToFolders>
-  </ItemGroup>
-  <ItemGroup>
-    <FxCompile Include="resources\shaders\scatterings\microfacet_distribution.hlsl">
-      <Filter>resources\shaders\scatterings</Filter>
-    </FxCompile>
-    <FxCompile Include="resources\shaders\scatterings\scattering_fresnel_blend.hlsl">
-      <Filter>resources\shaders\scatterings</Filter>
-    </FxCompile>
-    <FxCompile Include="resources\shaders\scatterings\scattering_microfacet.hlsl">
-      <Filter>resources\shaders\scatterings</Filter>
-    </FxCompile>
-    <FxCompile Include="resources\shaders\module_renderer\materials\material_substrate.hlsl">
-      <Filter>resources\shaders\module_renderer\materials</Filter>
-    </FxCompile>
-    <FxCompile Include="resources\shaders\module_renderer\materials\material_metal.hlsl">
-      <Filter>resources\shaders\module_renderer\materials</Filter>
-    </FxCompile>
-    <FxCompile Include="resources\shaders\module_renderer\lights\light_directional.hlsl">
+    <CopyFileToFolders Include="resources\shaders\module_renderer\lights\light_directional.hlsl">
       <Filter>resources\shaders\module_renderer\lights</Filter>
-    </FxCompile>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="resources\shaders\module_renderer\materials\material_metal.hlsl">
+      <Filter>resources\shaders\module_renderer\materials</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="resources\shaders\module_renderer\materials\material_substrate.hlsl">
+      <Filter>resources\shaders\module_renderer\materials</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="resources\shaders\scatterings\microfacet_distribution.hlsl">
+      <Filter>resources\shaders\scatterings</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="resources\shaders\scatterings\scattering_fresnel_blend.hlsl">
+      <Filter>resources\shaders\scatterings</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="resources\shaders\scatterings\scattering_microfacet.hlsl">
+      <Filter>resources\shaders\scatterings</Filter>
+    </CopyFileToFolders>
   </ItemGroup>
 </Project>

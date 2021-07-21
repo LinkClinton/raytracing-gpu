@@ -45,10 +45,13 @@ void path_tracing::renderers::depth_renderer::update(const runtime_service& serv
 	const auto [raster_to_camera, camera_to_world] = compute_camera_matrix(
 		service.scene);
 
+	if (mSceneConfig.raster_to_camera != raster_to_camera || mSceneConfig.camera_to_world != camera_to_world)
+		mSampleIndex = 0;
+	
 	mSceneConfig.raster_to_camera = raster_to_camera;
 	mSceneConfig.camera_to_world = camera_to_world;
 	mSceneConfig.camera_position = transform_point(service.scene.camera.transform, vector3(0));
-	mSceneConfig.sample_index = static_cast<uint32>(frame.frame_index);
+	mSceneConfig.sample_index = mSampleIndex++;
 }
 
 void path_tracing::renderers::depth_renderer::render(const runtime_service& service, const runtime_frame& frame)

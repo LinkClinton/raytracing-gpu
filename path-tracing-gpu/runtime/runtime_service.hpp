@@ -5,6 +5,7 @@
 #include "resources/images_system.hpp"
 
 #include "output/output_system.hpp"
+#include "inputs/inputs_system.hpp"
 
 #include "render/render_device.hpp"
 #include "render/render_system.hpp"
@@ -23,6 +24,7 @@ namespace path_tracing::runtime {
 		resources::images_system& images_system;
 
 		output::output_system& output_system;
+		inputs::inputs_system& inputs_system;
 		
 		render::render_device& render_device;
 		render::render_system& render_system;

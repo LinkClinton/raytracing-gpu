@@ -34,6 +34,8 @@ namespace path_tracing::runtime::render {
 		void update(const runtime_service& service, const runtime_frame& frame);
 
 		void render(const runtime_service& service, const runtime_frame& frame);
+
+		uint32 sample_index() const noexcept;
 	private:
 		std::shared_ptr<renderers::renderer> mRenderer;
 

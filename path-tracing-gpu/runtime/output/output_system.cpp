@@ -34,9 +34,10 @@ void path_tracing::runtime::output::output_system::update(const runtime_service&
 	if (service.window_system.active()) {
 		ImGui::SetNextWindowBgAlpha(0.35f);
 		ImGui::Begin("Basic Info");
-		ImGui::Text("Sample Index : %llu", frame.frame_index);
-		ImGui::Text("Delta Time   : %f", frame.delta_time);
-		ImGui::Text("Total Time   : %f", frame.total_time);
+		ImGui::Text("Sample Index  : %lu", service.render_system.sample_index() - 1);
+		ImGui::Text("Frame  Index  : %llu", frame.frame_index);
+		ImGui::Text("Delta  Time   : %f", frame.delta_time);
+		ImGui::Text("Total  Time   : %f", frame.total_time);
 		ImGui::Text("FPS	      : %f", ImGui::GetIO().Framerate);
 		ImGui::Separator();
 		ImGui::Text("Max Depth    : %lu", service.scene.max_depth);
