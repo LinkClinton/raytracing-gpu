@@ -25,6 +25,7 @@ void path_tracing::runtime::inputs::inputs_system::release(const runtime_service
 void path_tracing::runtime::inputs::inputs_system::update(const runtime_service& service,
 	const runtime_frame& frame)
 {
+	return;
 	if (!service.window_system.living()) return;
 	
 	const auto mouse_position = vector2(ImGui::GetMousePos().x, ImGui::GetMousePos().y);

@@ -360,5 +360,11 @@
     <CopyFileToFolders Include="resources\shaders\scatterings\scattering_microfacet.hlsl">
       <Filter>resources\shaders\scatterings</Filter>
     </CopyFileToFolders>
+    <CopyFileToFolders Include="resources\shaders\scatterings\scattering_specular_reflection.hlsl">
+      <Filter>resources\shaders\scatterings</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="resources\shaders\module_renderer\materials\material_mirror.hlsl">
+      <Filter>resources\shaders\module_renderer\materials</Filter>
+    </CopyFileToFolders>
   </ItemGroup>
 </Project>

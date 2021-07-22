@@ -32,6 +32,7 @@ void path_tracing::runtime::render::render_system::resolve(const runtime_service
 		std::vector<renderers::submodule>{
 			renderers::submodule{ "./materials/material_substrate.hlsl", "substrate_material" },
 			renderers::submodule{ "./materials/material_diffuse.hlsl", "diffuse_material" },
+			renderers::submodule{ "./materials/material_mirror.hlsl", "mirror_material" },
 			renderers::submodule{ "./materials/material_glass.hlsl", "glass_material" },
 			renderers::submodule{ "./materials/material_metal.hlsl", "metal_material" }
 		},

@@ -36,6 +36,18 @@ namespace path_tracing::extensions::json {
 		return submodule;
 	}
 
+	submodule_data load_mirror_material_from_json(const nlohmann::json& material)
+	{
+		submodule_data submodule;
+
+		if (material["properties"]["reflectance"]["type"] == "constant")
+			submodule.float3.insert({ "reflectance", material["properties"]["reflectance"]["constant"]["value"] });
+
+		submodule.submodule = "mirror_material";
+
+		return submodule;
+	}
+	
 	submodule_data load_glass_material_from_json(const nlohmann::json& material)
 	{
 		submodule_data submodule;
@@ -68,6 +80,7 @@ namespace path_tracing::extensions::json {
 	{
 		if (material["type"] == "substrate") return load_substrate_material_from_json(material);
 		if (material["type"] == "diffuse") return load_diffuse_material_from_json(material);
+		if (material["type"] == "mirror") return load_mirror_material_from_json(material);
 		if (material["type"] == "glass") return load_glass_material_from_json(material);
 		if (material["type"] == "metal") return load_metal_material_from_json(material);
 
