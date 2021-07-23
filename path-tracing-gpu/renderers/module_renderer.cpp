@@ -279,7 +279,7 @@ void path_tracing::renderers::module_renderer::build_material_submodule(const ru
 			material_functions_sentences["unpacking"].add_sentence(
 				"material." + variable.name + " = packed_material." + variable.name + ".index != INDEX_NULL ? textures[" + 
 				"packed_material." + variable.name + ".index].SampleLevel(default_sampler, uv, 0).rgb * packed_material." + 
-				variable.name + ".value : packed_material." + variable.name + ".value;");
+				variable.name + ".value : packed_material." + variable.name + ".value;", 1);
 		else 
 			material_functions_sentences["unpacking"].add_sentence("material." + variable.name + " = packed_material." + variable.name + ";", 1);
 	}
