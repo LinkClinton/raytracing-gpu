@@ -10,6 +10,7 @@
 
 using namespace path_tracing::runtime::resources;
 using namespace path_tracing::scenes::components;
+using namespace path_tracing::scenes;
 
 namespace path_tracing::extensions::json {
 
@@ -58,7 +59,7 @@ namespace path_tracing::extensions::json {
 		};
 	}
 
-	mesh_info load_mesh_from_data_property(meshes_system& system, const nlohmann::json& json)
+	mesh_info load_mesh_from_data_property(const resource_context& context, const nlohmann::json& json)
 	{
 		mesh_cpu_buffer instance;
 
@@ -68,43 +69,43 @@ namespace path_tracing::extensions::json {
 		if (json.contains("normals")) instance.normals = json["normals"].get<std::vector<vector3>>();
 		if (json.contains("uvs")) instance.uvs = json["uvs"].get<std::vector<vector3>>();
 
-		return system.allocate("unknown" + std::to_string(system.count()), std::move(instance));
+		return context.meshes_system.allocate("unknown" + std::to_string(context.meshes_system.count()), std::move(instance));
 	}
 
-	mesh_info load_mesh_from_obj_property(meshes_system& system, const nlohmann::json& json, const std::string& directory)
+	mesh_info load_mesh_from_obj_property(const resource_context& context, const nlohmann::json& json)
 	{
-		const auto fullpath = directory + json["filename"].get<std::string>();
+		const auto fullpath = context.directory + json["filename"].get<std::string>();
 
-		if (system.has(fullpath)) return system.info(fullpath);
+		if (context.meshes_system.has(fullpath)) return context.meshes_system.info(fullpath);
 
 		auto buffer = models::load_obj_mesh(fullpath);
 
-		return system.allocate(fullpath, std::move(buffer));
+		return context.meshes_system.allocate(fullpath, std::move(buffer));
 	}
 
-	mesh_info load_mesh_from_ply_property(meshes_system& system, const nlohmann::json& json, const std::string& directory)
+	mesh_info load_mesh_from_ply_property(const resource_context& context, const nlohmann::json& json)
 	{
-		const auto fullpath = directory + json["filename"].get<std::string>();
+		const auto fullpath = context.directory + json["filename"].get<std::string>();
 
-		if (system.has(fullpath)) return system.info(fullpath);
+		if (context.meshes_system.has(fullpath)) return context.meshes_system.info(fullpath);
 
 		auto buffer = models::load_ply_mesh(fullpath);
 
-		return system.allocate(fullpath, std::move(buffer));
+		return context.meshes_system.allocate(fullpath, std::move(buffer));
 	}
 	
-	mesh_info load_mesh_from_file_property(meshes_system& system, const nlohmann::json& json, const std::string& directory)
+	mesh_info load_mesh_from_file_property(const resource_context& context, const nlohmann::json& json)
 	{
-		if (json["type"] == "obj") return load_mesh_from_obj_property(system, json, directory);
-		if (json["type"] == "ply") return load_mesh_from_ply_property(system, json, directory);
+		if (json["type"] == "obj") return load_mesh_from_obj_property(context, json);
+		if (json["type"] == "ply") return load_mesh_from_ply_property(context, json);
 		
 		throw "not implementation";
 	}
 	
-	mesh_info load_mesh_from_property(meshes_system& system, const nlohmann::json& json, const std::string& directory)
+	submodule_mesh load_mesh_from_property(const resource_context& context, const nlohmann::json& json)
 	{
-		if (json["type"] == "triangles") return load_mesh_from_data_property(system, json["triangles"]);
-		if (json["type"] == "mesh") return load_mesh_from_file_property(system, json["mesh"], directory);
+		if (json["type"] == "triangles") return  { load_mesh_from_data_property(context, json["triangles"]), json["reverse_orientation"]};
+		if (json["type"] == "mesh") return { load_mesh_from_file_property(context, json["mesh"]), json["reverse_orientation"] };
 		
 		throw "not implementation";
 	}
@@ -153,18 +154,28 @@ void path_tracing::extensions::json::json_scene_loader::load(const runtime_servi
 	if (scene.contains("film")) 
 		service.scene.film = load_film(scene["film"]);
 
+	const resource_context context{
+		service.images_system,
+		service.meshes_system,
+		service.scene.texture_system,
+		directory
+	};
+	
 	uint32 index = 0;
 	
 	for (const auto& entity : scene["entities"]) {
+		// if we disable this entity, we ignore it
+		if (entity.find("enable") != entity.end() && entity["enable"].get<bool>() == false) continue;
+		
 		const auto transform = load_transform_from_property(service.scene.camera_system, entity["transform"]);
 
 		std::optional<submodule_data> material = std::nullopt;
 		std::optional<submodule_data> light = std::nullopt;
-		std::optional<mesh_info> mesh = std::nullopt;
+		std::optional<submodule_mesh> mesh = std::nullopt;
 
-		if (entity.contains("material")) material = load_material_from_json(entity["material"]);
-		if (entity.contains("light")) light = load_light_from_json(service.images_system, entity["light"], directory, index);
-		if (entity.contains("shape")) mesh = load_mesh_from_property(service.meshes_system, entity["shape"], directory);
+		if (entity.contains("material")) material = load_material_from_json(context, entity["material"]);
+		if (entity.contains("light")) light = load_light_from_json(context, entity["light"], index);
+		if (entity.contains("shape")) mesh = load_mesh_from_property(context, entity["shape"]);
 
 		service.scene.entities.push_back({ material, light, mesh, transform });
 

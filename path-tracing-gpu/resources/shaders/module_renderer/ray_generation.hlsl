@@ -101,7 +101,7 @@ float3 trace(ray_desc first, inout random_sampler sampler)
 
 	tracing_payload payload;
 
-	payload.entity = INDEX_NUll;
+	payload.entity = INDEX_NULL;
 	payload.missed = 0;
 
 	for (int bounces = 0; bounces < config.max_depth; bounces++) {
@@ -111,7 +111,7 @@ float3 trace(ray_desc first, inout random_sampler sampler)
 		if (payload.missed != 0) {
 			
 #ifdef __ENABLE_ENVIRONMENT_LIGHT__
-			if ((bounces != 0 && !tracing_info.specular) || config.environment == INDEX_NUll) break;
+			if ((bounces != 0 && !tracing_info.specular) || config.environment == INDEX_NULL) break;
 
 			interaction interaction;
 
@@ -124,11 +124,11 @@ float3 trace(ray_desc first, inout random_sampler sampler)
 
 		entity_info entity = entities[payload.entity];
 		
-		if ((bounces == 0 || tracing_info.specular != 0) && entity.light != INDEX_NUll)
+		if ((bounces == 0 || tracing_info.specular != 0) && entity.light != INDEX_NULL)
 			tracing_info.value += tracing_info.beta * evaluate_light(lights[entity.light], 
 				payload.interaction.base_type(), -tracing_info.ray.Direction);
 
-		if (entity.material == INDEX_NUll) {
+		if (entity.material == INDEX_NULL) {
 			tracing_info.ray = payload.interaction.spawn_ray(tracing_info.ray.Direction);
 
 			bounces--;

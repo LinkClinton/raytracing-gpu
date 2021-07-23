@@ -35,7 +35,7 @@
             "camera": "left_hand",
             "texture": "right_hand"
         },
-        "max_depth": 5,
+        "max_depth": 65,
         "output_images": {
             "hdr": "image.hdr",
             "sdr": "image.png"
@@ -49,31 +49,29 @@
                 1024
             ]
         },
-        "sample_count": 16
+        "sample_count": 64
     },
     "entities": [
         {
             "material": {
                 "properties": {
-                    "reflectance": {
-                        "constant": {
-                            "value": [
-                                0.7250000238418579,
-                                0.7099999785423279,
-                                0.6800000071525574
-                            ]
-                        },
-                        "type": "constant"
+                    "diffuse": {
+                        "gamma": false,
+                        "image": "",
+                        "value": [
+                            0.7250000238418579,
+                            0.7099999785423279,
+                            0.6800000071525574
+                        ]
                     },
                     "sigma": {
-                        "constant": {
-                            "value": [
-                                0.0,
-                                0.0,
-                                0.0
-                            ]
-                        },
-                        "type": "constant"
+                        "gamma": false,
+                        "image": "",
+                        "value": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ]
                     }
                 },
                 "remapping": true,
@@ -160,25 +158,23 @@
         {
             "material": {
                 "properties": {
-                    "reflectance": {
-                        "constant": {
-                            "value": [
-                                0.7250000238418579,
-                                0.7099999785423279,
-                                0.6800000071525574
-                            ]
-                        },
-                        "type": "constant"
+                    "diffuse": {
+                        "gamma": false,
+                        "image": "",
+                        "value": [
+                            0.7250000238418579,
+                            0.7099999785423279,
+                            0.6800000071525574
+                        ]
                     },
                     "sigma": {
-                        "constant": {
-                            "value": [
-                                0.0,
-                                0.0,
-                                0.0
-                            ]
-                        },
-                        "type": "constant"
+                        "gamma": false,
+                        "image": "",
+                        "value": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ]
                     }
                 },
                 "remapping": true,
@@ -265,25 +261,23 @@
         {
             "material": {
                 "properties": {
-                    "reflectance": {
-                        "constant": {
-                            "value": [
-                                0.7250000238418579,
-                                0.7099999785423279,
-                                0.6800000071525574
-                            ]
-                        },
-                        "type": "constant"
+                    "diffuse": {
+                        "gamma": false,
+                        "image": "",
+                        "value": [
+                            0.7250000238418579,
+                            0.7099999785423279,
+                            0.6800000071525574
+                        ]
                     },
                     "sigma": {
-                        "constant": {
-                            "value": [
-                                0.0,
-                                0.0,
-                                0.0
-                            ]
-                        },
-                        "type": "constant"
+                        "gamma": false,
+                        "image": "",
+                        "value": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ]
                     }
                 },
                 "remapping": true,
@@ -370,25 +364,23 @@
         {
             "material": {
                 "properties": {
-                    "reflectance": {
-                        "constant": {
-                            "value": [
-                                0.14000000059604645,
-                                0.44999998807907104,
-                                0.09099999815225601
-                            ]
-                        },
-                        "type": "constant"
+                    "diffuse": {
+                        "gamma": false,
+                        "image": "",
+                        "value": [
+                            0.14000000059604645,
+                            0.44999998807907104,
+                            0.09099999815225601
+                        ]
                     },
                     "sigma": {
-                        "constant": {
-                            "value": [
-                                0.0,
-                                0.0,
-                                0.0
-                            ]
-                        },
-                        "type": "constant"
+                        "gamma": false,
+                        "image": "",
+                        "value": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ]
                     }
                 },
                 "remapping": true,
@@ -475,25 +467,23 @@
         {
             "material": {
                 "properties": {
-                    "reflectance": {
-                        "constant": {
-                            "value": [
-                                0.6299999952316284,
-                                0.06499999761581421,
-                                0.05000000074505806
-                            ]
-                        },
-                        "type": "constant"
+                    "diffuse": {
+                        "gamma": false,
+                        "image": "",
+                        "value": [
+                            0.6299999952316284,
+                            0.06499999761581421,
+                            0.05000000074505806
+                        ]
                     },
                     "sigma": {
-                        "constant": {
-                            "value": [
-                                0.0,
-                                0.0,
-                                0.0
-                            ]
-                        },
-                        "type": "constant"
+                        "gamma": false,
+                        "image": "",
+                        "value": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ]
                     }
                 },
                 "remapping": true,
@@ -580,25 +570,23 @@
         {
             "material": {
                 "properties": {
-                    "reflectance": {
-                        "constant": {
-                            "value": [
-                                0.7250000238418579,
-                                0.7099999785423279,
-                                0.6800000071525574
-                            ]
-                        },
-                        "type": "constant"
+                    "diffuse": {
+                        "gamma": false,
+                        "image": "",
+                        "value": [
+                            0.7250000238418579,
+                            0.7099999785423279,
+                            0.6800000071525574
+                        ]
                     },
                     "sigma": {
-                        "constant": {
-                            "value": [
-                                0.0,
-                                0.0,
-                                0.0
-                            ]
-                        },
-                        "type": "constant"
+                        "gamma": false,
+                        "image": "",
+                        "value": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ]
                     }
                 },
                 "remapping": true,
@@ -895,25 +883,23 @@
         {
             "material": {
                 "properties": {
-                    "reflectance": {
-                        "constant": {
-                            "value": [
-                                0.7250000238418579,
-                                0.7099999785423279,
-                                0.6800000071525574
-                            ]
-                        },
-                        "type": "constant"
+                    "diffuse": {
+                        "gamma": false,
+                        "image": "",
+                        "value": [
+                            0.7250000238418579,
+                            0.7099999785423279,
+                            0.6800000071525574
+                        ]
                     },
                     "sigma": {
-                        "constant": {
-                            "value": [
-                                0.0,
-                                0.0,
-                                0.0
-                            ]
-                        },
-                        "type": "constant"
+                        "gamma": false,
+                        "image": "",
+                        "value": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ]
                     }
                 },
                 "remapping": true,
@@ -1218,25 +1204,23 @@
             },
             "material": {
                 "properties": {
-                    "reflectance": {
-                        "constant": {
-                            "value": [
-                                0.0,
-                                0.0,
-                                0.0
-                            ]
-                        },
-                        "type": "constant"
+                    "diffuse": {
+                        "gamma": false,
+                        "image": "",
+                        "value": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ]
                     },
                     "sigma": {
-                        "constant": {
-                            "value": [
-                                0.0,
-                                0.0,
-                                0.0
-                            ]
-                        },
-                        "type": "constant"
+                        "gamma": false,
+                        "image": "",
+                        "value": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ]
                     }
                 },
                 "remapping": true,
@@ -1324,8 +1308,8 @@
     "film": {
         "name": "film",
         "resolution": [
-            512,
-            512
+            1024,
+            1024
         ],
         "scale": 1.0
     }

@@ -5,6 +5,7 @@
 namespace path_tracing::renderers {
 
 	using scenes::components::submodule_data;
+	using scenes::components::submodule_mesh;
 	using scenes::components::transform;
 	using runtime::resources::mesh_info;
 	
@@ -25,65 +26,89 @@ namespace path_tracing::renderers {
 		}
 	}
 	
-	void update_submodule_data_element(mapping<std::string, std::string>& elements, const submodule_data& data)
+	void update_packed_submodule_data_element(mapping<std::string, std::string>& elements, const submodule_data& data)
 	{
 		update_submodule_data_element(elements, data.float3, "float3");
 		update_submodule_data_element(elements, data.real, "real");
 		update_submodule_data_element(elements, data.uint, "uint");
 
-		// we do not support texture in current version
-		/*for (const auto& value : data.texture) {
-			assert(elements.find(value.first) != elements.end());
+		for (const auto& texture : data.texture) {
+			if (elements.find(texture.first) != elements.end())
+				continue;
 
-			if (elements.find(value.first + "_index") == elements.end())
-				elements.insert({ value.first + "_index", "uint" });
-		}*/
+			elements.insert({ texture.first, "texture" });
+		}
+	}
+
+	void update_common_submodule_data_element(mapping<std::string, std::string>& elements, const submodule_data& data)
+	{
+		update_submodule_data_element(elements, data.float3, "float3");
+		update_submodule_data_element(elements, data.real, "real");
+		update_submodule_data_element(elements, data.uint, "uint");
+
+		// for texture property in common material, value = variable_v * texture[variable_t].sample(uv)
+		for (const auto& texture : data.texture) {
+			if (elements.find(texture.first) != elements.end())
+				continue;
+			
+			elements.insert({ texture.first, "float3" });
+		}
 	}
 
 	auto packing_submodule_data_layout(const mapping<std::string, std::string>& elements) -> std::vector<wrapper::directx12::shader_variable>
 	{
 		/*
 		 * packing rule :
-		 * 1. we push 12bytes elements(float3) with 4bytes element(real, uint)
-		 * 2. we push 4bytes elements(real, uint) and add unused element
+		 * 1. we push 16bytes elements 
+		 * 2. we push 12bytes elements(float3) with 4bytes element(real, uint)
+		 * 3. we push 4bytes elements(real, uint) and add unused element
 		 */
-		std::vector<std::pair<std::string, std::string>> element_in_12bytes;
-		std::vector<std::pair<std::string, std::string>> element_in_04bytes;
+		std::vector<wrapper::directx12::shader_variable> element_in_16bytes;
+		std::vector<wrapper::directx12::shader_variable> element_in_12bytes;
+		std::vector<wrapper::directx12::shader_variable> element_in_04bytes;
 
 		std::vector<wrapper::directx12::shader_variable> packing_layout;
 		
 		for (const auto& element : elements) {
-			if (element.second == "real" || element.second == "uint") element_in_04bytes.push_back(element);
-			if (element.second == "float3") element_in_12bytes.push_back(element);
+			const auto variable = wrapper::directx12::shader_variable{
+				"", element.first, element.second
+			};
+			
+			if (element.second == "real" || element.second == "uint") element_in_04bytes.push_back(variable);
+			if (element.second == "texture") element_in_16bytes.push_back(variable);
+			if (element.second == "float3") element_in_12bytes.push_back(variable);
 		}
 
 		uint32 unused_index = 0;
 		
 		while (element_in_12bytes.size() > element_in_04bytes.size())
-			element_in_04bytes.push_back({ "unused" + std::to_string(unused_index++), "real" });
+			element_in_04bytes.push_back({ "unused", "unused" + std::to_string(unused_index++), "real" });
 
 		while ((element_in_04bytes.size() - element_in_12bytes.size()) % 4 != 0)
-			element_in_04bytes.push_back({ "unused" + std::to_string(unused_index++), "real" });
+			element_in_04bytes.push_back({ "unused", "unused" + std::to_string(unused_index++), "real" });
 
+		for (size_t index = 0; index < element_in_16bytes.size(); index++)
+			packing_layout.push_back(element_in_16bytes[index]);
+		
 		for (size_t index = 0; index < element_in_12bytes.size(); index++) {
-			packing_layout.push_back({ "", element_in_12bytes[index].first, element_in_12bytes[index].second });
-			packing_layout.push_back({ "", element_in_04bytes[index].first, element_in_04bytes[index].second });
+			packing_layout.push_back(element_in_12bytes[index]);
+			packing_layout.push_back(element_in_04bytes[index]);
 		}
 
 		for (size_t index = element_in_12bytes.size(); index < element_in_04bytes.size(); index++)
-			packing_layout.push_back({ "", element_in_04bytes[index].first, element_in_04bytes[index].second });
+			packing_layout.push_back(element_in_04bytes[index]);
 
 		return packing_layout;
 	}
 
-	module_renderer_mesh_info allocate_mesh_info(const runtime_service& service, const transform& transform, const mesh_info& info)
+	module_renderer_mesh_info allocate_mesh_info(const runtime_service& service, const transform& transform, const submodule_mesh& mesh)
 	{
-		const auto property = service.meshes_system.property(info);
+		const auto property = service.meshes_system.property(mesh.info);
 		
 		return {
-			info.idx_count / 3, info.vtx_location, info.idx_location / 3,
-			0, property.normals ? 1u : 0u, property.uvs ? 1u : 0u,
-			scenes::compute_mesh_area_with_transform(service.meshes_system, transform, info)
+			mesh.info.idx_count / 3, mesh.info.vtx_location, mesh.info.idx_location / 3,
+			mesh.reverse ? 1u : 0u, property.normals ? 1u : 0u, property.uvs ? 1u : 0u,
+			scenes::compute_mesh_area_with_transform(service.meshes_system, transform, mesh.info)
 		};
 	}
 
@@ -99,6 +124,7 @@ namespace path_tracing::renderers {
 		copy_submodule_data_to(target, data.float3, addresses);
 		copy_submodule_data_to(target, data.uint, addresses);
 		copy_submodule_data_to(target, data.real, addresses);
+		copy_submodule_data_to(target, data.texture, addresses);
 	}
 }
 
@@ -190,8 +216,9 @@ void path_tracing::renderers::module_renderer::render(const runtime_service& ser
 void path_tracing::renderers::module_renderer::build_material_submodule(const runtime_service& service,
 	const std::vector<submodule>& materials)
 {
-	mapping<std::string, std::string> submodule_data_elements;
-
+	mapping<std::string, std::string> packed_submodule_data_elements;
+	mapping<std::string, std::string> common_submodule_data_elements;
+	
 	for (const auto& entity : service.scene.entities) {
 		if (!entity.material.has_value()) continue;
 
@@ -200,13 +227,15 @@ void path_tracing::renderers::module_renderer::build_material_submodule(const ru
 		if (mMaterialTypes.find(material.submodule) == mMaterialTypes.end())
 			mMaterialTypes.insert({ material.submodule, static_cast<uint32>(mMaterialTypes.size()) });
 
-		update_submodule_data_element(submodule_data_elements, material);
+		update_packed_submodule_data_element(packed_submodule_data_elements, material);
+		update_common_submodule_data_element(common_submodule_data_elements, material);
 	}
 
-	submodule_data_elements.insert({ "type", "uint" });
-
-	const auto packed_material_layout = packing_submodule_data_layout(submodule_data_elements);
-	const auto common_material_layout = packing_submodule_data_layout(submodule_data_elements);
+	packed_submodule_data_elements.insert({ "type", "uint" });
+	common_submodule_data_elements.insert({ "type", "uint" });
+	
+	const auto packed_material_layout = packing_submodule_data_layout(packed_submodule_data_elements);
+	const auto common_material_layout = packing_submodule_data_layout(common_submodule_data_elements);
 
 	mMaterialSubmoduleTypeSize = 0;
 	
@@ -243,10 +272,16 @@ void path_tracing::renderers::module_renderer::build_material_submodule(const ru
 		{ "pdf", wrapper::directx12::shader_creator::create() }
 	};
 
-	// todo : unpacking material with texture 
-	for (const auto& variable : common_material_layout) {
-		material_functions_sentences["unpacking"].add_sentence(
-			"material." + variable.name + " = packed_material." + variable.name + ";", 1);
+	for (const auto& variable : packed_material_layout) {
+		if (variable.semantic == "unused") continue;
+		
+		if (variable.type == "texture")
+			material_functions_sentences["unpacking"].add_sentence(
+				"material." + variable.name + " = packed_material." + variable.name + ".index != INDEX_NULL ? textures[" + 
+				"packed_material." + variable.name + ".index].SampleLevel(default_sampler, uv, 0).rgb * packed_material." + 
+				variable.name + ".value : packed_material." + variable.name + ".value;");
+		else 
+			material_functions_sentences["unpacking"].add_sentence("material." + variable.name + " = packed_material." + variable.name + ";", 1);
 	}
 
 	if (mMaterialValuesMemoryAddress.find("roughness") != mMaterialValuesMemoryAddress.end() &&
@@ -295,7 +330,7 @@ void path_tracing::renderers::module_renderer::build_light_submodule(const runti
 		if (mLightTypes.find(light.submodule) == mLightTypes.end())
 			mLightTypes.insert({ light.submodule, static_cast<uint32>(mLightTypes.size()) });
 
-		update_submodule_data_element(submodule_data_elements, light);
+		update_packed_submodule_data_element(submodule_data_elements, light);
 	}
 
 	submodule_data_elements.insert({ "type", "uint" });
@@ -373,7 +408,7 @@ void path_tracing::renderers::module_renderer::build_acceleration(const runtime_
 		
 		wrapper::directx12::raytracing_instance instance;
 
-		instance.geometry = service.meshes_system.geometry(entity.mesh.value());
+		instance.geometry = service.meshes_system.geometry(entity.mesh.value().info);
 
 		const auto matrix = glm::transpose(entity.transform.matrix());
 
@@ -551,13 +586,22 @@ void path_tracing::renderers::module_renderer::build_descriptor_heap(const runti
 		wrapper::directx12::resource_info::upload(),
 		std::max(sizeof(module_renderer_scene_config), static_cast<size_t>(256)));
 
+	std::vector<std::string> textures(service.images_system.count());
+
+	for (uint32 index = 0; index < service.images_system.count(); index++) 
+		textures[index] = "texture" + std::to_string(index);
+
+	// add texture to avoid empty textures
+	if (textures.empty()) textures.push_back("empty_texture");
+	
 	mDescriptorTable
 		.add_cbv_range({ "scene_config" }, 0, 0)
 		.add_srv_range({ "acceleration" }, 0, 1)
 		.add_uav_range({ "render_target_hdr", "render_target_sdr" }, 0, 2)
 		.add_srv_range({ "entity_info", "lights", "materials" }, 0, 3)
 		.add_srv_range({ "positions", "normals", "uvs", "indices" }, 0, 4)
-		.add_srv_range({ "environment" }, 0, 5);
+		.add_srv_range({ "environment" }, 0, 5)
+		.add_srv_range(textures, 0, 6);
 	
 	mDescriptorHeap = wrapper::directx12::descriptor_heap::create(service.render_device.device(), mDescriptorTable);
 
@@ -639,13 +683,21 @@ void path_tracing::renderers::module_renderer::build_descriptor_heap(const runti
 			environment
 		);
 	}
+	
+	for (uint32 index = 0; index < service.images_system.count(); index++) {
+		service.render_device.device().create_shader_resource_view(
+			wrapper::directx12::resource_view::texture2d(service.images_system.texture(index).format()),
+			mDescriptorHeap.cpu_handle(mDescriptorTable.index("texture" + std::to_string(index))),
+			service.images_system.texture(index)
+		);
+	}
 }
 
 void path_tracing::renderers::module_renderer::build_root_signature(const runtime_service& service)
 {
 	mRootSignatureInfo[0]
 		.add_descriptor_table("descriptor_table", mDescriptorTable)
-		.add_static_sampler("default_sampler", 0, 6);
+		.add_static_sampler("default_sampler", 0, 7);
 
 	mRootSignatureInfo[1]
 		.add_constants("hit_group_info", 0, 100, 1);

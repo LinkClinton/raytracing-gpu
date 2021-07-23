@@ -4,10 +4,17 @@
 
 namespace path_tracing::scenes::components {
 
+	struct texture {
+		vector3 value = vector3(1);
+		uint32 index = index_null;
+
+		texture() = default;
+	};
+	
 	struct submodule_data final {
+		mapping<std::string, texture> texture;
 		mapping<std::string, vector3> float3;
 		
-		mapping<std::string, uint32> texture;
 		mapping<std::string, uint32> uint;
 
 		mapping<std::string, real> real;

@@ -27,7 +27,7 @@ typedef RayDesc ray_desc;
 
 #define EPSILON 1.192092896e-07F
 
-#define INDEX_NUll 0xffffffff
+#define INDEX_NULL 0xffffffff
 
 float2 concentric_sample_disk(float2 sample)
 {

@@ -291,9 +291,6 @@
     <CopyFileToFolders Include="resources\shaders\samplers\random_sampler.hlsl">
       <Filter>resources\shaders\samplers</Filter>
     </CopyFileToFolders>
-    <CopyFileToFolders Include="resources\shaders\module_renderer\closest_hits.hlsl">
-      <Filter>resources\shaders\module_renderer</Filter>
-    </CopyFileToFolders>
     <CopyFileToFolders Include="resources\shaders\shared\interaction.hlsl">
       <Filter>resources\shaders\shared</Filter>
     </CopyFileToFolders>
@@ -365,6 +362,9 @@
     </CopyFileToFolders>
     <CopyFileToFolders Include="resources\shaders\module_renderer\materials\material_mirror.hlsl">
       <Filter>resources\shaders\module_renderer\materials</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="resources\shaders\module_renderer\closest_hits.hlsl">
+      <Filter>resources\shaders\module_renderer</Filter>
     </CopyFileToFolders>
   </ItemGroup>
 </Project>

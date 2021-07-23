@@ -23,7 +23,7 @@ namespace path_tracing {
 	using mapping = std::unordered_map<Key, Value>;
 
 	using identity = uint32;
-	
+
 	constexpr uint32 index_null = std::numeric_limits<uint32>::max();
 
 	enum class coordinate_system : uint32 {

@@ -7,17 +7,29 @@
 
 #include <optional>
 
+namespace path_tracing::scenes::components {
+
+	using runtime::resources::mesh_info;
+	
+	struct submodule_mesh final {
+		mesh_info info = mesh_info();
+
+		bool reverse = false;
+
+		submodule_mesh() = default;
+	};
+}
+
 namespace path_tracing::scenes {
 
 	using namespace components;
 
 	using runtime::resources::mesh_info;
-	
+
 	struct entity final {
 		std::optional<submodule_data> material;
 		std::optional<submodule_data> light;
-
-		std::optional<mesh_info> mesh;
+		std::optional<submodule_mesh> mesh;
 		
 		transform transform;
 		

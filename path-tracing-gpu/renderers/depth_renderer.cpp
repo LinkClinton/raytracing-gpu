@@ -99,9 +99,11 @@ void path_tracing::renderers::depth_renderer::build_acceleration(const runtime_s
 	std::vector<wrapper::directx12::raytracing_instance> instances;
 
 	for (const auto& entity : service.scene.entities) {
+		if (!entity.mesh.has_value()) continue;
+
 		wrapper::directx12::raytracing_instance instance;
 
-		instance.geometry = service.meshes_system.geometry(entity.mesh.value());
+		instance.geometry = service.meshes_system.geometry(entity.mesh.value().info);
 
 		const auto matrix = glm::transpose(entity.transform.matrix());
 
@@ -148,6 +150,8 @@ void path_tracing::renderers::depth_renderer::build_hit_groups(const runtime_ser
 	std::vector<wrapper::directx12::raytracing_hit_group> hit_groups;
 	
 	for (size_t index = 0; index < service.scene.entities.size(); index++) {
+		if (!service.scene.entities[index].mesh.has_value()) continue;
+		
 		hit_groups.push_back({
 			D3D12_HIT_GROUP_TYPE_TRIANGLES,
 			L"", depth_renderer_closest_hit, L"",

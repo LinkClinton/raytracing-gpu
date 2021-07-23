@@ -28,7 +28,7 @@ light_search_result search_light(interaction interaction, float3 wi)
 #ifdef __ENABLE_ENVIRONMENT_LIGHT__
 	// if the ray does not intersect any entity and we enable and have environment light
 	// we will return environment as search result
-	if (light_payload.missed == 1 && config.environment != INDEX_NUll) {
+	if (light_payload.missed == 1 && config.environment != INDEX_NULL) {
 		result.interaction.position = interaction.position + wi * 2 * 1000;
 		result.light = config.environment;
 		result.pdf = 1.0 / config.lights;
@@ -37,7 +37,7 @@ light_search_result search_light(interaction interaction, float3 wi)
 	}
 #endif
 
-	if (light_payload.missed == 1 || entities[light_payload.entity].light == INDEX_NUll)
+	if (light_payload.missed == 1 || entities[light_payload.entity].light == INDEX_NULL)
 		return result;
 
 	result.interaction = light_payload.interaction;

@@ -12,10 +12,20 @@ namespace path_tracing::extensions::json {
 
 	using scenes::components::submodule_data;
 	using runtime::resources::images_system;
+	using runtime::resources::meshes_system;
 	using runtime::resources::mesh_info;
-	
-	submodule_data load_material_from_json(const nlohmann::json& material);
 
-	submodule_data load_light_from_json(images_system& system, const nlohmann::json& light, const std::string& directory, uint32 index);
+	struct resource_context final {
+		images_system& images_system;
+		meshes_system& meshes_system;
+
+		coordinate_system coordinate;
+		
+		std::string directory;
+	};
+	
+	submodule_data load_material_from_json(const resource_context& context, const nlohmann::json& material);
+
+	submodule_data load_light_from_json(const resource_context& context, const nlohmann::json& light, uint32 index);
 	
 }

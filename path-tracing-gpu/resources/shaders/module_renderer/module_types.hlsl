@@ -58,6 +58,11 @@ struct entity_info {
 	uint light;
 };
 
+struct texture {
+	float3 value;
+	uint index;
+};
+
 SHADER_CONSTANT_BUFFER_DEFINE(scene_config, config, b0, space0);
 
 SHADER_RESOURCE_DEFINE(RaytracingAccelerationStructure, acceleration, t0, space1);
@@ -75,6 +80,8 @@ SHADER_STRUCTURED_BUFFER_DEFINE(uint3, indices, t3, space4);
 
 SHADER_RESOURCE_DEFINE(Texture2D, environment, t0, space5);
 
-SHADER_RESOURCE_DEFINE(SamplerState, default_sampler, s0, space6);
+SHADER_RESOURCE_DEFINE(Texture2D, textures[], t0, space6);
+
+SHADER_RESOURCE_DEFINE(SamplerState, default_sampler, s0, space7);
 
 #endif
