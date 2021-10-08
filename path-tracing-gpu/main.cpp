@@ -15,8 +15,8 @@ int main()
 	//load_scene_from_file(process, "./resources/scenes/classroom/scene.json");
 	//load_scene_from_file(process, "./resources/scenes/yeahright/yeahright.json");
 	//load_scene_from_file(process, "./resources/scenes/glass-plate/scene.json");
-	//load_scene_from_file(process, "./resources/scenes/cornell-box/scene.json");
-	load_scene_from_file(process, "./resources/scenes/ganesha/ganesha.json");
+	load_scene_from_file(process, "./resources/scenes/cornell-box/scene.json");
+	//load_scene_from_file(process, "./resources/scenes/ganesha/ganesha.json");
 
 	process.run_loop();
 }

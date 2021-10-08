@@ -1,6 +1,8 @@
 #include "runtime_process.hpp"
 #include "runtime_frame.hpp"
 
+#include <chrono>
+
 path_tracing::runtime::runtime_process::runtime_process() :
 	mRuntimeService(*this), mRenderDevice(D3D_FEATURE_LEVEL_12_0)
 {
