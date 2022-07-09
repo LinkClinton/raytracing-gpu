@@ -1,5 +1,6 @@
 #include "json_scene_loader.hpp"
 
+#include "../models/model_generator.hpp"
 #include "../models/tiny_obj_loader.hpp"
 #include "../models/tiny_ply_loader.hpp"
 
@@ -101,12 +102,24 @@ namespace path_tracing::extensions::json {
 		
 		throw "not implementation";
 	}
+
+	mesh_info load_mesh_from_sphere_model_generator(const resource_context& context, real radius)
+	{
+		const auto sphere_name = "sphere" + std::to_string(radius);
+
+		if (context.meshes_system.has(sphere_name)) return context.meshes_system.info(sphere_name);
+
+		auto bufffer = extensions::models::generate_sphere_model(radius);
+
+		return context.meshes_system.allocate(sphere_name, std::move(bufffer));
+	}
 	
 	submodule_mesh load_mesh_from_property(const resource_context& context, const nlohmann::json& json)
 	{
 		if (json["type"] == "triangles") return  { load_mesh_from_data_property(context, json["triangles"]), json["reverse_orientation"]};
 		if (json["type"] == "mesh") return { load_mesh_from_file_property(context, json["mesh"]), json["reverse_orientation"] };
-		
+		//if (json["type"] == "sphere") return { load_mesh_from_sphere_model_generator(context, json["sphere"]["radius"]), json["reverse_orientation"]};
+
 		throw "not implementation";
 	}
 }

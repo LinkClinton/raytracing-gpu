@@ -74,6 +74,9 @@
     <ClCompile Include="runtime\inputs\inputs_system.cpp">
       <Filter>runtime\inputs</Filter>
     </ClCompile>
+    <ClCompile Include="extensions\models\model_generator.cpp">
+      <Filter>extensions\models</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="extensions">
@@ -261,6 +264,9 @@
     </ClInclude>
     <ClInclude Include="runtime\inputs\inputs_system.hpp">
       <Filter>runtime\inputs</Filter>
+    </ClInclude>
+    <ClInclude Include="extensions\models\model_generator.hpp">
+      <Filter>extensions\models</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

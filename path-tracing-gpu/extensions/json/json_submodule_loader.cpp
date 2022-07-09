@@ -103,7 +103,7 @@ namespace path_tracing::extensions::json {
 		if (material["type"] == "mirror") return load_mirror_material_from_json(context, material);
 		if (material["type"] == "glass") return load_glass_material_from_json(context, material);
 		if (material["type"] == "metal") return load_metal_material_from_json(context, material);
-
+		
 		spdlog::error("unknown material type : {0}.", material["type"].get<std::string>());
 		
 		return {};

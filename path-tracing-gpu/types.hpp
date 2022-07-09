@@ -29,5 +29,19 @@ namespace path_tracing {
 	enum class coordinate_system : uint32 {
 		right_hand = 0, left_hand = 1
 	};
-	
+
+	template <typename T>
+	T pi() { return glm::pi<T>(); }
+
+	template <typename T>
+	T two_pi() { return glm::two_pi<T>(); }
+
+	template <typename T>
+	T sin(T value) { return glm::sin(value); }
+
+	template <typename T>
+	T cos(T value) { return glm::cos(value); }
+
+	template <typename T>
+	T normalize(const T& value) { return glm::normalize<T>(value); }
 }
