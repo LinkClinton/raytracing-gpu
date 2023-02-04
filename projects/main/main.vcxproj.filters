@@ -1,0 +1,175 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="extensions\imgui\imgui_impl_win32.cpp">
+      <Filter>extensions\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="runtime\runtime_process.cpp">
+      <Filter>runtime</Filter>
+    </ClCompile>
+    <ClCompile Include="runtime\runtime_service.cpp">
+      <Filter>runtime</Filter>
+    </ClCompile>
+    <ClCompile Include="runtime\output\output_system.cpp">
+      <Filter>runtime\output</Filter>
+    </ClCompile>
+    <ClCompile Include="runtime\render\render_device.cpp">
+      <Filter>runtime\render</Filter>
+    </ClCompile>
+    <ClCompile Include="runtime\render\render_system.cpp">
+      <Filter>runtime\render</Filter>
+    </ClCompile>
+    <ClCompile Include="runtime\windows\view_window.cpp">
+      <Filter>runtime\windows</Filter>
+    </ClCompile>
+    <ClCompile Include="runtime\windows\window_system.cpp">
+      <Filter>runtime\windows</Filter>
+    </ClCompile>
+    <ClCompile Include="extensions\imgui\imgui_renderer.cpp">
+      <Filter>extensions\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="scenes\scene.cpp">
+      <Filter>scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="extensions\json\json_scene_loader.cpp">
+      <Filter>extensions\json</Filter>
+    </ClCompile>
+    <ClCompile Include="scenes\components\transform.cpp">
+      <Filter>scenes\components</Filter>
+    </ClCompile>
+    <ClCompile Include="renderers\renderer.cpp">
+      <Filter>renderers</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="extensions">
+      <UniqueIdentifier>{1836ac59-b2fb-463d-8473-e92ad2812326}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="extensions\glm">
+      <UniqueIdentifier>{49ce08cf-7520-4937-9f27-91824fd8ccce}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="extensions\images">
+      <UniqueIdentifier>{f1750201-d877-4217-9483-27233b695f1a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="extensions\imgui">
+      <UniqueIdentifier>{2cdf8326-6ca3-424c-8639-31c616ddac3e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="extensions\json">
+      <UniqueIdentifier>{49b0af92-7e89-47da-82bd-012ef5f2951f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="extensions\models">
+      <UniqueIdentifier>{61dfc69b-ce56-426c-a23d-b3e27598d699}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="extensions\spdlog">
+      <UniqueIdentifier>{348c4277-1226-4e1b-bff1-3ee5a09acd32}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="interfaces">
+      <UniqueIdentifier>{9fca3b01-eb30-4965-8b1b-dcf11fcab649}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="runtime">
+      <UniqueIdentifier>{072d7b04-febb-4d46-876b-a13827910944}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="runtime\output">
+      <UniqueIdentifier>{9d813bb9-3d46-4f11-ad3d-f7e70ff26c15}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="runtime\render">
+      <UniqueIdentifier>{2393ff93-d0d3-4ebb-989c-7e3515e98c02}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="runtime\resources">
+      <UniqueIdentifier>{096b92a7-1f83-4b65-8630-be80a8a88fcb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="runtime\windows">
+      <UniqueIdentifier>{11f0a24f-97db-4ca8-9ad5-e36c7a020fd1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="resources">
+      <UniqueIdentifier>{aa47756d-e2a1-47be-bb82-f709898e2781}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="resources\fonts">
+      <UniqueIdentifier>{1c7c221a-4665-4064-8383-a2476019255a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="scenes">
+      <UniqueIdentifier>{d35ed84e-ec87-41ac-890f-756a11ed76b4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="scenes\components">
+      <UniqueIdentifier>{178239d5-f439-484b-8a0b-a49b4d30dd9d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="renderers">
+      <UniqueIdentifier>{84bb011c-d45c-4cf1-936e-53ab8ba0a8d2}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="extensions\glm\glm.hpp">
+      <Filter>extensions\glm</Filter>
+    </ClInclude>
+    <ClInclude Include="extensions\images\image_info.hpp">
+      <Filter>extensions\images</Filter>
+    </ClInclude>
+    <ClInclude Include="types.hpp" />
+    <ClInclude Include="extensions\imgui\imgui_impl_win32.hpp">
+      <Filter>extensions\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="extensions\json\json.hpp">
+      <Filter>extensions\json</Filter>
+    </ClInclude>
+    <ClInclude Include="extensions\spdlog\spdlog.hpp">
+      <Filter>extensions\spdlog</Filter>
+    </ClInclude>
+    <ClInclude Include="interfaces\noncopyable.hpp">
+      <Filter>interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="runtime\runtime_frame.hpp">
+      <Filter>runtime</Filter>
+    </ClInclude>
+    <ClInclude Include="runtime\runtime_process.hpp">
+      <Filter>runtime</Filter>
+    </ClInclude>
+    <ClInclude Include="runtime\runtime_service.hpp">
+      <Filter>runtime</Filter>
+    </ClInclude>
+    <ClInclude Include="runtime\output\output_system.hpp">
+      <Filter>runtime\output</Filter>
+    </ClInclude>
+    <ClInclude Include="runtime\render\render_device.hpp">
+      <Filter>runtime\render</Filter>
+    </ClInclude>
+    <ClInclude Include="runtime\render\render_system.hpp">
+      <Filter>runtime\render</Filter>
+    </ClInclude>
+    <ClInclude Include="runtime\windows\view_window.hpp">
+      <Filter>runtime\windows</Filter>
+    </ClInclude>
+    <ClInclude Include="runtime\windows\window_system.hpp">
+      <Filter>runtime\windows</Filter>
+    </ClInclude>
+    <ClInclude Include="extensions\imgui\imgui_renderer.hpp">
+      <Filter>extensions\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="scenes\scene.hpp">
+      <Filter>scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="extensions\json\json_scene_loader.hpp">
+      <Filter>extensions\json</Filter>
+    </ClInclude>
+    <ClInclude Include="runtime\resources\resource_system.hpp">
+      <Filter>runtime\resources</Filter>
+    </ClInclude>
+    <ClInclude Include="scenes\components\film.hpp">
+      <Filter>scenes\components</Filter>
+    </ClInclude>
+    <ClInclude Include="scenes\components\perspective_camera.hpp">
+      <Filter>scenes\components</Filter>
+    </ClInclude>
+    <ClInclude Include="scenes\components\transform.hpp">
+      <Filter>scenes\components</Filter>
+    </ClInclude>
+    <ClInclude Include="renderers\renderer.hpp">
+      <Filter>renderers</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Font Include="resources\fonts\CascadiaCode.ttf">
+      <Filter>resources\fonts</Filter>
+    </Font>
+  </ItemGroup>
+</Project>
