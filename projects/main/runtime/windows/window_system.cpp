@@ -5,7 +5,8 @@
 
 void raytracing::runtime::windows::window_system::resolve(const runtime_service& service)
 {
-	if (service.scene.output_window.has_value() && service.scene.output_window->enable) {
+	if (service.scene.output_window.has_value() && service.scene.output_window->enable) 
+	{
 		mViewWindow = view_window(
 			service.render_device.queue(), service.render_device.device(),
 			service.scene.output_window->name,

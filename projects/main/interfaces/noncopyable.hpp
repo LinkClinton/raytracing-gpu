@@ -1,8 +1,9 @@
 #pragma once
 
-namespace raytracing::interfaces {
-
-	class noncopyable {
+namespace raytracing::interfaces
+{
+	class noncopyable
+	{
 	public:
 		noncopyable() = default;
 		virtual ~noncopyable() = default;

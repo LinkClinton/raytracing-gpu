@@ -4,7 +4,8 @@
 
 #include <spdlog/spdlog.h>
 
-namespace raytracing::extensions::spdlog {
+namespace raytracing::extensions::spdlog
+{
 
 	template <typename... Args>
 	void debug(const std::string_view& format, const Args& ... args) { ::spdlog::debug(format, args...); }

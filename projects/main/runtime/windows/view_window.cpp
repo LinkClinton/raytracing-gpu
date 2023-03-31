@@ -86,7 +86,8 @@ raytracing::runtime::windows::view_window::view_window(view_window&& window) noe
 
 raytracing::runtime::windows::view_window::~view_window()
 {
-	if (mHandle != nullptr) {
+	if (mHandle != nullptr) 
+	{
 		ImGui_ImplWin32_Shutdown();
 		ImGui::DestroyContext();
 	}
@@ -98,7 +99,8 @@ void raytracing::runtime::windows::view_window::update(const runtime_service& se
 
 	message.hwnd = static_cast<HWND>(mHandle);
 
-	while (PeekMessage(&message, 0, 0, 0, PM_REMOVE)) {
+	while (PeekMessage(&message, 0, 0, 0, PM_REMOVE)) 
+	{
 		TranslateMessage(&message);
 		DispatchMessage(&message);
 

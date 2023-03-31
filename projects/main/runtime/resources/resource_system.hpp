@@ -5,15 +5,18 @@
 #include "../../interfaces/noncopyable.hpp"
 #include "../../types.hpp"
 
-namespace raytracing::runtime {
+namespace raytracing::runtime
+{
 
 	struct runtime_service;
 	
 }
 
-namespace raytracing::runtime::resources {
+namespace raytracing::runtime::resources
+{
 
-	class resource_system final : public noncopyable {
+	class resource_system final : public noncopyable
+	{
 	public:
 		resource_system() = default;
 

@@ -19,7 +19,8 @@ void raytracing::extensions::imgui::imgui_renderer::resolve(
 	mRenderTargetViewHeap = wrapper::directx12::descriptor_heap::create(mDevice,
 		D3D12_DESCRIPTOR_HEAP_TYPE_RTV, mSwapChain.buffers().size());
 
-	for (size_t index = 0; index < mSwapChain.buffers().size(); index++) {
+	for (size_t index = 0; index < mSwapChain.buffers().size(); index++) 
+	{
 		device.device().create_render_target_view(
 			wrapper::directx12::resource_view::render_target2d(mSwapChain.format()),
 			mRenderTargetViewHeap.cpu_handle(index),

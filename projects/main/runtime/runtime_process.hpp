@@ -2,9 +2,10 @@
 
 #include "runtime_service.hpp"
 
-namespace raytracing::runtime {
-
-	class runtime_process final : public noncopyable {
+namespace raytracing::runtime
+{
+	class runtime_process final : public noncopyable
+	{
 	public:
 		runtime_process();
 

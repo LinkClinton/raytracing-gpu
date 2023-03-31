@@ -2,10 +2,12 @@
 
 #include "../../types.hpp"
 
-namespace raytracing::extensions::images {
+namespace raytracing::extensions::images
+{
 
 	template <typename ValueType>
-	struct image_info {
+	struct image_info
+	{
 		std::vector<ValueType> values;
 
 		uint32 size_x = 0;

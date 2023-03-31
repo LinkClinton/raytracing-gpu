@@ -5,11 +5,13 @@
 
 #include "json.hpp"
 
-namespace raytracing::extensions::json {
+namespace raytracing::extensions::json
+{
 
 	using runtime::runtime_service;
 	
-	class json_scene_loader final : public noncopyable {
+	class json_scene_loader final : public noncopyable
+	{
 	public:
 		json_scene_loader() = default;
 

@@ -4,24 +4,24 @@
 
 #include <memory>
 
-namespace raytracing::renderers {
-
+namespace raytracing::renderers
+{
 	class renderer;
-	
 }
 
-namespace raytracing::runtime {
-
+namespace raytracing::runtime
+{
 	struct runtime_service;
 	struct runtime_frame;
-	
 }
 
-namespace raytracing::runtime::render {
+namespace raytracing::runtime::render
+{
 
 	using runtime::runtime_service;
 
-	class render_system final : public noncopyable {
+	class render_system final : public noncopyable
+	{
 	public:
 		render_system() = default;
 

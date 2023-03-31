@@ -3,12 +3,13 @@
 #include "../runtime/runtime_service.hpp"
 #include "../runtime/runtime_frame.hpp"
 
-namespace raytracing::renderers {
-
+namespace raytracing::renderers
+{
 	using runtime::runtime_service;
 	using runtime::runtime_frame;
 
-	class renderer : public noncopyable {
+	class renderer : public noncopyable
+	{
 	public:
 		renderer(const runtime_service& service);
 

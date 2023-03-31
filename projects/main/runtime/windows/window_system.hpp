@@ -4,18 +4,21 @@
 
 #include "view_window.hpp"
 
-namespace raytracing::runtime {
+namespace raytracing::runtime
+{
 
 	struct runtime_service;
 	struct runtime_frame;
 	
 }
 
-namespace raytracing::runtime::windows {
+namespace raytracing::runtime::windows
+{
 
 	using extensions::imgui::imgui_renderer;
 	
-	class window_system final : public noncopyable {
+	class window_system final : public noncopyable
+	{
 	public:
 		window_system() = default;
 

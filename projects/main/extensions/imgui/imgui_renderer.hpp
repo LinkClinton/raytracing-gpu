@@ -5,20 +5,20 @@
 
 #include "../../runtime/render/render_device.hpp"
 
-namespace raytracing::runtime {
-
+namespace raytracing::runtime
+{
 	struct runtime_service;
 	struct runtime_frame;
-	
 }
 
-namespace raytracing::extensions::imgui {
-
+namespace raytracing::extensions::imgui
+{
 	using runtime::render::render_device;
 	using runtime::runtime_service;
 	using runtime::runtime_frame;
 	
-	class imgui_renderer final {
+	class imgui_renderer final
+	{
 	public:
 		imgui_renderer() = default;
 

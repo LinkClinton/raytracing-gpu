@@ -3,16 +3,16 @@
 #include "../../interfaces/noncopyable.hpp"
 #include "../../types.hpp"
 
-namespace raytracing::runtime {
-
+namespace raytracing::runtime
+{
 	struct runtime_service;
 	struct runtime_frame;
-	
 }
 
-namespace raytracing::runtime::output {
-
-	class output_system final : public noncopyable {
+namespace raytracing::runtime::output
+{
+	class output_system final : public noncopyable
+	{
 	public:
 		output_system() = default;
 

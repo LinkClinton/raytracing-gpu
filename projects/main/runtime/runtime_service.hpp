@@ -10,11 +10,12 @@
 
 #include "../scenes/scene.hpp"
 
-namespace raytracing::runtime {
-
+namespace raytracing::runtime
+{
 	class runtime_process;
 	
-	struct runtime_service final {
+	struct runtime_service final
+	{
 		resources::resource_system& resource_system;
 
 		output::output_system& output_system;

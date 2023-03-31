@@ -4,8 +4,8 @@
 
 #include <unordered_map>
 
-namespace raytracing {
-
+namespace raytracing
+{
 	using uint64 = unsigned long long;
 	using uint32 = unsigned;
 	using real = float;
@@ -26,10 +26,6 @@ namespace raytracing {
 
 	constexpr uint32 index_null = std::numeric_limits<uint32>::max();
 
-	enum class coordinate_system : uint32 {
-		right_hand = 0, left_hand = 1
-	};
-
 	template <typename T>
 	T pi() { return glm::pi<T>(); }
 
@@ -44,4 +40,5 @@ namespace raytracing {
 
 	template <typename T>
 	T normalize(const T& value) { return glm::normalize<T>(value); }
+
 }

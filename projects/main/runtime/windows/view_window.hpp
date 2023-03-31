@@ -7,18 +7,20 @@
 
 #include <string>
 
-namespace raytracing::runtime {
+namespace raytracing::runtime
+{
 
 	struct runtime_service;
 	struct runtime_frame;
 	
 }
 
-namespace raytracing::runtime::windows {
-
+namespace raytracing::runtime::windows
+{
 	using handle = void*;
 
-	class view_window final : public noncopyable {
+	class view_window final : public noncopyable
+	{
 	public:
 		view_window() = default;
 

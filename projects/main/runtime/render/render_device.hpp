@@ -8,9 +8,11 @@
 #include "../../interfaces/noncopyable.hpp"
 #include "../../types.hpp"
 
-namespace raytracing::runtime::render {
+namespace raytracing::runtime::render
+{
 	
-	class render_device final : public noncopyable {
+	class render_device final : public noncopyable
+	{
 	public:
 		render_device() = default;
 

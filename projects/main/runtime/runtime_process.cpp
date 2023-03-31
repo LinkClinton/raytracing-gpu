@@ -23,7 +23,8 @@ void raytracing::runtime::runtime_process::run_loop()
 	// renderer will record sample_index by itself so sample_index is not equal frame_index
 	// but in console rendering mode(without window system), frame_index is equal to sample_index
 	// todo : using sample_index instead of frame_index to break loop
-	while (mWindowSystem.living() || (!mWindowSystem.active() && frame.frame_index < mRuntimeService.scene.sample_count)) {
+	while (mWindowSystem.living() || (!mWindowSystem.active() && frame.frame_index < mRuntimeService.scene.sample_count)) 
+	{
 		auto duration = std::chrono::duration_cast<std::chrono::duration<float>>(time_point::now() - current);
 
 		current = time_point::now();
