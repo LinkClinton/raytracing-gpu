@@ -97,6 +97,9 @@
     <Filter Include="renderers">
       <UniqueIdentifier>{84bb011c-d45c-4cf1-936e-53ab8ba0a8d2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="resources\shaders">
+      <UniqueIdentifier>{2178845a-c58c-4df2-ab88-d479c710de1d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="extensions\glm\glm.hpp">

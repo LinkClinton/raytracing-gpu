@@ -48,32 +48,30 @@
     "entities": [
         {
             "material": {
-                "properties": {
-                    "diffuse": {
-                        "gamma": false,
+                "properties": [
+                    {
                         "image": "",
+                        "name": "diffuse",
                         "value": [
                             0.7250000238418579,
                             0.7099999785423279,
                             0.6800000071525574
                         ]
                     },
-                    "sigma": {
-                        "gamma": false,
+                    {
                         "image": "",
+                        "name": "sigma",
                         "value": [
                             0.0,
                             0.0,
                             0.0
                         ]
                     }
-                },
-                "remapping": true,
+                ],
                 "type": "diffuse"
             },
             "name": "entity0",
             "shape": {
-                "reverse_orientation": false,
                 "triangles": {
                     "indices": [
                         0,
@@ -149,32 +147,30 @@
         },
         {
             "material": {
-                "properties": {
-                    "diffuse": {
-                        "gamma": false,
+                "properties": [
+                    {
                         "image": "",
+                        "name": "diffuse",
                         "value": [
                             0.7250000238418579,
                             0.7099999785423279,
                             0.6800000071525574
                         ]
                     },
-                    "sigma": {
-                        "gamma": false,
+                    {
                         "image": "",
+                        "name": "sigma",
                         "value": [
                             0.0,
                             0.0,
                             0.0
                         ]
                     }
-                },
-                "remapping": true,
+                ],
                 "type": "diffuse"
             },
             "name": "entity1",
             "shape": {
-                "reverse_orientation": false,
                 "triangles": {
                     "indices": [
                         0,
@@ -250,32 +246,30 @@
         },
         {
             "material": {
-                "properties": {
-                    "diffuse": {
-                        "gamma": false,
+                "properties": [
+                    {
                         "image": "",
+                        "name": "diffuse",
                         "value": [
                             0.7250000238418579,
                             0.7099999785423279,
                             0.6800000071525574
                         ]
                     },
-                    "sigma": {
-                        "gamma": false,
+                    {
                         "image": "",
+                        "name": "sigma",
                         "value": [
                             0.0,
                             0.0,
                             0.0
                         ]
                     }
-                },
-                "remapping": true,
+                ],
                 "type": "diffuse"
             },
             "name": "entity2",
             "shape": {
-                "reverse_orientation": false,
                 "triangles": {
                     "indices": [
                         0,
@@ -351,32 +345,30 @@
         },
         {
             "material": {
-                "properties": {
-                    "diffuse": {
-                        "gamma": false,
+                "properties": [
+                    {
                         "image": "",
+                        "name": "diffuse",
                         "value": [
                             0.14000000059604645,
                             0.44999998807907104,
                             0.09099999815225601
                         ]
                     },
-                    "sigma": {
-                        "gamma": false,
+                    {
                         "image": "",
+                        "name": "sigma",
                         "value": [
                             0.0,
                             0.0,
                             0.0
                         ]
                     }
-                },
-                "remapping": true,
+                ],
                 "type": "diffuse"
             },
             "name": "entity3",
             "shape": {
-                "reverse_orientation": false,
                 "triangles": {
                     "indices": [
                         0,
@@ -452,32 +444,30 @@
         },
         {
             "material": {
-                "properties": {
-                    "diffuse": {
-                        "gamma": false,
+                "properties": [
+                    {
                         "image": "",
+                        "name": "diffuse",
                         "value": [
                             0.6299999952316284,
                             0.06499999761581421,
                             0.05000000074505806
                         ]
                     },
-                    "sigma": {
-                        "gamma": false,
+                    {
                         "image": "",
+                        "name": "sigma",
                         "value": [
                             0.0,
                             0.0,
                             0.0
                         ]
                     }
-                },
-                "remapping": true,
+                ],
                 "type": "diffuse"
             },
             "name": "entity4",
             "shape": {
-                "reverse_orientation": false,
                 "triangles": {
                     "indices": [
                         0,
@@ -553,32 +543,30 @@
         },
         {
             "material": {
-                "properties": {
-                    "diffuse": {
-                        "gamma": false,
+                "properties": [
+                    {
                         "image": "",
+                        "name": "diffuse",
                         "value": [
                             0.7250000238418579,
                             0.7099999785423279,
                             0.6800000071525574
                         ]
                     },
-                    "sigma": {
-                        "gamma": false,
+                    {
                         "image": "",
+                        "name": "sigma",
                         "value": [
                             0.0,
                             0.0,
                             0.0
                         ]
                     }
-                },
-                "remapping": true,
+                ],
                 "type": "diffuse"
             },
             "name": "entity5",
             "shape": {
-                "reverse_orientation": false,
                 "triangles": {
                     "indices": [
                         0,
@@ -864,32 +852,30 @@
         },
         {
             "material": {
-                "properties": {
-                    "diffuse": {
-                        "gamma": false,
+                "properties": [
+                    {
                         "image": "",
+                        "name": "diffuse",
                         "value": [
                             0.7250000238418579,
                             0.7099999785423279,
                             0.6800000071525574
                         ]
                     },
-                    "sigma": {
-                        "gamma": false,
+                    {
                         "image": "",
+                        "name": "sigma",
                         "value": [
                             0.0,
                             0.0,
                             0.0
                         ]
                     }
-                },
-                "remapping": true,
+                ],
                 "type": "diffuse"
             },
             "name": "entity6",
             "shape": {
-                "reverse_orientation": false,
                 "triangles": {
                     "indices": [
                         0,
@@ -1184,7 +1170,6 @@
             },
             "name": "entity7",
             "shape": {
-                "reverse_orientation": false,
                 "triangles": {
                     "indices": [
                         0,
