@@ -6,6 +6,7 @@
 #include "components/film.hpp"
 
 #include <optional>
+#include <string>
 
 namespace raytracing::scenes
 {

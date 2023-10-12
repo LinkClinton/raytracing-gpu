@@ -65,6 +65,13 @@ namespace raytracing::extensions::json
 		};
 	}
 
+	void load_scene_entities(const scene_loader_context& context, const nlohmann::json& entities)
+	{
+		for (const auto& entity : entities)
+		{
+
+		}
+	}
 }
 
 void raytracing::extensions::json::json_scene_loader::load(const runtime_service& service, 
@@ -76,6 +83,11 @@ void raytracing::extensions::json::json_scene_loader::load(const runtime_service
 		directory
 	};
 
+	if (scene.contains("camera")) 
+	{
+		load_scene_camera(context, scene["camera"]);
+	}
+
 	if (scene.contains("config")) 
 	{
 		load_scene_config(context, scene["config"]);
@@ -84,11 +96,6 @@ void raytracing::extensions::json::json_scene_loader::load(const runtime_service
 	if (scene.contains("film")) 
 	{
 		load_scene_film(context, scene["film"]);
-	}
-
-	if (scene.contains("camera")) 
-	{
-		load_scene_camera(context, scene["camera"]);
 	}
 
 	service.render_device.wait();

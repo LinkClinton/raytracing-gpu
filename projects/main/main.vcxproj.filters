@@ -169,6 +169,9 @@
     <ClInclude Include="renderers\renderer.hpp">
       <Filter>renderers</Filter>
     </ClInclude>
+    <ClInclude Include="scenes\components\material.hpp">
+      <Filter>scenes\components</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Font Include="resources\fonts\CascadiaCode.ttf">

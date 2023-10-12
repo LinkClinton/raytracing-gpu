@@ -177,6 +177,7 @@
     <ClInclude Include="runtime\windows\view_window.hpp" />
     <ClInclude Include="runtime\windows\window_system.hpp" />
     <ClInclude Include="scenes\components\film.hpp" />
+    <ClInclude Include="scenes\components\material.hpp" />
     <ClInclude Include="scenes\components\perspective_camera.hpp" />
     <ClInclude Include="scenes\components\transform.hpp" />
     <ClInclude Include="scenes\scene.hpp" />
