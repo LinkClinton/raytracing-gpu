@@ -8,15 +8,15 @@ namespace raytracing::extensions::spdlog
 {
 
 	template <typename... Args>
-	void debug(const std::string_view& format, const Args& ... args) { ::spdlog::debug(format, args...); }
+	void debug(::spdlog::format_string_t<Args...> format, const Args& ... args) { ::spdlog::debug(format, args...); }
 
 	template <typename... Args>
-	void info(const std::string_view& format, const Args& ... args) { ::spdlog::info(format, args...); }
+	void info(::spdlog::format_string_t<Args...> format, Args&& ... args) { ::spdlog::info(format, std::forward<Args>(args)...); }
 
 	template <typename... Args>
-	void warn(const std::string_view& format, const Args& ... args) { ::spdlog::warn(format, args...); }
+	void warn(::spdlog::format_string_t<Args...> format, const Args& ... args) { ::spdlog::warn(format, args...); }
 
 	template <typename... Args>
-	void error(const std::string_view& format, const Args& ... args) { ::spdlog::error(format, args...); }
+	void error(::spdlog::format_string_t<Args...> format, const Args& ... args) { ::spdlog::error(format, args...); }
 
 }

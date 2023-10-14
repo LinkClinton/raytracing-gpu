@@ -13,8 +13,6 @@ namespace raytracing::renderers
 	public:
 		renderer(const runtime_service& service);
 
-		~renderer() = default;
-
 		virtual void update(const runtime_service& service, const runtime_frame& frame) = 0;
 
 		virtual void render(const runtime_service& service, const runtime_frame& frame) = 0;

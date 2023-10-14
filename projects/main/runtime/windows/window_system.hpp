@@ -20,10 +20,6 @@ namespace raytracing::runtime::windows
 	class window_system final : public noncopyable
 	{
 	public:
-		window_system() = default;
-
-		~window_system() = default;
-
 		void resolve(const runtime_service& service);
 
 		void release(const runtime_service& service);
@@ -40,7 +36,7 @@ namespace raytracing::runtime::windows
 
 		view_window mViewWindow;
 
-		ImTextureID mRenderTargetID;
+		ImTextureID mRenderTargetID = nullptr;
 	};
 	
 }

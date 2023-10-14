@@ -18,8 +18,6 @@ namespace raytracing::runtime::render
 
 		render_device(const D3D_FEATURE_LEVEL& level);
 
-		~render_device() = default;
-
 		void wait() const;
 
 		wrapper::directx12::command_queue queue() const noexcept;

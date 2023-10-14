@@ -23,10 +23,6 @@ namespace raytracing::runtime::render
 	class render_system final : public noncopyable
 	{
 	public:
-		render_system() = default;
-
-		~render_system() = default;
-
 		void resolve(const runtime_service& service);
 
 		void release(const runtime_service& service);

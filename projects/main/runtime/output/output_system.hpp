@@ -14,10 +14,6 @@ namespace raytracing::runtime::output
 	class output_system final : public noncopyable
 	{
 	public:
-		output_system() = default;
-
-		~output_system() = default;
-
 		void resolve(const runtime_service& service);
 
 		void release(const runtime_service& service);

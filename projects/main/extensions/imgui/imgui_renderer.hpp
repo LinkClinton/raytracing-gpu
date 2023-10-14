@@ -20,10 +20,6 @@ namespace raytracing::extensions::imgui
 	class imgui_renderer final
 	{
 	public:
-		imgui_renderer() = default;
-
-		~imgui_renderer() = default;
-
 		void resolve(
 			const wrapper::directx12::swap_chain& swap_chain,
 			const render_device& device, uint32 font_size);

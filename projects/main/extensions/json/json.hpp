@@ -36,20 +36,6 @@ namespace nlohmann
 	};
 
 	template <>
-	struct adl_serializer<vector4>
-	{
-		static void to_json(json& json, const vector4& vector)
-		{
-			json = { vector.x, vector.y, vector.z, vector.w };
-		}
-
-		static void from_json(const json& json, vector4& vector)
-		{
-			vector = vector4(json[0], json[1], json[2], json[3]);
-		}
-	};
-
-	template <>
 	struct adl_serializer<vector3>
 	{
 		static void to_json(json& json, const vector3& vector)
@@ -83,20 +69,20 @@ namespace nlohmann
 	{
 		static void to_json(json& json, const std::vector<vector3>& vector)
 		{
-			std::vector<float> floats(vector.size() * 3);
-
-			std::memcpy(floats.data(), vector.data(), sizeof(float) * floats.size());
-
-			json = floats;
+			for (size_t index = 0; index < vector.size(); index++)
+			{
+				json[index] = vector[index];
+			}
 		}
 
 		static void from_json(const json& json, std::vector<vector3>& vector)
 		{
-			std::vector<float> floats = json;
+			vector.resize(json.size());
 
-			vector = std::vector<vector3>(floats.size() / 3);
-
-			std::memcpy(vector.data(), floats.data(), sizeof(vector3) * vector.size());
+			for (size_t index = 0; index < json.size(); index++)
+			{
+				vector[index] = json[index];
+			}
 		}
 	};
 
@@ -105,21 +91,21 @@ namespace nlohmann
 	{
 		static void to_json(json& json, const std::vector<vector2>& vector)
 		{
-			std::vector<float> floats(vector.size() * 2);
-
-			std::memcpy(floats.data(), vector.data(), sizeof(float) * floats.size());
-
-			json = floats;
+			for (size_t index = 0; index < vector.size(); index++)
+			{
+				json[index] = vector[index];
+			}
 		}
 
 		static void from_json(const json& json, std::vector<vector2>& vector)
 		{
-			std::vector<float> floats = json;
+			vector.resize(json.size());
 
-			vector = std::vector<vector2>(floats.size() / 2);
-
-			std::memcpy(vector.data(), floats.data(), sizeof(vector2) * vector.size());
+			for (size_t index = 0; index < json.size(); index++)
+			{
+				vector[index] = json[index];
+			}
 		}
 	};
-	
+
 }

@@ -13,10 +13,6 @@ namespace raytracing::extensions::json
 	class json_scene_loader final : public noncopyable
 	{
 	public:
-		json_scene_loader() = default;
-
-		~json_scene_loader() = default;
-
 		static void load(const runtime_service& service, const nlohmann::json& scene, const std::string& directory);
 
 		static void load(const runtime_service& service, const std::string& filename);

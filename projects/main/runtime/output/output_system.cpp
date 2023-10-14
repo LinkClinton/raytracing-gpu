@@ -31,7 +31,7 @@ void raytracing::runtime::output::output_system::update(const runtime_service& s
 		ImGui::Separator();
 		ImGui::End();
 	}
-	else extensions::spdlog::info("finished sample index {0} cost {1}s.", frame.frame_index, frame.delta_time);
+	//else extensions::spdlog::info("finished sample index {0} cost {1}s.", frame.frame_index, frame.delta_time);
 
 	// record the total time of rendering 
 	mTotalTime = frame.total_time;

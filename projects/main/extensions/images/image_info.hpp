@@ -12,8 +12,6 @@ namespace raytracing::extensions::images
 
 		uint32 size_x = 0;
 		uint32 size_y = 0;
-
-		image_info() = default;
 	};
 	
 }

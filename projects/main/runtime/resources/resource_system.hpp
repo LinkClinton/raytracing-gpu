@@ -5,6 +5,9 @@
 #include "../../interfaces/noncopyable.hpp"
 #include "../../types.hpp"
 
+#include "components/texture.hpp"
+#include "components/mesh.hpp"
+
 namespace raytracing::runtime
 {
 
@@ -14,14 +17,11 @@ namespace raytracing::runtime
 
 namespace raytracing::runtime::resources
 {
+	using namespace raytracing::runtime::resources::components;
 
 	class resource_system final : public noncopyable
 	{
 	public:
-		resource_system() = default;
-
-		~resource_system() = default;
-
 		template <typename Resource>
 		void add(const std::string& name, const Resource& resource);
 
@@ -43,7 +43,9 @@ namespace raytracing::runtime::resources
 		template <typename Resource>
 		mapping<std::string, Resource>& resource_pool();
 
-		mapping<std::string, wrapper::directx12::texture2d> mTextures;
+		mapping<std::string, wrapper::directx12::texture2d> mGpuTextures;
+		mapping<std::string, texture> mCpuTextures;
+		mapping<std::string, mesh> mMeshes;
 	};
 
 	template <typename Resource>
@@ -55,7 +57,7 @@ namespace raytracing::runtime::resources
 	template <typename Resource>
 	void resource_system::add(const std::string& name, Resource&& resource)
 	{
-		resource_pool<Resource>().insert({ name, std::move(resource) });
+		resource_pool<Resource>().insert({ name, resource });
 	}
 
 	template <typename Resource>
@@ -85,7 +87,19 @@ namespace raytracing::runtime::resources
 	template <>
 	inline mapping<std::string, wrapper::directx12::texture2d>& resource_system::resource_pool()
 	{
-		return mTextures;
+		return mGpuTextures;
+	}
+
+	template <>
+	inline mapping<std::string, texture>& resource_system::resource_pool()
+	{
+		return mCpuTextures;
+	}
+
+	template <>
+	inline mapping<std::string, mesh>& resource_system::resource_pool()
+	{
+		return mMeshes;
 	}
 
 }

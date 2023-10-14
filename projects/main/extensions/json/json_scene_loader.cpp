@@ -2,6 +2,7 @@
 
 #include <filesystem>
 #include <fstream>
+#include <format>
 
 namespace raytracing::extensions::json
 {
@@ -67,9 +68,71 @@ namespace raytracing::extensions::json
 
 	void load_scene_entities(const scene_loader_context& context, const nlohmann::json& entities)
 	{
+		uint32 scene_internal_mesh_count = 0;
+
 		for (const auto& entity : entities)
 		{
+			scenes::entity entity_data;
+			
+			if (entity.contains("material"))
+			{
+				scenes::submodule_data material;
 
+				for (const auto& property : entity["material"].items())
+				{
+					if (property.key() == "type")
+					{
+						material.type = property.value();
+					}else
+					{
+						material.textures[property.key()] = property.value()["image"];
+						material.value[property.key()] = property.value()["value"];
+					}
+				}
+
+				entity_data.material = material;
+			}
+
+			
+			if (entity.contains("light"))
+			{
+				scenes::submodule_data light;
+
+				light.type = entity["light"]["type"];
+
+				if (entity["light"].contains("intensity"))
+				{
+					light.value["intensity"] = entity["light"]["intensity"];
+				}
+
+				entity_data.light = light;
+			}
+
+			if (entity.contains("shape"))
+			{
+				scenes::submodule_mesh mesh;
+
+				if (entity["shape"]["type"] == "triangles")
+				{
+					runtime::resources::mesh resource;
+
+					resource.data.positions = entity["shape"]["triangles"]["positions"];
+					resource.data.normals = entity["shape"]["triangles"]["normals"];
+					resource.data.uvs = entity["shape"]["triangles"]["uvs"];
+					resource.data.indices = entity["shape"]["triangles"]["indices"].get<std::vector<uint32>>();
+
+					resource.info.vtx_count = static_cast<uint32>(resource.data.positions.size());
+					resource.info.idx_count = static_cast<uint32>(resource.data.indices.size());
+					
+					std::string mesh_name = std::format("scene_internal_mesh_{}", scene_internal_mesh_count);
+
+					context.service.resource_system.add(mesh_name, std::move(resource));
+				}
+			}
+
+			entity_data.transform = scenes::transform(entity["transform"]);
+
+			context.service.scene.entities.push_back(std::move(entity_data));
 		}
 	}
 }
@@ -96,6 +159,11 @@ void raytracing::extensions::json::json_scene_loader::load(const runtime_service
 	if (scene.contains("film")) 
 	{
 		load_scene_film(context, scene["film"]);
+	}
+
+	if (scene.contains("entities"))
+	{
+		load_scene_entities(context, scene["entities"]);
 	}
 
 	service.render_device.wait();

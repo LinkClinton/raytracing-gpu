@@ -16,8 +16,6 @@ namespace raytracing::scenes::components
 
 		transform(const matrix4x4& matrix, const matrix4x4& inverse);
 
-		~transform() = default;
-
 		transform inverse() const noexcept;
 
 		matrix4x4 matrix() const noexcept;

@@ -100,6 +100,9 @@
     <Filter Include="resources\shaders">
       <UniqueIdentifier>{2178845a-c58c-4df2-ab88-d479c710de1d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="runtime\resources\components">
+      <UniqueIdentifier>{3e7e3f0d-dacd-40b9-b777-7001c4d36ba5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="extensions\glm\glm.hpp">
@@ -169,8 +172,14 @@
     <ClInclude Include="renderers\renderer.hpp">
       <Filter>renderers</Filter>
     </ClInclude>
-    <ClInclude Include="scenes\components\material.hpp">
-      <Filter>scenes\components</Filter>
+    <ClInclude Include="runtime\resources\components\texture.hpp">
+      <Filter>runtime\resources\components</Filter>
+    </ClInclude>
+    <ClInclude Include="runtime\resources\components\mesh.hpp">
+      <Filter>runtime\resources\components</Filter>
+    </ClInclude>
+    <ClInclude Include="scenes\entity.hpp">
+      <Filter>scenes</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

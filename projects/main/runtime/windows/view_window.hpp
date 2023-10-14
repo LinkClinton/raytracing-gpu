@@ -31,7 +31,7 @@ namespace raytracing::runtime::windows
 
 		view_window(view_window&& window) noexcept;
 
-		~view_window();
+		~view_window() override;
 
 		void update(const runtime_service& service, const runtime_frame& frame);
 

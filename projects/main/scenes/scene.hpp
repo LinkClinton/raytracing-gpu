@@ -4,6 +4,7 @@
 
 #include "components/perspective_camera.hpp"
 #include "components/film.hpp"
+#include "entity.hpp"
 
 #include <optional>
 #include <string>
@@ -12,7 +13,7 @@ namespace raytracing::scenes
 {
 	using namespace components;
 
-	struct output_window_property
+	struct output_window_property final
 	{
 		std::string name = "";
 
@@ -21,16 +22,12 @@ namespace raytracing::scenes
 		uint32 size_y = 1080;
 
 		bool enable = true;
-
-		output_window_property() = default;
 	};
 
-	struct output_images_property
+	struct output_images_property final
 	{
 		std::string sdr_image = "";
 		std::string hdr_image = "";
-
-		output_images_property() = default;
 	};
 
 	struct scene final
@@ -41,9 +38,10 @@ namespace raytracing::scenes
 		perspective_camera camera;
 		film film;
 
+		std::vector<entity> entities;
+
 		std::optional<output_window_property> output_window;
 		std::optional<output_images_property> output_images;
-
 	};
 
 }

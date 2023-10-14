@@ -9,8 +9,6 @@ namespace raytracing::runtime
 	public:
 		runtime_process();
 
-		~runtime_process() = default;
-
 		void run_loop();
 		
 		runtime_service service() const noexcept;

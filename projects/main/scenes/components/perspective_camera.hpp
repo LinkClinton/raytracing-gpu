@@ -10,7 +10,5 @@ namespace raytracing::scenes::components
 		transform transform = components::transform();
 		
 		real fov = 45.f;
-
-		perspective_camera() = default;
 	};
 }
