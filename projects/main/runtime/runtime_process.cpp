@@ -11,7 +11,7 @@ raytracing::runtime::runtime_process::runtime_process() :
 void raytracing::runtime::runtime_process::run_loop()
 {
 	using time_point = std::chrono::high_resolution_clock;
-
+	
 	mRenderSystem.resolve(mRuntimeService);
 	mWindowSystem.resolve(mRuntimeService);
 	mOutputSystem.resolve(mRuntimeService);
@@ -31,7 +31,7 @@ void raytracing::runtime::runtime_process::run_loop()
 
 		frame.delta_time = duration.count();
 		frame.total_time = frame.total_time + duration.count();
-
+		
 		mRenderSystem.update(mRuntimeService, frame);
 		mWindowSystem.update(mRuntimeService, frame);
 		mOutputSystem.update(mRuntimeService, frame);

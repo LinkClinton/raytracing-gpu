@@ -20,7 +20,8 @@ void raytracing::runtime::output::output_system::release(const runtime_service& 
 
 void raytracing::runtime::output::output_system::update(const runtime_service& service, const runtime_frame& frame)
 {
-	if (service.window_system.active()) {
+	if (service.window_system.active()) 
+	{
 		ImGui::SetNextWindowBgAlpha(0.35f);
 		ImGui::Begin("Basic Info");
 		ImGui::Text("Sample Index  : %lu", service.render_system.sample_index() - 1);
@@ -31,7 +32,7 @@ void raytracing::runtime::output::output_system::update(const runtime_service& s
 		ImGui::Separator();
 		ImGui::End();
 	}
-	//else extensions::spdlog::info("finished sample index {0} cost {1}s.", frame.frame_index, frame.delta_time);
+	else extensions::spdlog::info("finished sample index {0} cost {1}s.", frame.frame_index, frame.delta_time);
 
 	// record the total time of rendering 
 	mTotalTime = frame.total_time;

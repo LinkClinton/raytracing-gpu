@@ -1,9 +1,9 @@
 #pragma once
 
-#include <directx12-wrapper/swap_chain.hpp>
-
 #include "../../interfaces/noncopyable.hpp"
 #include "../../types.hpp"
+
+#include <directx12-wrapper/swap_chain.hpp>
 
 #include <string>
 

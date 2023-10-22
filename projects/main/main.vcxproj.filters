@@ -41,6 +41,9 @@
     <ClCompile Include="renderers\renderer.cpp">
       <Filter>renderers</Filter>
     </ClCompile>
+    <ClCompile Include="renderers\depth_renderer.cpp">
+      <Filter>renderers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="extensions">
@@ -180,6 +183,12 @@
     </ClInclude>
     <ClInclude Include="scenes\entity.hpp">
       <Filter>scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="renderers\depth_renderer.hpp">
+      <Filter>renderers</Filter>
+    </ClInclude>
+    <ClInclude Include="runtime\resources\components\resource.hpp">
+      <Filter>runtime\resources\components</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

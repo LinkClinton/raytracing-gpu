@@ -114,7 +114,7 @@ namespace raytracing::extensions::json
 
 				if (entity["shape"]["type"] == "triangles")
 				{
-					runtime::resources::mesh resource;
+					runtime::resources::cpu_mesh resource;
 
 					resource.data.positions = entity["shape"]["triangles"]["positions"];
 					resource.data.normals = entity["shape"]["triangles"]["normals"];
@@ -124,10 +124,14 @@ namespace raytracing::extensions::json
 					resource.info.vtx_count = static_cast<uint32>(resource.data.positions.size());
 					resource.info.idx_count = static_cast<uint32>(resource.data.indices.size());
 					
-					std::string mesh_name = std::format("scene_internal_mesh_{}", scene_internal_mesh_count);
-
+					std::string mesh_name = std::format("scene_internal_mesh_{}", scene_internal_mesh_count++);
+					
 					context.service.resource_system.add(mesh_name, std::move(resource));
+
+					mesh.name = mesh_name;
 				}
+				
+				entity_data.mesh = mesh;
 			}
 
 			entity_data.transform = scenes::transform(entity["transform"]);
@@ -140,7 +144,7 @@ namespace raytracing::extensions::json
 void raytracing::extensions::json::json_scene_loader::load(const runtime_service& service, 
 	const nlohmann::json& scene, const std::string& directory)
 {
-	scene_loader_context context =
+	const scene_loader_context context =
 	{
 		service,
 		directory

@@ -1,6 +1,8 @@
 #pragma once
 
-#include "../../../types.hpp"
+#include "resource.hpp"
+
+#include <directx12-wrapper/resources/texture2d.hpp>
 
 namespace raytracing::runtime::resources::components
 {
@@ -22,11 +24,9 @@ namespace raytracing::runtime::resources::components
 		texture_format format = texture_format::uint8;
 	};
 
-	using texture_data = std::vector<byte>;
+	using cpu_texture_data = std::vector<byte>;
+	using gpu_texture_data = wrapper::directx12::texture2d;
 
-	struct texture final
-	{
-		texture_info info;
-		texture_data data;
-	};
+	using cpu_texture = resource<texture_info, cpu_texture_data>;
+	using gpu_texture = resource<texture_info, gpu_texture_data>;
 }

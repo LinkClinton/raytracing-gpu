@@ -15,8 +15,9 @@ void raytracing::runtime::windows::window_system::resolve(const runtime_service&
 
 		mImGuiRenderer.resolve(mViewWindow.mSwapChain, service.render_device, service.scene.output_window->font_size);
 
-		mRenderTargetID = mImGuiRenderer.allocate(service.resource_system.resource<
-			wrapper::directx12::texture2d>("RenderSystem.RenderTarget.SDR"), 1);
+		mRenderTargetID = mImGuiRenderer.allocate(
+			service.resource_system.resource<resources::gpu_texture>("RenderSystem.RenderTarget.SDR").data,
+			1);
 	}
 }
 

@@ -1,6 +1,8 @@
 #pragma once
 
-#include "../../../types.hpp"
+#include "resource.hpp"
+
+#include <directx12-wrapper/resources/buffer.hpp>
 
 namespace raytracing::runtime::resources::components
 {
@@ -10,7 +12,7 @@ namespace raytracing::runtime::resources::components
 		uint32 idx_count = 0;
 	};
 
-	struct mesh_data final
+	struct cpu_mesh_data final
 	{
 		std::vector<vector3> positions;
 		std::vector<vector3> normals;
@@ -19,9 +21,15 @@ namespace raytracing::runtime::resources::components
 		std::vector<uint32> indices;
 	};
 	
-	struct mesh final
+	struct gpu_mesh_data final
 	{
-		mesh_info info;
-		mesh_data data;
+		wrapper::directx12::buffer positions;
+		wrapper::directx12::buffer normals;
+		wrapper::directx12::buffer uvs;
+
+		wrapper::directx12::buffer indices;
 	};
+
+	using cpu_mesh = resource<mesh_info, cpu_mesh_data>;
+	using gpu_mesh = resource<mesh_info, gpu_mesh_data>;
 }

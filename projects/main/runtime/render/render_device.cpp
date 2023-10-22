@@ -2,6 +2,8 @@
 
 raytracing::runtime::render::render_device::render_device(const D3D_FEATURE_LEVEL& level)
 {
+	wrapper::directx12::device::enable_debug_layer();
+
 	mDevice = wrapper::directx12::device::create(level);
 	mFence = wrapper::directx12::fence::create(mDevice, 0);
 

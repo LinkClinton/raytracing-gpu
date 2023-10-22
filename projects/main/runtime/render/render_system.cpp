@@ -7,7 +7,16 @@
 
 void raytracing::runtime::render::render_system::resolve(const runtime_service& service)
 {
-	mRenderTargetHDR = wrapper::directx12::texture2d::create(
+	mRenderTargetHDR.info = resources::texture_info
+	{
+		service.scene.film.size_x,
+		service.scene.film.size_y,
+		4,
+		resources::texture_format::fp32
+	};
+
+	mRenderTargetHDR.data = wrapper::directx12::texture2d::create
+	(
 		service.render_device.device(),
 		wrapper::directx12::resource_info::common(D3D12_RESOURCE_STATE_GENERIC_READ, D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS),
 		DXGI_FORMAT_R32G32B32A32_FLOAT,
@@ -15,7 +24,16 @@ void raytracing::runtime::render::render_system::resolve(const runtime_service& 
 		service.scene.film.size_y
 	);
 
-	mRenderTargetSDR = wrapper::directx12::texture2d::create(
+	mRenderTargetSDR.info = resources::texture_info
+	{
+		service.scene.film.size_x,
+		service.scene.film.size_y,
+		4,
+		resources::texture_format::uint8
+	};
+
+	mRenderTargetSDR.data = wrapper::directx12::texture2d::create
+	(
 		service.render_device.device(),
 		wrapper::directx12::resource_info::common(D3D12_RESOURCE_STATE_GENERIC_READ, D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS),
 		DXGI_FORMAT_R8G8B8A8_UNORM,
@@ -23,8 +41,8 @@ void raytracing::runtime::render::render_system::resolve(const runtime_service& 
 		service.scene.film.size_y
 	);
 	
-	service.resource_system.add<wrapper::directx12::texture2d>("RenderSystem.RenderTarget.HDR", mRenderTargetHDR);
-	service.resource_system.add<wrapper::directx12::texture2d>("RenderSystem.RenderTarget.SDR", mRenderTargetSDR);
+	service.resource_system.add<resources::gpu_texture>("RenderSystem.RenderTarget.HDR", mRenderTargetHDR);
+	service.resource_system.add<resources::gpu_texture>("RenderSystem.RenderTarget.SDR", mRenderTargetSDR);
 }
 
 void raytracing::runtime::render::render_system::release(const runtime_service& service)

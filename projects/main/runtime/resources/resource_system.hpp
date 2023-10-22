@@ -1,7 +1,5 @@
 #pragma once
 
-#include <directx12-wrapper/resources/texture2d.hpp>
-
 #include "../../interfaces/noncopyable.hpp"
 #include "../../types.hpp"
 
@@ -42,10 +40,11 @@ namespace raytracing::runtime::resources
 	private:
 		template <typename Resource>
 		mapping<std::string, Resource>& resource_pool();
-
-		mapping<std::string, wrapper::directx12::texture2d> mGpuTextures;
-		mapping<std::string, texture> mCpuTextures;
-		mapping<std::string, mesh> mMeshes;
+		
+		mapping<std::string, cpu_texture> mCpuTextures;
+		mapping<std::string, gpu_texture> mGpuTextures;
+		mapping<std::string, cpu_mesh> mCpuMeshes;
+		mapping<std::string, gpu_mesh> mGpuMeshes;
 	};
 
 	template <typename Resource>
@@ -85,21 +84,26 @@ namespace raytracing::runtime::resources
 	}
 
 	template <>
-	inline mapping<std::string, wrapper::directx12::texture2d>& resource_system::resource_pool()
-	{
-		return mGpuTextures;
-	}
-
-	template <>
-	inline mapping<std::string, texture>& resource_system::resource_pool()
+	inline mapping<std::string, cpu_texture>& resource_system::resource_pool()
 	{
 		return mCpuTextures;
 	}
 
 	template <>
-	inline mapping<std::string, mesh>& resource_system::resource_pool()
+	inline mapping<std::string, gpu_texture>& resource_system::resource_pool()
 	{
-		return mMeshes;
+		return mGpuTextures;
 	}
 
+	template <>
+	inline mapping<std::string, cpu_mesh>& resource_system::resource_pool()
+	{
+		return mCpuMeshes;
+	}
+
+	template <>
+	inline mapping<std::string, gpu_mesh>& resource_system::resource_pool()
+	{
+		return mGpuMeshes;
+	}
 }

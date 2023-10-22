@@ -11,7 +11,7 @@ namespace raytracing::renderers
 	class renderer : public noncopyable
 	{
 	public:
-		renderer(const runtime_service& service);
+		explicit renderer(const runtime_service& service);
 
 		virtual void update(const runtime_service& service, const runtime_frame& frame) = 0;
 

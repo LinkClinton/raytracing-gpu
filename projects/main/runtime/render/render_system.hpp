@@ -2,6 +2,8 @@
 
 #include "render_device.hpp"
 
+#include "../resources/resource_system.hpp"
+
 #include <memory>
 
 namespace raytracing::renderers
@@ -35,8 +37,8 @@ namespace raytracing::runtime::render
 	private:
 		std::shared_ptr<renderers::renderer> mRenderer;
 
-		wrapper::directx12::texture2d mRenderTargetHDR;
-		wrapper::directx12::texture2d mRenderTargetSDR;
+		resources::components::gpu_texture mRenderTargetHDR;
+		resources::components::gpu_texture mRenderTargetSDR;
 	};
 	
 }
