@@ -2,6 +2,7 @@
 
 #include "resource.hpp"
 
+#include <directx12-wrapper/raytracings/accleration.hpp>
 #include <directx12-wrapper/resources/buffer.hpp>
 
 namespace raytracing::runtime::resources::components

@@ -37,8 +37,8 @@ namespace raytracing::runtime::render
 	private:
 		std::shared_ptr<renderers::renderer> mRenderer;
 
-		resources::components::gpu_texture mRenderTargetHDR;
-		resources::components::gpu_texture mRenderTargetSDR;
+		resources::gpu_texture mRenderTargetHDR;
+		resources::gpu_texture mRenderTargetSDR;
 	};
 	
 }

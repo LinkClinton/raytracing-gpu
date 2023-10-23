@@ -40,7 +40,9 @@ namespace raytracing::runtime::resources
 	private:
 		template <typename Resource>
 		mapping<std::string, Resource>& resource_pool();
-		
+
+		mapping<std::string, wrapper::directx12::raytracing_geometry> mRayTracingGeometries;
+
 		mapping<std::string, cpu_texture> mCpuTextures;
 		mapping<std::string, gpu_texture> mGpuTextures;
 		mapping<std::string, cpu_mesh> mCpuMeshes;
@@ -106,4 +108,11 @@ namespace raytracing::runtime::resources
 	{
 		return mGpuMeshes;
 	}
+
+	template <>
+	inline mapping<std::string, wrapper::directx12::raytracing_geometry>& resource_system::resource_pool()
+	{
+		return mRayTracingGeometries;
+	}
+
 }
