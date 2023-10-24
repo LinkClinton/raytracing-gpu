@@ -106,6 +106,9 @@
     <Filter Include="runtime\resources\components">
       <UniqueIdentifier>{3e7e3f0d-dacd-40b9-b777-7001c4d36ba5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="resources\shaders\depth_renderer">
+      <UniqueIdentifier>{b10301ca-9093-4455-b8f9-367e6c76cd92}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="extensions\glm\glm.hpp">
@@ -195,5 +198,13 @@
     <Font Include="resources\fonts\CascadiaCode.ttf">
       <Filter>resources\fonts</Filter>
     </Font>
+  </ItemGroup>
+  <ItemGroup>
+    <CopyFileToFolders Include="resources\shaders\depth_renderer\ray_generation.hlsl">
+      <Filter>resources\shaders\depth_renderer</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="resources\shaders\types.hlsl">
+      <Filter>resources\shaders</Filter>
+    </CopyFileToFolders>
   </ItemGroup>
 </Project>

@@ -24,5 +24,4 @@ namespace raytracing::scenes::components
 	};
 
 	vector3 transform_point(const transform& transform, const vector3& point);
-	
 }

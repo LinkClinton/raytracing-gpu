@@ -41,4 +41,8 @@ namespace raytracing
 	template <typename T>
 	T normalize(const T& value) { return glm::normalize<T>(value); }
 
+	inline matrix4x4 transpose(const matrix4x4& matrix)
+	{
+		return glm::transpose(matrix);
+	}
 }

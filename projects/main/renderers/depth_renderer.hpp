@@ -15,5 +15,7 @@ namespace raytracing::renderers
 	private:
 		wrapper::directx12::command_allocator mCommandAllocator;
 		wrapper::directx12::graphics_command_list mCommandList;
+
+		wrapper::directx12::raytracing_acceleration mAcceleration;
 	};
 }
