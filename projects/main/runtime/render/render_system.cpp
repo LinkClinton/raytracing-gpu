@@ -3,6 +3,7 @@
 #include "../runtime_service.hpp"
 #include "../runtime_frame.hpp"
 
+#include "../../renderers/depth_renderer.hpp"
 #include "../../renderers/renderer.hpp"
 
 namespace raytracing::runtime::render
@@ -156,6 +157,9 @@ void raytracing::runtime::render::render_system::resolve(const runtime_service& 
 	
 	service.resource_system.add<resources::gpu_texture>("RenderSystem.RenderTarget.HDR", mRenderTargetHDR);
 	service.resource_system.add<resources::gpu_texture>("RenderSystem.RenderTarget.SDR", mRenderTargetSDR);
+
+	//todo : create renderer from config
+	mRenderer = std::make_shared<renderers::depth_renderer>(service);
 }
 
 void raytracing::runtime::render::render_system::release(const runtime_service& service)

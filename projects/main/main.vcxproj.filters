@@ -109,6 +109,9 @@
     <Filter Include="resources\shaders\depth_renderer">
       <UniqueIdentifier>{b10301ca-9093-4455-b8f9-367e6c76cd92}</UniqueIdentifier>
     </Filter>
+    <Filter Include="resources\dxc">
+      <UniqueIdentifier>{47ef149c-444f-4338-bbc1-a13ead99f5de}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="extensions\glm\glm.hpp">
@@ -195,16 +198,20 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Font Include="resources\fonts\CascadiaCode.ttf">
-      <Filter>resources\fonts</Filter>
-    </Font>
-  </ItemGroup>
-  <ItemGroup>
     <CopyFileToFolders Include="resources\shaders\depth_renderer\ray_generation.hlsl">
       <Filter>resources\shaders\depth_renderer</Filter>
     </CopyFileToFolders>
     <CopyFileToFolders Include="resources\shaders\types.hlsl">
       <Filter>resources\shaders</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="resources\dxc\dxcompiler.dll">
+      <Filter>resources\dxc</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="resources\fonts\CascadiaCode.ttf">
+      <Filter>resources\fonts</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="resources\dxc\dxil.dll">
+      <Filter>resources\dxc</Filter>
     </CopyFileToFolders>
   </ItemGroup>
 </Project>

@@ -7,6 +7,13 @@
 // fix resharper c++ error or miss type
 #ifndef __HLSL_SHADER__
 
+enum COMMITTED_STATUS : uint
+{
+    COMMITTED_NOTHING,
+    COMMITTED_TRIANGLE_HIT,
+    COMMITTED_PROCEDURAL_PRIMITIVE_HIT
+};
+
 struct RayQuery
 {
     void TraceRayInline(
@@ -14,6 +21,12 @@ struct RayQuery
 		uint RayFlags,
 		uint InstanceInclusionMask,
 		RayDesc Ray);
+
+    void Proceed();
+
+    COMMITTED_STATUS CommittedStatus();
+
+    float CommittedRayT();
 };
 
 #define RAY_QUERY(flags) RayQuery

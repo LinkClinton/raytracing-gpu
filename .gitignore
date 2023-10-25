@@ -338,5 +338,4 @@ ASALocalRun/
 
 # BeatPulse healthcheck temp database
 healthchecksdb
-/path-tracing-gpu/image.png
-/path-tracing-gpu/resources/scenes/
+/projects/main/resources/dxc

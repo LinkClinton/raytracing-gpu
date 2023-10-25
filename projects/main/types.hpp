@@ -41,8 +41,31 @@ namespace raytracing
 	template <typename T>
 	T normalize(const T& value) { return glm::normalize<T>(value); }
 
+	template <typename T>
+	T radians(const T& value) { return glm::radians(value); }
+
 	inline matrix4x4 transpose(const matrix4x4& matrix)
 	{
 		return glm::transpose(matrix);
+	}
+
+	inline matrix4x4 perspective_fov(real fov, real size_x, real size_y, real n, real f)
+	{
+		return glm::perspectiveFovLH(fov, size_x, size_y, n, f);
+	}
+
+	inline matrix4x4 translate(const matrix4x4& m, const vector3& v)
+	{
+		return glm::translate(m, v);
+	}
+
+	inline matrix4x4 scale(const matrix4x4& m, const vector3& v)
+	{
+		return glm::scale(m, v);
+	}
+
+	inline matrix4x4 inverse(const matrix4x4& m)
+	{
+		return glm::inverse(m);
 	}
 }

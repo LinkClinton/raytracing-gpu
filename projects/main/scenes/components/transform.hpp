@@ -24,4 +24,6 @@ namespace raytracing::scenes::components
 	};
 
 	vector3 transform_point(const transform& transform, const vector3& point);
+
+	matrix4x4 compute_raster_to_camera(real fov, real size_x, real size_y, real near, real far);
 }
