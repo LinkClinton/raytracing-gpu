@@ -20,8 +20,8 @@ SHADER_RESOURCE_DEFINE(RWTexture2D<float4>, global_render_target_sdr, u1, space2
 [shader("raygeneration")]
 void ray_generation()
 {
-    float2 sample_location = ((DispatchRaysIndex().xy + 0.5f) / DispatchRaysDimensions().xy) * 2.0f - 1.0f;
-    
+    float2 sample_location = DispatchRaysIndex().xy + 0.5f;
+	
     float3 ray_target_camera_space = mul(float4(sample_location, 0, 1), global_frame_data.raster_to_camera).xyz;
     float3 ray_origin_camera_space = float3(0, 0, 0);
 

@@ -51,7 +51,7 @@ namespace raytracing
 
 	inline matrix4x4 perspective_fov(real fov, real size_x, real size_y, real n, real f)
 	{
-		return glm::perspectiveFovLH(fov, size_x, size_y, n, f);
+		return glm::perspectiveFovLH(glm::radians(fov), size_x, size_y, n, f);
 	}
 
 	inline matrix4x4 translate(const matrix4x4& m, const vector3& v)

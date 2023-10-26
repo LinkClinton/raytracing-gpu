@@ -158,7 +158,7 @@ void raytracing::renderers::depth_renderer::update(const runtime_service& servic
 	const real size_x = static_cast<real>(service.scene.film.size_x);
 	const real size_y = static_cast<real>(service.scene.film.size_y);
 
-	mFrameData.raster_to_camera = transpose(inverse(perspective_fov(service.scene.camera.fov, size_x, size_y, 0.1f, 1000.0f)));
+	mFrameData.raster_to_camera = scenes::compute_raster_to_camera(service.scene.camera.fov, size_x, size_y, 0.1f, 1000.0f);
 	mFrameData.camera_to_world = transpose(service.scene.camera.transform.matrix());
 	mFrameData.camera_position = scenes::transform_point(service.scene.camera.transform, vector3(0));
 	mFrameData.sample_index = mSampleIndex++;
