@@ -25,6 +25,7 @@ void raytracing::runtime::render::render_system::resolve(const runtime_service& 
 	{
 		if (entity.mesh.has_value())
 		{
+			// vertex attribute gpu buffer
 			if (!service.resource_system.has<resources::gpu_mesh>(entity.mesh->name))
 			{
 				const auto& [info, data] = service.resource_system.resource<resources::cpu_mesh>(entity.mesh->name);
@@ -36,19 +37,19 @@ void raytracing::runtime::render::render_system::resolve(const runtime_service& 
 					{
 						.positions = wrapper::directx12::buffer::create(
 							service.render_device.device(),
-							wrapper::directx12::resource_info::common(D3D12_RESOURCE_STATE_COMMON),
+							wrapper::directx12::resource_info::common(),
 							info.vtx_count * sizeof(vector3)),
 						.normals = wrapper::directx12::buffer::create(
 							service.render_device.device(),
-							wrapper::directx12::resource_info::common(D3D12_RESOURCE_STATE_COMMON),
+							wrapper::directx12::resource_info::common(),
 							info.vtx_count * sizeof(vector3)),
 						.uvs = wrapper::directx12::buffer::create(
 							service.render_device.device(),
-							wrapper::directx12::resource_info::common(D3D12_RESOURCE_STATE_COMMON),
+							wrapper::directx12::resource_info::common(),
 							info.vtx_count * sizeof(vector3)),
 						.indices = wrapper::directx12::buffer::create(
 							service.render_device.device(),
-							wrapper::directx12::resource_info::common(D3D12_RESOURCE_STATE_COMMON),
+							wrapper::directx12::resource_info::common(),
 							info.idx_count * sizeof(uint32))
 					}
 				};
@@ -100,6 +101,7 @@ void raytracing::runtime::render::render_system::resolve(const runtime_service& 
 				service.resource_system.add(entity.mesh->name, std::move(resource));
 			}
 
+			// ray tracing bottom level accelerate structure
 			if (!service.resource_system.has<wrapper::directx12::raytracing_geometry>(entity.mesh->name))
 			{
 				const auto& [info, data] = service.resource_system.resource<resources::gpu_mesh>(entity.mesh->name);

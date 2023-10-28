@@ -111,9 +111,8 @@ raytracing::renderers::depth_renderer::depth_renderer(const runtime_service& ser
 			.set_raytracing_shader_associations({ association })
 			.set_shader_libraries({ mShaderLibrary })
 			.set_ray_generation(L"ray_generation")
-			.set_root_signature(mRootSignature)
-			.set_max_depth(5);
-
+			.set_root_signature(mRootSignature);
+		
 		mPipeline = wrapper::directx12::raytracing_pipeline::create(service.render_device.device(), pipeline_info);
 	}
 

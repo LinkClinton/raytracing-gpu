@@ -1,3 +1,4 @@
+#include "../samplers/independent_sampler.hlsl"
 #include "../types.hlsl"
 
 struct frame_data
@@ -20,7 +21,11 @@ SHADER_RESOURCE_DEFINE(RWTexture2D<float4>, global_render_target_sdr, u1, space2
 [shader("raygeneration")]
 void ray_generation()
 {
-    float2 sample_location = DispatchRaysIndex().xy + 0.5f;
+    independent_sampler data_sampler;
+
+    data_sampler.initialize(DispatchRaysIndex().xy, global_frame_data.sample_index);
+    
+    float2 sample_location = DispatchRaysIndex().xy + data_sampler.next_sample2d();
 	
     float3 ray_target_camera_space = mul(float4(sample_location, 0, 1), global_frame_data.raster_to_camera).xyz;
     float3 ray_origin_camera_space = float3(0, 0, 0);

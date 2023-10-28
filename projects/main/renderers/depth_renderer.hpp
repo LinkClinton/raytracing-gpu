@@ -45,7 +45,6 @@ namespace raytracing::renderers
 		wrapper::directx12::buffer mShaderTableGpuBuffer;
 		wrapper::directx12::buffer mFrameDataCpuBuffer;
 
-
 		frame_data mFrameData;
 	};
 }

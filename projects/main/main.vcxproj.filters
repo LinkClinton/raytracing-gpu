@@ -112,6 +112,9 @@
     <Filter Include="resources\dxc">
       <UniqueIdentifier>{47ef149c-444f-4338-bbc1-a13ead99f5de}</UniqueIdentifier>
     </Filter>
+    <Filter Include="resources\shaders\samplers">
+      <UniqueIdentifier>{57e34ba8-d929-4a8e-981c-186d95debf29}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="extensions\glm\glm.hpp">
@@ -212,6 +215,9 @@
     </CopyFileToFolders>
     <CopyFileToFolders Include="resources\dxc\dxil.dll">
       <Filter>resources\dxc</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="resources\shaders\samplers\independent_sampler.hlsl">
+      <Filter>resources\shaders\samplers</Filter>
     </CopyFileToFolders>
   </ItemGroup>
 </Project>
