@@ -4,26 +4,21 @@
 
 namespace raytracing::renderers
 {
-	struct depth_renderer_frame_data final
+	struct shade_renderer_frame_data final
 	{
-		matrix4x4 raster_to_camera = matrix4x4(1);
-		matrix4x4 camera_to_world = matrix4x4(1);
-
-		vector3 camera_position = vector3(0);
-
-		uint32 sample_index = 0;
+		
 	};
 
-	class depth_renderer final : public renderer
+	class shade_renderer final : public renderer
 	{
 	public:
-		explicit depth_renderer(const runtime_service& service);
+		explicit shade_renderer(const runtime_service& service);
 
 		void update(const runtime_service& service, const runtime_frame& frame) override;
 
 		void render(const runtime_service& service, const runtime_frame& frame) override;
 	private:
-		using frame_data = depth_renderer_frame_data;
+		using frame_data = shade_renderer_frame_data;
 
 		wrapper::directx12::command_allocator mCommandAllocator;
 		wrapper::directx12::graphics_command_list mCommandList;

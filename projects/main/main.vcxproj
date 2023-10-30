@@ -158,6 +158,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="renderers\depth_renderer.cpp" />
     <ClCompile Include="renderers\renderer.cpp" />
+    <ClCompile Include="renderers\shade_renderer.cpp" />
     <ClCompile Include="runtime\output\output_system.cpp" />
     <ClCompile Include="runtime\render\render_device.cpp" />
     <ClCompile Include="runtime\render\render_system.cpp" />
@@ -184,6 +185,7 @@
     <ClInclude Include="interfaces\noncopyable.hpp" />
     <ClInclude Include="renderers\depth_renderer.hpp" />
     <ClInclude Include="renderers\renderer.hpp" />
+    <ClInclude Include="renderers\shade_renderer.hpp" />
     <ClInclude Include="runtime\output\output_system.hpp" />
     <ClInclude Include="runtime\render\render_device.hpp" />
     <ClInclude Include="runtime\render\render_system.hpp" />

@@ -3,6 +3,8 @@
 #include "../runtime/runtime_service.hpp"
 #include "../runtime/runtime_frame.hpp"
 
+#include <directx12-wrapper/raytracings/pipeline.hpp>
+
 namespace raytracing::renderers
 {
 	using runtime::runtime_service;

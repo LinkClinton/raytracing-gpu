@@ -44,6 +44,9 @@
     <ClCompile Include="renderers\depth_renderer.cpp">
       <Filter>renderers</Filter>
     </ClCompile>
+    <ClCompile Include="renderers\shade_renderer.cpp">
+      <Filter>renderers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="extensions">
@@ -198,6 +201,9 @@
     </ClInclude>
     <ClInclude Include="runtime\resources\components\resource.hpp">
       <Filter>runtime\resources\components</Filter>
+    </ClInclude>
+    <ClInclude Include="renderers\shade_renderer.hpp">
+      <Filter>renderers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
