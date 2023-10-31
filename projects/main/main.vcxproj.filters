@@ -109,14 +109,20 @@
     <Filter Include="runtime\resources\components">
       <UniqueIdentifier>{3e7e3f0d-dacd-40b9-b777-7001c4d36ba5}</UniqueIdentifier>
     </Filter>
-    <Filter Include="resources\shaders\depth_renderer">
-      <UniqueIdentifier>{b10301ca-9093-4455-b8f9-367e6c76cd92}</UniqueIdentifier>
-    </Filter>
     <Filter Include="resources\dxc">
       <UniqueIdentifier>{47ef149c-444f-4338-bbc1-a13ead99f5de}</UniqueIdentifier>
     </Filter>
     <Filter Include="resources\shaders\samplers">
       <UniqueIdentifier>{57e34ba8-d929-4a8e-981c-186d95debf29}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="resources\shaders\renderer">
+      <UniqueIdentifier>{197a341f-aae9-4ec4-b425-d7a3c691e527}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="resources\shaders\renderer\depth_renderer">
+      <UniqueIdentifier>{d1a010f3-294a-482a-b326-6317424efada}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="resources\shaders\renderer\shade_renderer">
+      <UniqueIdentifier>{c577b4d1-14a9-4b6d-b4ed-072665248bb1}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -207,9 +213,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <CopyFileToFolders Include="resources\shaders\depth_renderer\ray_generation.hlsl">
-      <Filter>resources\shaders\depth_renderer</Filter>
-    </CopyFileToFolders>
     <CopyFileToFolders Include="resources\shaders\types.hlsl">
       <Filter>resources\shaders</Filter>
     </CopyFileToFolders>
@@ -224,6 +227,12 @@
     </CopyFileToFolders>
     <CopyFileToFolders Include="resources\shaders\samplers\independent_sampler.hlsl">
       <Filter>resources\shaders\samplers</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="resources\shaders\renderer\depth_renderer\ray_generation.hlsl">
+      <Filter>resources\shaders\renderer\depth_renderer</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="resources\shaders\renderer\shade_renderer\ray_generation.hlsl">
+      <Filter>resources\shaders\renderer\shade_renderer</Filter>
     </CopyFileToFolders>
   </ItemGroup>
 </Project>

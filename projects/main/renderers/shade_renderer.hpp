@@ -6,7 +6,12 @@ namespace raytracing::renderers
 {
 	struct shade_renderer_frame_data final
 	{
-		
+		matrix4x4 raster_to_camera = matrix4x4(1);
+		matrix4x4 camera_to_world = matrix4x4(1);
+
+		vector3 camera_position = vector3(0);
+
+		uint32 sample_index = 0;
 	};
 
 	class shade_renderer final : public renderer

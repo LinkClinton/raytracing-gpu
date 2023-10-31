@@ -54,7 +54,7 @@ raytracing::renderers::depth_renderer::depth_renderer(const runtime_service& ser
 	// create shader libraries
 	{
 		wrapper::directx12::shader_code shader = wrapper::directx12::extensions::compile_from_file_using_dxc(
-			L"./resources/shaders/depth_renderer/ray_generation.hlsl", L"", L"lib_6_6");
+			L"./resources/shaders/renderer/depth_renderer/ray_generation.hlsl", L"", L"lib_6_6");
 
 		mShaderLibrary = wrapper::directx12::shader_library::create(shader, { L"ray_generation" });
 	}

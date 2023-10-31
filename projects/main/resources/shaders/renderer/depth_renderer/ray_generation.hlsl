@@ -1,5 +1,6 @@
-#include "../samplers/independent_sampler.hlsl"
-#include "../types.hlsl"
+#include "../../types.hlsl"
+
+#include "../../samplers/independent_sampler.hlsl"
 
 struct frame_data
 {
