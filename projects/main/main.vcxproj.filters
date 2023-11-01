@@ -115,14 +115,17 @@
     <Filter Include="resources\shaders\samplers">
       <UniqueIdentifier>{57e34ba8-d929-4a8e-981c-186d95debf29}</UniqueIdentifier>
     </Filter>
-    <Filter Include="resources\shaders\renderer">
+    <Filter Include="resources\shaders\renderers">
       <UniqueIdentifier>{197a341f-aae9-4ec4-b425-d7a3c691e527}</UniqueIdentifier>
     </Filter>
-    <Filter Include="resources\shaders\renderer\depth_renderer">
+    <Filter Include="resources\shaders\renderers\depth_renderer">
       <UniqueIdentifier>{d1a010f3-294a-482a-b326-6317424efada}</UniqueIdentifier>
     </Filter>
-    <Filter Include="resources\shaders\renderer\shade_renderer">
+    <Filter Include="resources\shaders\renderers\shade_renderer">
       <UniqueIdentifier>{c577b4d1-14a9-4b6d-b4ed-072665248bb1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="resources\shaders\materials">
+      <UniqueIdentifier>{0856b242-e8ce-4db8-91c1-f0e715171815}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -228,11 +231,11 @@
     <CopyFileToFolders Include="resources\shaders\samplers\independent_sampler.hlsl">
       <Filter>resources\shaders\samplers</Filter>
     </CopyFileToFolders>
-    <CopyFileToFolders Include="resources\shaders\renderer\depth_renderer\ray_generation.hlsl">
-      <Filter>resources\shaders\renderer\depth_renderer</Filter>
+    <CopyFileToFolders Include="resources\shaders\renderers\depth_renderer\ray_generation.hlsl">
+      <Filter>resources\shaders\renderers\depth_renderer</Filter>
     </CopyFileToFolders>
-    <CopyFileToFolders Include="resources\shaders\renderer\shade_renderer\ray_generation.hlsl">
-      <Filter>resources\shaders\renderer\shade_renderer</Filter>
+    <CopyFileToFolders Include="resources\shaders\renderers\shade_renderer\ray_generation.hlsl">
+      <Filter>resources\shaders\renderers\shade_renderer</Filter>
     </CopyFileToFolders>
   </ItemGroup>
 </Project>

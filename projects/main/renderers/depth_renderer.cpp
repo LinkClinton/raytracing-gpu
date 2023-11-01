@@ -15,13 +15,16 @@ raytracing::renderers::depth_renderer::depth_renderer(const runtime_service& ser
 	{
 		std::vector<wrapper::directx12::raytracing_instance> instances;
 
-		for (const auto& entity : service.scene.entities)
+		for (size_t index = 0; index < service.scene.entities.size(); index++)
 		{
+			const auto& entity = service.scene.entities[index];
+
 			if (entity.mesh.has_value())
 			{
 				wrapper::directx12::raytracing_instance instance;
 				
 				instance.geometry = service.resource_system.resource<wrapper::directx12::raytracing_geometry>(entity.mesh->name);
+				instance.identity = static_cast<uint32>(index);
 
 				const auto matrix = transpose(entity.transform.matrix());
 
@@ -54,7 +57,7 @@ raytracing::renderers::depth_renderer::depth_renderer(const runtime_service& ser
 	// create shader libraries
 	{
 		wrapper::directx12::shader_code shader = wrapper::directx12::extensions::compile_from_file_using_dxc(
-			L"./resources/shaders/renderer/depth_renderer/ray_generation.hlsl", L"", L"lib_6_6");
+			L"./resources/shaders/renderers/depth_renderer/ray_generation.hlsl", L"", L"lib_6_6");
 
 		mShaderLibrary = wrapper::directx12::shader_library::create(shader, { L"ray_generation" });
 	}

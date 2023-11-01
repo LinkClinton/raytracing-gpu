@@ -3,6 +3,8 @@
 #include <directx12-wrapper/shaders/shader_library.hpp>
 #include <directx12-wrapper/extensions/dxc.hpp>
 
+#include <ranges>
+
 raytracing::renderers::shade_renderer::shade_renderer(const runtime_service& service) : renderer(service)
 {
 	mCommandAllocator = wrapper::directx12::command_allocator::create(service.render_device.device());
@@ -11,17 +13,44 @@ raytracing::renderers::shade_renderer::shade_renderer(const runtime_service& ser
 	mCommandAllocator.reset();
 	mCommandList.reset(mCommandAllocator);
 
+	std::vector<entity_info> entities_info;
+
+	mapping<std::string, uint32> geometry_indexer;
+
+	// create render data
+	{
+		for (const auto& entity : service.scene.entities)
+		{
+			entity_info info;
+
+			if (entity.mesh.has_value())
+			{
+				if (!geometry_indexer.contains(entity.mesh->name))
+				{
+					geometry_indexer.insert({ entity.mesh->name, static_cast<uint32>(geometry_indexer.size()) });
+				}
+
+				info.geometry_index = geometry_indexer.at(entity.mesh->name);
+			}
+
+			entities_info.push_back(info);
+		}
+	}
+
 	// create top acceleration 
 	{
 		std::vector<wrapper::directx12::raytracing_instance> instances;
 
-		for (const auto& entity : service.scene.entities)
+		for (size_t index = 0; index < service.scene.entities.size(); index++)
 		{
+			const auto& entity = service.scene.entities[index];
+			
 			if (entity.mesh.has_value())
 			{
 				wrapper::directx12::raytracing_instance instance;
 
 				instance.geometry = service.resource_system.resource<wrapper::directx12::raytracing_geometry>(entity.mesh->name);
+				instance.identity = static_cast<uint32>(index);
 
 				const auto matrix = transpose(entity.transform.matrix());
 
@@ -54,15 +83,32 @@ raytracing::renderers::shade_renderer::shade_renderer(const runtime_service& ser
 	// create shader libraries
 	{
 		wrapper::directx12::shader_code shader = wrapper::directx12::extensions::compile_from_file_using_dxc(
-			L"./resources/shaders/renderer/shade_renderer/ray_generation.hlsl", L"", L"lib_6_6");
+			L"./resources/shaders/renderers/shade_renderer/ray_generation.hlsl", L"", L"lib_6_6");
 
 		mShaderLibrary = wrapper::directx12::shader_library::create(shader, { L"ray_generation" });
 	}
 
 	// create descriptor heap/table
 	{
+		std::vector<std::string> global_geometry_positions_name;
+		std::vector<std::string> global_geometry_normals_name;
+		std::vector<std::string> global_geometry_uvs_name;
+		std::vector<std::string> global_geometry_indices_name;
+
+		for (size_t index = 0; index < geometry_indexer.size(); index++)
+		{
+			global_geometry_positions_name.push_back("global_geometry_positions_" + std::to_string(index));
+			global_geometry_normals_name.push_back("global_geometry_normals_" + std::to_string(index));
+			global_geometry_uvs_name.push_back("global_geometry_uvs_" + std::to_string(index));
+			global_geometry_indices_name.push_back("global_geometry_indices_" + std::to_string(index));
+		}
+
 		mDescriptorTable
-			.add_uav_range({ "global_render_target_hdr", "global_render_target_sdr" }, 0, 2);
+			.add_uav_range({ "global_render_target_hdr", "global_render_target_sdr" }, 0, 2)
+			.add_srv_range(global_geometry_positions_name, 0, 3)
+			.add_srv_range(global_geometry_normals_name, 0, 4)
+			.add_srv_range(global_geometry_uvs_name, 0, 5)
+			.add_srv_range(global_geometry_indices_name, 0, 6);
 
 		mDescriptorHeap = wrapper::directx12::descriptor_heap::create(service.render_device.device(), mDescriptorTable);
 
@@ -80,6 +126,32 @@ raytracing::renderers::shade_renderer::shade_renderer(const runtime_service& ser
 			wrapper::directx12::resource_view::read_write_texture2d(render_target_sdr.data.format()),
 			mDescriptorHeap.cpu_handle(mDescriptorTable.index("global_render_target_sdr")),
 			render_target_sdr.data);
+
+		// create geometry(positions, normals, uvs, indices) gpu buffer view
+		for (const auto& [name, index] : geometry_indexer)
+		{
+			const auto& [info, data] = service.resource_system.resource<runtime::resources::gpu_mesh>(name);
+
+			service.render_device.device().create_shader_resource_view(
+				wrapper::directx12::resource_view::structured_buffer(sizeof(vector3), data.positions.size_in_bytes()),
+				mDescriptorHeap.cpu_handle(mDescriptorTable.index(global_geometry_positions_name[index])),
+				data.positions);
+
+			service.render_device.device().create_shader_resource_view(
+				wrapper::directx12::resource_view::structured_buffer(sizeof(vector3), data.normals.size_in_bytes()),
+				mDescriptorHeap.cpu_handle(mDescriptorTable.index(global_geometry_normals_name[index])),
+				data.normals);
+
+			service.render_device.device().create_shader_resource_view(
+				wrapper::directx12::resource_view::structured_buffer(sizeof(vector3), data.uvs.size_in_bytes()),
+				mDescriptorHeap.cpu_handle(mDescriptorTable.index(global_geometry_uvs_name[index])),
+				data.uvs);
+
+			service.render_device.device().create_shader_resource_view(
+				wrapper::directx12::resource_view::structured_buffer(sizeof(uint32) * 3, data.indices.size_in_bytes()),
+				mDescriptorHeap.cpu_handle(mDescriptorTable.index(global_geometry_indices_name[index])),
+				data.indices);
+		}
 	}
 
 	// create root signature
@@ -128,34 +200,72 @@ raytracing::renderers::shade_renderer::shade_renderer(const runtime_service& ser
 				D3D12_SHADER_IDENTIFIER_SIZE_IN_BYTES);
 		}
 
-		wrapper::directx12::buffer upload = wrapper::directx12::buffer::create(
+		mShaderTableCpuBuffer = wrapper::directx12::buffer::create(
 			service.render_device.device(),
 			wrapper::directx12::resource_info::upload(),
 			mShaderTable.size());
 
-		upload.copy_from_cpu(mShaderTable.data(), mShaderTable.size());
+		mShaderTableCpuBuffer.copy_from_cpu(mShaderTable.data(), mShaderTable.size());
 
 		mShaderTableGpuBuffer = wrapper::directx12::buffer::create(
 			service.render_device.device(),
 			wrapper::directx12::resource_info::common(),
 			mShaderTable.size());
 
-		mShaderTableGpuBuffer.copy_from(mCommandList, upload);
+		mShaderTableGpuBuffer.copy_from(mCommandList, mShaderTableCpuBuffer);
 		mShaderTableGpuBuffer.barrier(mCommandList,
 			D3D12_RESOURCE_STATE_COPY_DEST,
 			D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE);
-
-		mCommandList.close();
-
-		service.render_device.queue().execute({ mCommandList });
-		service.render_device.wait();
 	}
+
+	mCommandList.close();
+
+	service.render_device.queue().execute({ mCommandList });
+	service.render_device.wait();
 }
 
 void raytracing::renderers::shade_renderer::update(const runtime_service& service, const runtime_frame& frame)
 {
+	const real size_x = static_cast<real>(service.scene.film.size_x);
+	const real size_y = static_cast<real>(service.scene.film.size_y);
+
+	mFrameData.raster_to_camera = scenes::compute_raster_to_camera(service.scene.camera.fov, size_x, size_y, 0.1f, 1000.0f);
+	mFrameData.camera_to_world = transpose(service.scene.camera.transform.matrix());
+	mFrameData.camera_position = scenes::transform_point(service.scene.camera.transform, vector3(0));
+	mFrameData.sample_index = mSampleIndex++;
 }
 
 void raytracing::renderers::shade_renderer::render(const runtime_service& service, const runtime_frame& frame)
 {
+	// update frame data
+	mFrameDataCpuBuffer.copy_from_cpu(&mFrameData, sizeof(mFrameData));
+
+	mCommandAllocator.reset();
+	mCommandList.reset(mCommandAllocator);
+
+	mCommandList->SetPipelineState1(mPipeline.get());
+	mCommandList->SetComputeRootSignature(mRootSignature.get());
+
+	mCommandList.set_descriptor_heaps({ mDescriptorHeap.get() });
+	mCommandList.set_compute_constant_buffer_view(mRootSignatureInfo.index("global_frame_data"), mFrameDataCpuBuffer);
+	mCommandList.set_compute_shader_resource_view(mRootSignatureInfo.index("global_acceleration"), mAcceleration.acceleration());
+	mCommandList.set_compute_descriptor_table(mRootSignatureInfo.index("global_descriptor_table"), mDescriptorHeap.gpu_handle());
+
+	const auto render_target = service.resource_system.resource<runtime::resources::gpu_texture>("RenderSystem.RenderTarget.HDR");
+
+	D3D12_DISPATCH_RAYS_DESC dispatch_desc = {};
+
+	dispatch_desc.Width = render_target.info.size_x;
+	dispatch_desc.Height = render_target.info.size_y;
+	dispatch_desc.Depth = 1;
+
+	const auto shader_table_address = mShaderTableGpuBuffer->GetGPUVirtualAddress();
+
+	dispatch_desc.RayGenerationShaderRecord.StartAddress = shader_table_address + mShaderTable.ray_generation().address;
+	dispatch_desc.RayGenerationShaderRecord.SizeInBytes = mShaderTable.ray_generation().size;
+
+	mCommandList->DispatchRays(&dispatch_desc);
+	mCommandList.close();
+
+	service.render_device.queue().execute({ mCommandList });
 }

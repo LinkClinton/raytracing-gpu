@@ -243,7 +243,7 @@
     </CopyFileToFolders>
   </ItemGroup>
   <ItemGroup>
-    <CopyFileToFolders Include="resources\shaders\renderer\depth_renderer\ray_generation.hlsl">
+    <CopyFileToFolders Include="resources\shaders\renderers\depth_renderer\ray_generation.hlsl">
       <FileType>Document</FileType>
       <DestinationFolders Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(OutDir)%(RelativeDir)</DestinationFolders>
       <DestinationFolders Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(OutDir)%(RelativeDir)</DestinationFolders>
@@ -252,7 +252,7 @@
     </CopyFileToFolders>
   </ItemGroup>
   <ItemGroup>
-    <CopyFileToFolders Include="resources\shaders\renderer\shade_renderer\ray_generation.hlsl">
+    <CopyFileToFolders Include="resources\shaders\renderers\shade_renderer\ray_generation.hlsl">
       <FileType>Document</FileType>
       <DestinationFolders Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(OutDir)%(RelativeDir)</DestinationFolders>
       <DestinationFolders Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(OutDir)%(RelativeDir)</DestinationFolders>

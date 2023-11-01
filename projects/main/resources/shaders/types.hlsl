@@ -27,6 +27,8 @@ struct RayQuery
     COMMITTED_STATUS CommittedStatus();
 
     float CommittedRayT();
+
+    uint CommittedInstanceID();
 };
 
 #define RAY_QUERY(flags) RayQuery
