@@ -155,6 +155,7 @@
     <ClCompile Include="extensions\imgui\imgui_impl_win32.cpp" />
     <ClCompile Include="extensions\imgui\imgui_renderer.cpp" />
     <ClCompile Include="extensions\json\json_scene_loader.cpp" />
+    <ClCompile Include="extensions\models\tiny_ply_loader.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="renderers\depth_renderer.cpp" />
     <ClCompile Include="renderers\renderer.cpp" />
@@ -181,6 +182,7 @@
     <ClInclude Include="extensions\imgui\imgui_renderer.hpp" />
     <ClInclude Include="extensions\json\json.hpp" />
     <ClInclude Include="extensions\json\json_scene_loader.hpp" />
+    <ClInclude Include="extensions\models\tiny_ply_loader.hpp" />
     <ClInclude Include="extensions\spdlog\spdlog.hpp" />
     <ClInclude Include="interfaces\noncopyable.hpp" />
     <ClInclude Include="renderers\depth_renderer.hpp" />
@@ -253,6 +255,15 @@
   </ItemGroup>
   <ItemGroup>
     <CopyFileToFolders Include="resources\shaders\renderers\shade_renderer\ray_generation.hlsl">
+      <FileType>Document</FileType>
+      <DestinationFolders Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(OutDir)%(RelativeDir)</DestinationFolders>
+      <DestinationFolders Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(OutDir)%(RelativeDir)</DestinationFolders>
+      <DestinationFolders Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(OutDir)%(RelativeDir)</DestinationFolders>
+      <DestinationFolders Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(OutDir)%(RelativeDir)</DestinationFolders>
+    </CopyFileToFolders>
+  </ItemGroup>
+  <ItemGroup>
+    <CopyFileToFolders Include="resources\shaders\macros.hlsl">
       <FileType>Document</FileType>
       <DestinationFolders Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(OutDir)%(RelativeDir)</DestinationFolders>
       <DestinationFolders Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(OutDir)%(RelativeDir)</DestinationFolders>

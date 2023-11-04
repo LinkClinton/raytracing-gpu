@@ -14,7 +14,7 @@ namespace raytracing::renderers
 		uint32 sample_index = 0;
 	};
 
-	struct shade_renderer_entity_info final
+	struct shade_renderer_entity_data final
 	{
 		uint32 geometry_index = index_null;
 	};
@@ -29,7 +29,7 @@ namespace raytracing::renderers
 		void render(const runtime_service& service, const runtime_frame& frame) override;
 	private:
 		using frame_data = shade_renderer_frame_data;
-		using entity_info = shade_renderer_entity_info;
+		using entity_data = shade_renderer_entity_data;
 
 		wrapper::directx12::command_allocator mCommandAllocator;
 		wrapper::directx12::graphics_command_list mCommandList;
@@ -48,6 +48,8 @@ namespace raytracing::renderers
 
 		wrapper::directx12::buffer mShaderTableCpuBuffer;
 		wrapper::directx12::buffer mShaderTableGpuBuffer;
+		wrapper::directx12::buffer mEntitiesDataCpuBuffer;
+		wrapper::directx12::buffer mEntitiesDataGpuBuffer;
 		wrapper::directx12::buffer mFrameDataCpuBuffer;
 
 		frame_data mFrameData;

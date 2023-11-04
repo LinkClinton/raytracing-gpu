@@ -13,15 +13,15 @@ raytracing::renderers::shade_renderer::shade_renderer(const runtime_service& ser
 	mCommandAllocator.reset();
 	mCommandList.reset(mCommandAllocator);
 
-	std::vector<entity_info> entities_info;
-
+	std::vector<entity_data> entities_data;
+	
 	mapping<std::string, uint32> geometry_indexer;
 
 	// create render data
 	{
 		for (const auto& entity : service.scene.entities)
 		{
-			entity_info info;
+			entity_data data;
 
 			if (entity.mesh.has_value())
 			{
@@ -30,10 +30,10 @@ raytracing::renderers::shade_renderer::shade_renderer(const runtime_service& ser
 					geometry_indexer.insert({ entity.mesh->name, static_cast<uint32>(geometry_indexer.size()) });
 				}
 
-				info.geometry_index = geometry_indexer.at(entity.mesh->name);
+				data.geometry_index = geometry_indexer.at(entity.mesh->name);
 			}
 
-			entities_info.push_back(info);
+			entities_data.push_back(data);
 		}
 	}
 
@@ -78,6 +78,20 @@ raytracing::renderers::shade_renderer::shade_renderer(const runtime_service& ser
 			service.render_device.device(),
 			wrapper::directx12::resource_info::upload(),
 			std::max(sizeof(frame_data), static_cast<size_t>(256)));
+
+		mEntitiesDataCpuBuffer = wrapper::directx12::buffer::create(
+			service.render_device.device(),
+			wrapper::directx12::resource_info::upload(),
+			entities_data.size() * sizeof(entity_data));
+
+		mEntitiesDataGpuBuffer = wrapper::directx12::buffer::create(
+			service.render_device.device(),
+			wrapper::directx12::resource_info::common(),
+			entities_data.size() * sizeof(entity_data));
+
+		mEntitiesDataCpuBuffer.copy_from_cpu(entities_data.data(), entities_data.size() * sizeof(entity_data));
+		mEntitiesDataGpuBuffer.copy_from(mCommandList, mEntitiesDataCpuBuffer);
+		mEntitiesDataGpuBuffer.barrier(mCommandList, D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE);
 	}
 
 	// create shader libraries
@@ -158,6 +172,7 @@ raytracing::renderers::shade_renderer::shade_renderer(const runtime_service& ser
 	{
 		mRootSignatureInfo
 			.add_constant_buffer_view("global_frame_data", 0, 0)
+			.add_shader_resource_view("global_entities_data", 1, 0)
 			.add_shader_resource_view("global_acceleration", 0, 1)
 			.add_descriptor_table("global_descriptor_table", mDescriptorTable);
 
@@ -248,6 +263,7 @@ void raytracing::renderers::shade_renderer::render(const runtime_service& servic
 
 	mCommandList.set_descriptor_heaps({ mDescriptorHeap.get() });
 	mCommandList.set_compute_constant_buffer_view(mRootSignatureInfo.index("global_frame_data"), mFrameDataCpuBuffer);
+	mCommandList.set_compute_shader_resource_view(mRootSignatureInfo.index("global_entities_data"), mEntitiesDataGpuBuffer);
 	mCommandList.set_compute_shader_resource_view(mRootSignatureInfo.index("global_acceleration"), mAcceleration.acceleration());
 	mCommandList.set_compute_descriptor_table(mRootSignatureInfo.index("global_descriptor_table"), mDescriptorHeap.gpu_handle());
 

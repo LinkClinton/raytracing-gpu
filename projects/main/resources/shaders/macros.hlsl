@@ -1,0 +1,9 @@
+#ifndef __MACROS_HLSL__
+#define __MACROS_HLSL__
+
+#define GEOMETRY_ATTRIBUTE_POSITION_BIT (1u << 0)
+#define GEOMETRY_ATTRIBUTE_NORMAL_BIT (1u << 1)
+#define GEOMETRY_ATTRIBUTE_UV_BIT (1u << 2)
+#define GEOMETRY_ATTRIBUTE_INDEX_BIT (1u << 3)
+
+#endif

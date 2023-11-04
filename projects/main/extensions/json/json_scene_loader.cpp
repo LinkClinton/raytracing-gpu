@@ -117,18 +117,35 @@ namespace raytracing::extensions::json
 					runtime::resources::cpu_mesh resource;
 
 					resource.data.positions = entity["shape"]["triangles"]["positions"];
-					resource.data.normals = entity["shape"]["triangles"]["normals"];
-					resource.data.uvs = entity["shape"]["triangles"]["uvs"];
 					resource.data.indices = entity["shape"]["triangles"]["indices"].get<std::vector<uint32>>();
+
+					if (entity["shape"]["triangles"].contains("normals"))
+					{
+						resource.info.attribute |= runtime::resources::mesh_attribute::normal;
+						resource.data.normals = entity["shape"]["triangles"]["normals"];
+					}
+
+					if (entity["shape"]["triangles"].contains("uvs"))
+					{
+						resource.info.attribute |= runtime::resources::mesh_attribute::uv;
+						resource.data.uvs = entity["shape"]["triangles"]["uvs"];
+					}
 
 					resource.info.vtx_count = static_cast<uint32>(resource.data.positions.size());
 					resource.info.idx_count = static_cast<uint32>(resource.data.indices.size());
-					
+					resource.info.attribute = resource.info.attribute | runtime::resources::mesh_attribute::position;
+					resource.info.attribute = resource.info.attribute | runtime::resources::mesh_attribute::index;
+
 					std::string mesh_name = std::format("scene_internal_mesh_{}", scene_internal_mesh_count++);
 					
 					context.service.resource_system.add(mesh_name, std::move(resource));
 
 					mesh.name = mesh_name;
+				}
+
+				if (entity["shape"]["type"] == "mesh")
+				{
+					
 				}
 				
 				entity_data.mesh = mesh;

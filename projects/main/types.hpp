@@ -1,5 +1,7 @@
 #pragma once
 
+#include "resources/shaders/macros.hlsl"
+
 #include "extensions/glm/glm.hpp"
 
 #include <unordered_map>
@@ -67,5 +69,44 @@ namespace raytracing
 	inline matrix4x4 inverse(const matrix4x4& m)
 	{
 		return glm::inverse(m);
+	}
+
+	// enum operators for enum flag
+	template <typename Enum>
+	concept FlagEnum = requires(Enum e)
+	{
+		{ mark_enum_as_flag(e) } -> std::convertible_to<void>;
+	};
+
+	template <FlagEnum Enum>
+	Enum operator|(Enum lhs, Enum rhs)
+	{
+		return static_cast<Enum>(
+			static_cast<std::underlying_type_t<Enum>>(lhs) |
+			static_cast<std::underlying_type_t<Enum>>(rhs));
+	}
+
+	template <FlagEnum Enum>
+	Enum operator|=(Enum& lhs, Enum rhs)
+	{
+		return lhs = static_cast<Enum>(
+			static_cast<std::underlying_type_t<Enum>>(lhs) |
+			static_cast<std::underlying_type_t<Enum>>(rhs));
+	}
+
+	template <FlagEnum Enum>
+	Enum operator&(Enum lhs, Enum rhs)
+	{
+		return static_cast<Enum>(
+			static_cast<std::underlying_type_t<Enum>>(lhs) &
+			static_cast<std::underlying_type_t<Enum>>(rhs));
+	}
+
+	template <FlagEnum Enum>
+	Enum operator&=(Enum& lhs, Enum rhs)
+	{
+		return lhs = static_cast<Enum>(
+			static_cast<std::underlying_type_t<Enum>>(lhs) &
+			static_cast<std::underlying_type_t<Enum>>(rhs));
 	}
 }

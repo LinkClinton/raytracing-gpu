@@ -1,6 +1,8 @@
 #ifndef __TYPES_HLSL__
 #define __TYPES_HLSL__
 
+#include "macros.hlsl"
+
 // fix resharper c++ error or miss type
 #ifndef __HLSL_SHADER__
 

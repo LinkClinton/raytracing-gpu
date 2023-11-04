@@ -30,7 +30,9 @@ void raytracing::runtime::render::render_system::resolve(const runtime_service& 
 			if (!service.resource_system.has<resources::gpu_mesh>(entity.mesh->name))
 			{
 				const auto& [info, data] = service.resource_system.resource<resources::cpu_mesh>(entity.mesh->name);
-				
+
+				// empty resource(maybe normals or uvs in general)
+				// will create with other buffer size but copy zero data
 				resources::gpu_mesh resource =
 				{
 					.info = info,

@@ -10,12 +10,13 @@ struct frame_data
     uint sample_index;
 };
 
-struct entity_info
+struct entity_data
 {
     uint geometry_index;
 };
 
 SHADER_RESOURCE_DEFINE(ConstantBuffer<frame_data>, global_frame_data, b0, space0);
+SHADER_RESOURCE_DEFINE(StructuredBuffer<entity_data>, global_entities_data, t1, space0);
 
 SHADER_RESOURCE_DEFINE(RaytracingAccelerationStructure, global_acceleration, t0, space1);
 
@@ -30,5 +31,4 @@ SHADER_RESOURCE_DEFINE(StructuredBuffer<uint3>,  global_geometry_indices[], t0, 
 [shader("raygeneration")]
 void ray_generation()
 {
-    
 }

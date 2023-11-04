@@ -47,6 +47,9 @@
     <ClCompile Include="renderers\shade_renderer.cpp">
       <Filter>renderers</Filter>
     </ClCompile>
+    <ClCompile Include="extensions\models\tiny_ply_loader.cpp">
+      <Filter>extensions\models</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="extensions">
@@ -214,6 +217,9 @@
     <ClInclude Include="renderers\shade_renderer.hpp">
       <Filter>renderers</Filter>
     </ClInclude>
+    <ClInclude Include="extensions\models\tiny_ply_loader.hpp">
+      <Filter>extensions\models</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <CopyFileToFolders Include="resources\shaders\types.hlsl">
@@ -236,6 +242,9 @@
     </CopyFileToFolders>
     <CopyFileToFolders Include="resources\shaders\renderers\shade_renderer\ray_generation.hlsl">
       <Filter>resources\shaders\renderers\shade_renderer</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="resources\shaders\macros.hlsl">
+      <Filter>resources\shaders</Filter>
     </CopyFileToFolders>
   </ItemGroup>
 </Project>
