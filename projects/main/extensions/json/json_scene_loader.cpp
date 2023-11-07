@@ -1,5 +1,7 @@
 #include "json_scene_loader.hpp"
 
+#include "../models/tiny_ply_loader.hpp"
+
 #include <filesystem>
 #include <fstream>
 #include <format>
@@ -145,7 +147,14 @@ namespace raytracing::extensions::json
 
 				if (entity["shape"]["type"] == "mesh")
 				{
-					
+					mesh.name = entity["shape"]["mesh"];
+
+					if (!context.service.resource_system.has<runtime::resources::cpu_mesh>(mesh.name))
+					{
+						auto resource = models::load_ply_mesh(context.working_directory + mesh.name);
+
+						context.service.resource_system.add(mesh.name, std::move(resource));
+					}
 				}
 				
 				entity_data.mesh = mesh;
