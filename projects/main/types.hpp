@@ -35,6 +35,9 @@ namespace raytracing
 	constexpr uint32 index_null = std::numeric_limits<uint32>::max();
 
 	template <typename T>
+	T pow(T value, T exponent) { return glm::pow(value, exponent); }
+
+	template <typename T>
 	T pi() { return glm::pi<T>(); }
 
 	template <typename T>
@@ -114,5 +117,17 @@ namespace raytracing
 		return lhs = static_cast<Enum>(
 			static_cast<std::underlying_type_t<Enum>>(lhs) &
 			static_cast<std::underlying_type_t<Enum>>(rhs));
+	}
+
+	inline real sRGB_to_linear(real value)
+	{
+		if (value <= 0.04045f) 
+		{
+			return value * 1.f / 12.92f;
+		}
+		else
+		{
+			return pow((value + 0.055f) * 1.f / 1.055f, 2.4f);
+		}
 	}
 }

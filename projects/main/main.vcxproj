@@ -170,7 +170,11 @@
     <ClCompile Include="extensions\imgui\imgui_impl_win32.cpp" />
     <ClCompile Include="extensions\imgui\imgui_renderer.cpp" />
     <ClCompile Include="extensions\json\json_scene_loader.cpp" />
+    <ClCompile Include="extensions\models\model_loader.cpp" />
     <ClCompile Include="extensions\models\tiny_ply_loader.cpp" />
+    <ClCompile Include="extensions\textures\stb_image_loader.cpp" />
+    <ClCompile Include="extensions\textures\texture_loader.cpp" />
+    <ClCompile Include="extensions\textures\tiny_exr_loader.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="renderers\depth_renderer.cpp" />
     <ClCompile Include="renderers\renderer.cpp" />
@@ -192,13 +196,16 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="extensions\glm\glm.hpp" />
-    <ClInclude Include="extensions\images\image_info.hpp" />
     <ClInclude Include="extensions\imgui\imgui_impl_win32.hpp" />
     <ClInclude Include="extensions\imgui\imgui_renderer.hpp" />
     <ClInclude Include="extensions\json\json.hpp" />
     <ClInclude Include="extensions\json\json_scene_loader.hpp" />
+    <ClInclude Include="extensions\models\model_loader.hpp" />
     <ClInclude Include="extensions\models\tiny_ply_loader.hpp" />
     <ClInclude Include="extensions\spdlog\spdlog.hpp" />
+    <ClInclude Include="extensions\textures\stb_image_loader.hpp" />
+    <ClInclude Include="extensions\textures\texture_loader.hpp" />
+    <ClInclude Include="extensions\textures\tiny_exr_loader.hpp" />
     <ClInclude Include="interfaces\noncopyable.hpp" />
     <ClInclude Include="renderers\depth_renderer.hpp" />
     <ClInclude Include="renderers\renderer.hpp" />

@@ -50,6 +50,18 @@
     <ClCompile Include="extensions\models\tiny_ply_loader.cpp">
       <Filter>extensions\models</Filter>
     </ClCompile>
+    <ClCompile Include="extensions\textures\stb_image_loader.cpp">
+      <Filter>extensions\textures</Filter>
+    </ClCompile>
+    <ClCompile Include="extensions\textures\tiny_exr_loader.cpp">
+      <Filter>extensions\textures</Filter>
+    </ClCompile>
+    <ClCompile Include="extensions\textures\texture_loader.cpp">
+      <Filter>extensions\textures</Filter>
+    </ClCompile>
+    <ClCompile Include="extensions\models\model_loader.cpp">
+      <Filter>extensions\models</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="extensions">
@@ -57,9 +69,6 @@
     </Filter>
     <Filter Include="extensions\glm">
       <UniqueIdentifier>{49ce08cf-7520-4937-9f27-91824fd8ccce}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="extensions\images">
-      <UniqueIdentifier>{f1750201-d877-4217-9483-27233b695f1a}</UniqueIdentifier>
     </Filter>
     <Filter Include="extensions\imgui">
       <UniqueIdentifier>{2cdf8326-6ca3-424c-8639-31c616ddac3e}</UniqueIdentifier>
@@ -130,13 +139,13 @@
     <Filter Include="resources\shaders\materials">
       <UniqueIdentifier>{0856b242-e8ce-4db8-91c1-f0e715171815}</UniqueIdentifier>
     </Filter>
+    <Filter Include="extensions\textures">
+      <UniqueIdentifier>{47cbdb18-b5d3-479c-b822-ea55663c7efe}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="extensions\glm\glm.hpp">
       <Filter>extensions\glm</Filter>
-    </ClInclude>
-    <ClInclude Include="extensions\images\image_info.hpp">
-      <Filter>extensions\images</Filter>
     </ClInclude>
     <ClInclude Include="types.hpp" />
     <ClInclude Include="extensions\imgui\imgui_impl_win32.hpp">
@@ -218,6 +227,18 @@
       <Filter>renderers</Filter>
     </ClInclude>
     <ClInclude Include="extensions\models\tiny_ply_loader.hpp">
+      <Filter>extensions\models</Filter>
+    </ClInclude>
+    <ClInclude Include="extensions\textures\stb_image_loader.hpp">
+      <Filter>extensions\textures</Filter>
+    </ClInclude>
+    <ClInclude Include="extensions\textures\tiny_exr_loader.hpp">
+      <Filter>extensions\textures</Filter>
+    </ClInclude>
+    <ClInclude Include="extensions\textures\texture_loader.hpp">
+      <Filter>extensions\textures</Filter>
+    </ClInclude>
+    <ClInclude Include="extensions\models\model_loader.hpp">
       <Filter>extensions\models</Filter>
     </ClInclude>
   </ItemGroup>

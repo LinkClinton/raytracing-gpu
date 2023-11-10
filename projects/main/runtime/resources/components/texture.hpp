@@ -19,7 +19,7 @@ namespace raytracing::runtime::resources::components
 		uint32 size_x = 0;
 		uint32 size_y = 0;
 
-		uint32 channel = 1;
+		uint32 channel = 0;
 
 		texture_format format = texture_format::uint8;
 	};

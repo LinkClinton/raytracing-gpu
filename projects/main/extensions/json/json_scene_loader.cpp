@@ -2,6 +2,8 @@
 
 #include "../models/tiny_ply_loader.hpp"
 
+#include "../textures/texture_loader.hpp"
+
 #include <filesystem>
 #include <fstream>
 #include <format>
@@ -105,6 +107,19 @@ namespace raytracing::extensions::json
 				if (entity["light"].contains("intensity"))
 				{
 					light.value["intensity"] = entity["light"]["intensity"];
+				}
+
+				if (entity["light"].contains("environment"))
+				{
+					light.textures["environment"] = entity["light"]["environment"];
+
+					if (!context.service.resource_system.has<runtime::resources::cpu_texture>(light.textures["environment"]))
+					{
+						runtime::resources::cpu_texture resource = textures::load_texture(
+							context.working_directory + light.textures["environment"]);
+
+						context.service.resource_system.add(light.textures["environment"], std::move(resource));
+					}
 				}
 
 				entity_data.light = light;
