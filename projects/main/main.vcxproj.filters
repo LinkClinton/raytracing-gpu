@@ -142,6 +142,9 @@
     <Filter Include="extensions\textures">
       <UniqueIdentifier>{47cbdb18-b5d3-479c-b822-ea55663c7efe}</UniqueIdentifier>
     </Filter>
+    <Filter Include="renderers\internal">
+      <UniqueIdentifier>{f5e85679-fa80-4956-a0b0-d40ecb6aa134}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="extensions\glm\glm.hpp">
@@ -240,6 +243,9 @@
     </ClInclude>
     <ClInclude Include="extensions\models\model_loader.hpp">
       <Filter>extensions\models</Filter>
+    </ClInclude>
+    <ClInclude Include="renderers\internal\material.hpp">
+      <Filter>renderers\internal</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

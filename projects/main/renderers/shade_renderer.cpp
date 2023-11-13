@@ -1,5 +1,7 @@
 #include "shade_renderer.hpp"
 
+#include "internal/material.hpp"
+
 #include <directx12-wrapper/shaders/shader_library.hpp>
 #include <directx12-wrapper/extensions/dxc.hpp>
 
@@ -14,8 +16,11 @@ raytracing::renderers::shade_renderer::shade_renderer(const runtime_service& ser
 	mCommandList.reset(mCommandAllocator);
 
 	std::vector<entity_data> entities_data;
-	
+
+	std::vector<raytracing::renderer::internal::diffuse_material> diffuse_materials;
+
 	mapping<std::string, uint32> geometry_indexer;
+	mapping<std::string, uint32> texture_indexer;
 
 	// create render data
 	{
@@ -33,6 +38,32 @@ raytracing::renderers::shade_renderer::shade_renderer(const runtime_service& ser
 				data.geometry_index = geometry_indexer.at(entity.mesh->name);
 			}
 
+			if (entity.material.has_value())
+			{
+				for (const auto& texture : entity.material->textures | std::views::values)
+				{
+					if (!texture.empty() && !texture_indexer.contains(texture))
+					{
+						texture_indexer.insert({ texture, static_cast<uint32>(texture_indexer.size()) });
+					}
+				}
+
+				if (entity.material->type == "diffuse")
+				{
+					raytracing::renderer::internal::diffuse_material material;
+
+					material.diffuse = raytracing::renderer::internal::read_property_from_material(
+						texture_indexer,
+						entity.material.value(), 
+						"diffuse");
+
+					data.material_index = static_cast<uint32>(diffuse_materials.size());
+					data.material_type = static_cast<uint32>(raytracing::renderer::internal::material_type::diffuse);
+
+					diffuse_materials.push_back(material);
+				}
+			}
+			
 			entities_data.push_back(data);
 		}
 	}

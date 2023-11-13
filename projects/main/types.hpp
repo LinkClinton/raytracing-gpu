@@ -32,7 +32,7 @@ namespace raytracing
 
 	using identity = uint32;
 
-	constexpr uint32 index_null = std::numeric_limits<uint32>::max();
+	constexpr uint32 index_null = INDEX_NULL;
 
 	template <typename T>
 	T pow(T value, T exponent) { return glm::pow(value, exponent); }

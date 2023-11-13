@@ -6,4 +6,6 @@
 #define GEOMETRY_ATTRIBUTE_UV_BIT (1u << 2)
 #define GEOMETRY_ATTRIBUTE_INDEX_BIT (1u << 3)
 
+#define INDEX_NULL 0xffffffff
+
 #endif

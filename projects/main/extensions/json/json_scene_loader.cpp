@@ -1,8 +1,7 @@
 #include "json_scene_loader.hpp"
 
-#include "../models/tiny_ply_loader.hpp"
-
 #include "../textures/texture_loader.hpp"
+#include "../models/model_loader.hpp"
 
 #include <filesystem>
 #include <fstream>
@@ -91,12 +90,22 @@ namespace raytracing::extensions::json
 					{
 						material.textures[property.key()] = property.value()["image"];
 						material.value[property.key()] = property.value()["value"];
+
+						if (material.textures[property.key()] != "")
+						{
+							if (!context.service.resource_system.has<runtime::resources::cpu_texture>(material.textures[property.key()]))
+							{
+								runtime::resources::cpu_texture resource = textures::load_texture(
+									context.working_directory + material.textures[property.key()]);
+
+								context.service.resource_system.add(material.textures[property.key()], std::move(resource));
+							}
+						}
 					}
 				}
 
 				entity_data.material = material;
 			}
-
 			
 			if (entity.contains("light"))
 			{
@@ -166,7 +175,7 @@ namespace raytracing::extensions::json
 
 					if (!context.service.resource_system.has<runtime::resources::cpu_mesh>(mesh.name))
 					{
-						auto resource = models::load_ply_mesh(context.working_directory + mesh.name);
+						auto resource = models::load_mesh(context.working_directory + mesh.name);
 
 						context.service.resource_system.add(mesh.name, std::move(resource));
 					}
