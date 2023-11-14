@@ -7,9 +7,46 @@
 #include "../../renderers/shade_renderer.hpp"
 #include "../../renderers/renderer.hpp"
 
+#include <ranges>
+
 namespace raytracing::runtime::render
 {
-	
+
+	template <typename T>
+	void copy_memory(
+		const wrapper::directx12::graphics_command_list& command_list,
+		const wrapper::directx12::texture2d& destination, 
+		const wrapper::directx12::buffer& upload, 
+		const std::vector<T>& values)
+	{
+		const auto logic_width = destination.size_x() *
+			wrapper::directx12::size_of(destination.format());
+
+		if (destination.alignment() == logic_width)
+		{
+			upload.copy_from_cpu(values.data(), sizeof(T) * values.size());
+		}
+		else 
+		{
+			const auto upload_memory = static_cast<byte*>(upload.begin_mapping());
+			const auto cpu_memory = reinterpret_cast<const byte*>(values.data());
+			const auto alignment = destination.alignment();
+
+			for (size_t y = 0; y < destination.size_y(); y++) 
+			{
+				std::memcpy(
+					upload_memory + y * alignment, 
+					cpu_memory + y * logic_width,
+					logic_width);
+			}
+
+			upload.end_mapping();
+		}
+
+		destination.copy_from(command_list, upload);
+		destination.barrier(command_list, D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE);
+	}
+
 }
 
 void raytracing::runtime::render::render_system::resolve(const runtime_service& service)
@@ -20,6 +57,7 @@ void raytracing::runtime::render::render_system::resolve(const runtime_service& 
 	command_allocator.reset();
 	command_list.reset(command_allocator);
 
+	std::vector<wrapper::directx12::buffer> upload_gpu_texture_heaps;
 	std::vector<resources::gpu_mesh> upload_gpu_mesh_heaps;
 
 	for (const auto& entity : service.scene.entities)
@@ -119,6 +157,45 @@ void raytracing::runtime::render::render_system::resolve(const runtime_service& 
 				service.resource_system.add(entity.mesh->name, std::move(geometry));
 			}
 		}
+
+		// merge material and light textures
+		std::vector<mapping<std::string, std::string>> textures = 
+		{
+			entity.material.has_value() ? entity.material->textures : mapping<std::string, std::string>{},
+			entity.light.has_value() ? entity.light->textures : mapping<std::string, std::string>{}
+		};
+
+		// load gpu texture from cpu texture
+		for (const auto& texture :  textures | std::views::join | std::views::values)
+		{
+			if (!texture.empty() && !service.resource_system.has<resources::gpu_texture>(texture))
+			{
+				const auto& [info, data] = service.resource_system.resource<resources::cpu_texture>(texture);
+
+				resources::gpu_texture resource =
+				{
+					.info = info,
+					.data = wrapper::directx12::texture2d::create(
+						service.render_device.device(),
+						wrapper::directx12::resource_info::common(),
+						resources::to_dxgi_format(info.format, info.channel),
+						info.size_x,
+						info.size_y)
+				};
+
+				wrapper::directx12::buffer upload = wrapper::directx12::buffer::create(
+					service.render_device.device(),
+					wrapper::directx12::resource_info::upload(),
+					info.size_y * resource.data.alignment());
+
+				copy_memory(command_list, resource.data, upload, data);
+
+				upload_gpu_texture_heaps.emplace_back(upload);
+
+				service.resource_system.add(texture, std::move(resource));
+			}
+
+		}
 	}
 
 	command_list.close();
@@ -148,7 +225,7 @@ void raytracing::runtime::render::render_system::resolve(const runtime_service& 
 		service.scene.film.size_x,
 		service.scene.film.size_y,
 		4,
-		resources::texture_format::uint8
+		resources::texture_format::fp8
 	};
 
 	mRenderTargetSDR.data = wrapper::directx12::texture2d::create
