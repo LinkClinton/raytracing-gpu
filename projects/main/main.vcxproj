@@ -177,6 +177,7 @@
     <ClCompile Include="extensions\textures\tiny_exr_loader.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="renderers\depth_renderer.cpp" />
+    <ClCompile Include="renderers\internal\material.cpp" />
     <ClCompile Include="renderers\renderer.cpp" />
     <ClCompile Include="renderers\shade_renderer.cpp" />
     <ClCompile Include="runtime\output\output_system.cpp" />

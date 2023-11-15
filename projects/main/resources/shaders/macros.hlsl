@@ -8,4 +8,7 @@
 
 #define INDEX_NULL 0xffffffff
 
+#define GLOBAL_TEXTURE_REGISTER_SPACE 7
+#define GLOBAL_MATERIAL_REGISTER_SPACE 8
+
 #endif

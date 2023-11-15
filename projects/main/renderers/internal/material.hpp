@@ -3,14 +3,8 @@
 #include "../../scenes/entity.hpp"
 #include "../../types.hpp"
 
-namespace raytracing::renderer::internal
+namespace raytracing::renderers::internal
 {
-	enum class material_type : uint32
-	{
-		diffuse = 0,
-		none = index_null,
-	};
-
 	struct texture final
 	{
 		vector3 value = vector3(1);
@@ -18,22 +12,26 @@ namespace raytracing::renderer::internal
 		uint32 index = index_null;
 	};
 
-	struct diffuse_material final
+	/*
+	 * material is the array of textures
+	 * each texture contain value(vector3) and index(uint, used to look up texture)
+	 * material identity should be continuous for each type material
+	 */
+	struct material_metadata final
 	{
-		texture diffuse;
+		std::string name = "unknown";
+		std::vector<std::string> textures;
+
+		uint32 identity = 0;
+		uint32 size = 0;
+
+		static const material_metadata& get_by_identity(uint32 identity);
+		static const material_metadata& get_by_name(const std::string& name);
+		static uint32 count();
 	};
 
-	inline texture read_property_from_material(
+	texture read_property_from_material(
 		const mapping<std::string, uint32>& texture_indexer,
 		const scenes::submodule_data& material,
-		const std::string& property)
-	{
-		const texture result =
-		{
-			.value = material.value.at(property),
-			.index = material.textures.at(property).empty() ? index_null : texture_indexer.at(material.textures.at(property))
-		};
-
-		return result;
-	}
+		const std::string& property);
 }

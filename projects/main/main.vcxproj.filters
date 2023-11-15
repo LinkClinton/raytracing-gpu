@@ -62,6 +62,9 @@
     <ClCompile Include="extensions\models\model_loader.cpp">
       <Filter>extensions\models</Filter>
     </ClCompile>
+    <ClCompile Include="renderers\internal\material.cpp">
+      <Filter>renderers\internal</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="extensions">
