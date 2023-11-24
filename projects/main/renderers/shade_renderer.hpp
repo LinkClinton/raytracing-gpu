@@ -59,6 +59,8 @@ namespace raytracing::renderers
 
 		std::vector<wrapper::directx12::buffer> mMaterialCpuBuffers;
 		std::vector<wrapper::directx12::buffer> mMaterialGpuBuffers;
+		std::vector<wrapper::directx12::buffer> mLightCpuBuffers;
+		std::vector<wrapper::directx12::buffer> mLightGpuBuffers;
 
 		frame_data mFrameData;
 	};

@@ -177,6 +177,7 @@
     <ClCompile Include="extensions\textures\tiny_exr_loader.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="renderers\depth_renderer.cpp" />
+    <ClCompile Include="renderers\internal\light.cpp" />
     <ClCompile Include="renderers\internal\material.cpp" />
     <ClCompile Include="renderers\renderer.cpp" />
     <ClCompile Include="renderers\shade_renderer.cpp" />
@@ -209,7 +210,9 @@
     <ClInclude Include="extensions\textures\tiny_exr_loader.hpp" />
     <ClInclude Include="interfaces\noncopyable.hpp" />
     <ClInclude Include="renderers\depth_renderer.hpp" />
+    <ClInclude Include="renderers\internal\light.hpp" />
     <ClInclude Include="renderers\internal\material.hpp" />
+    <ClInclude Include="renderers\internal\texture.hpp" />
     <ClInclude Include="renderers\renderer.hpp" />
     <ClInclude Include="renderers\shade_renderer.hpp" />
     <ClInclude Include="runtime\output\output_system.hpp" />

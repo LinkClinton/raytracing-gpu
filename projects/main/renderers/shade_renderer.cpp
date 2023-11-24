@@ -1,10 +1,13 @@
 #include "shade_renderer.hpp"
 
 #include "internal/material.hpp"
+#include "internal/texture.hpp"
+#include "internal/light.hpp"
 
 #include <directx12-wrapper/shaders/shader_library.hpp>
 #include <directx12-wrapper/extensions/dxc.hpp>
 
+#include <format>
 #include <ranges>
 
 raytracing::renderers::shade_renderer::shade_renderer(const runtime_service& service) : renderer(service)
@@ -19,8 +22,9 @@ raytracing::renderers::shade_renderer::shade_renderer(const runtime_service& ser
 
 	mapping<std::string, uint32> geometry_indexer;
 	mapping<std::string, uint32> texture_indexer;
-
+	
 	mapping<std::string, std::vector<internal::texture>> material_data;
+	mapping<std::string, std::vector<internal::texture>> light_data;
 
 	// create render data
 	{
@@ -42,9 +46,9 @@ raytracing::renderers::shade_renderer::shade_renderer(const runtime_service& ser
 			{
 				for (const auto& texture : entity.material->textures | std::views::values)
 				{
-					if (!texture.empty() && !texture_indexer.contains(texture))
+					if (!texture.image.empty() && !texture_indexer.contains(texture.image))
 					{
-						texture_indexer.insert({ texture, static_cast<uint32>(texture_indexer.size()) });
+						texture_indexer.insert({ texture.image, static_cast<uint32>(texture_indexer.size()) });
 					}
 				}
 
@@ -55,12 +59,34 @@ raytracing::renderers::shade_renderer::shade_renderer(const runtime_service& ser
 
 				for (const auto& texture : metadata.textures)
 				{
-					const auto value = entity.material->value.at(texture);
-					const auto index = entity.material->textures.at(texture).empty() ? 
-						index_null :
-						texture_indexer.at(entity.material->textures.at(texture));
+					const auto [value, image] = entity.material->textures.at(texture);
+					const auto index = image.empty() ? index_null : texture_indexer.at(image);
 
 					material_data[metadata.name].push_back({ value, index });
+				}
+			}
+
+			if (entity.light.has_value())
+			{
+				for (const auto& texture : entity.light->textures | std::views::values)
+				{
+					if (!texture.image.empty() && !texture_indexer.contains(texture.image))
+					{
+						texture_indexer.insert({ texture.image, static_cast<uint32>(texture_indexer.size()) });
+					}
+				}
+
+				const auto& metadata = internal::light_metadata::get_by_name(entity.light->type);
+
+				data.light_index = static_cast<uint32>(light_data[metadata.name].size() / metadata.textures.size());
+				data.light_type = metadata.identity;
+
+				for (const auto& texture : metadata.textures)
+				{
+					const auto [value, image] = entity.light->textures.at(texture);
+					const auto index = image.empty() ? index_null : texture_indexer.at(image);
+
+					light_data[metadata.name].push_back({ value, index });
 				}
 			}
 			
@@ -149,6 +175,32 @@ raytracing::renderers::shade_renderer::shade_renderer(const runtime_service& ser
 			mMaterialGpuBuffers[index].copy_from(mCommandList, mMaterialCpuBuffers[index]);
 			mMaterialGpuBuffers[index].barrier(mCommandList, D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE);
 		}
+
+		mLightCpuBuffers.resize(internal::light_metadata::count());
+		mLightGpuBuffers.resize(internal::light_metadata::count());
+
+		for (uint32 index = 0; index < internal::light_metadata::count(); index++)
+		{
+			const auto& metadata = internal::light_metadata::get_by_identity(index);
+
+			const void* buffer_data = light_data[metadata.name].data();
+			const size_t buffer_size = light_data[metadata.name].size() * sizeof(internal::texture);
+
+			mLightCpuBuffers[index] = wrapper::directx12::buffer::create(
+				service.render_device.device(),
+				wrapper::directx12::resource_info::upload(),
+				std::max(buffer_size, static_cast<size_t>(256)));
+
+			mLightGpuBuffers[index] = wrapper::directx12::buffer::create(
+				service.render_device.device(),
+				wrapper::directx12::resource_info::common(),
+				std::max(buffer_size, static_cast<size_t>(256)));
+
+			mLightCpuBuffers[index].copy_from_cpu(buffer_data, buffer_size);
+
+			mLightGpuBuffers[index].copy_from(mCommandList, mLightCpuBuffers[index]);
+			mLightGpuBuffers[index].barrier(mCommandList, D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE);
+		}
 	}
 
 	// create shader libraries
@@ -161,41 +213,67 @@ raytracing::renderers::shade_renderer::shade_renderer(const runtime_service& ser
 
 	// create descriptor heap/table
 	{
-		std::vector<std::string> global_geometry_positions_name;
-		std::vector<std::string> global_geometry_normals_name;
-		std::vector<std::string> global_geometry_uvs_name;
-		std::vector<std::string> global_geometry_indices_name;
+		struct global_resource_array final
+		{
+			std::vector<std::string> name;
+
+			uint32 space;
+			uint32 base;
+		};
+
+		mapping<std::string, global_resource_array> global_resource_arrays =
+		{
+			{ "global_geometry_positions", global_resource_array { {}, 3, 0 } },
+			{ "global_geometry_normals", global_resource_array { {}, 4, 0 } },
+			{ "global_geometry_uvs", global_resource_array { {}, 5, 0 } },
+			{ "global_geometry_indices", global_resource_array { {}, 6, 0 } },
+			{ "global_textures", global_resource_array{ {}, GLOBAL_TEXTURE_REGISTER_SPACE, 0} },
+			{ "global_materials", global_resource_array{ {}, GLOBAL_MATERIAL_REGISTER_SPACE, 0} },
+			{ "global_lights", global_resource_array{{}, GLOBAL_LIGHT_REGISTER_SPACE, 0} }
+		};
+
+		auto& global_geometry_positions = global_resource_arrays["global_geometry_positions"];
+		auto& global_geometry_normals = global_resource_arrays["global_geometry_normals"];
+		auto& global_geometry_uvs = global_resource_arrays["global_geometry_uvs"];
+		auto& global_geometry_indices = global_resource_arrays["global_geometry_indices"];
+		auto& global_textures = global_resource_arrays["global_textures"];
+		auto& global_materials = global_resource_arrays["global_materials"];
+		auto& global_lights = global_resource_arrays["global_lights"];
 
 		for (size_t index = 0; index < geometry_indexer.size(); index++)
 		{
-			global_geometry_positions_name.push_back("global_geometry_positions_" + std::to_string(index));
-			global_geometry_normals_name.push_back("global_geometry_normals_" + std::to_string(index));
-			global_geometry_uvs_name.push_back("global_geometry_uvs_" + std::to_string(index));
-			global_geometry_indices_name.push_back("global_geometry_indices_" + std::to_string(index));
+			global_geometry_positions.name.push_back(std::format("global_geometry_positions_{}", index));
+			global_geometry_normals.name.push_back(std::format("global_geometry_normals_{}", index));
+			global_geometry_uvs.name.push_back(std::format("global_geometry_uvs_{}", index));
+			global_geometry_indices.name.push_back(std::format("global_geometry_indices_{}", index));
 		}
-
-		std::vector<std::string> global_texture_name;
 
 		for (size_t index = 0; index < texture_indexer.size(); index++)
 		{
-			global_texture_name.push_back("global_texture_" + std::to_string(index));
+			global_textures.name.push_back(std::format("global_texture_{}", index));
 		}
-
-		std::vector<std::string> global_material_name;
 
 		for (uint32 index = 0; index < internal::material_metadata::count(); index++)
 		{
-			global_material_name.push_back("global_" + internal::material_metadata::get_by_identity(index).name + "_material");
+			global_materials.name.push_back(std::format("global_{}_material", 
+				internal::material_metadata::get_by_identity(index).name));
 		}
 
-		mDescriptorTable
-			.add_uav_range({ "global_render_target_hdr", "global_render_target_sdr" }, 0, 2)
-			.add_srv_range(global_geometry_positions_name, 0, 3)
-			.add_srv_range(global_geometry_normals_name, 0, 4)
-			.add_srv_range(global_geometry_uvs_name, 0, 5)
-			.add_srv_range(global_geometry_indices_name, 0, 6)
-			.add_srv_range(global_texture_name, 0, GLOBAL_TEXTURE_REGISTER_SPACE)
-			.add_srv_range(global_material_name, 0, GLOBAL_MATERIAL_REGISTER_SPACE);
+		for (uint32 index = 0; index < internal::light_metadata::count(); index++)
+		{
+			global_lights.name.push_back(std::format("global_{}_light",
+				internal::light_metadata::get_by_identity(index).name));
+		}
+
+		mDescriptorTable.add_uav_range({ "global_render_target_hdr", "global_render_target_sdr" }, 0, 2);
+
+		for (const auto& resource_array : global_resource_arrays | std::views::values)
+		{
+			if (!resource_array.name.empty())
+			{
+				mDescriptorTable.add_srv_range(resource_array.name, resource_array.base, resource_array.space);
+			}
+		}
 
 		mDescriptorHeap = wrapper::directx12::descriptor_heap::create(service.render_device.device(), mDescriptorTable);
 
@@ -221,22 +299,22 @@ raytracing::renderers::shade_renderer::shade_renderer(const runtime_service& ser
 
 			service.render_device.device().create_shader_resource_view(
 				wrapper::directx12::resource_view::structured_buffer(sizeof(vector3), data.positions.size_in_bytes()),
-				mDescriptorHeap.cpu_handle(mDescriptorTable.index(global_geometry_positions_name[index])),
+				mDescriptorHeap.cpu_handle(mDescriptorTable.index(global_geometry_positions.name[index])),
 				data.positions);
 
 			service.render_device.device().create_shader_resource_view(
 				wrapper::directx12::resource_view::structured_buffer(sizeof(vector3), data.normals.size_in_bytes()),
-				mDescriptorHeap.cpu_handle(mDescriptorTable.index(global_geometry_normals_name[index])),
+				mDescriptorHeap.cpu_handle(mDescriptorTable.index(global_geometry_normals.name[index])),
 				data.normals);
 
 			service.render_device.device().create_shader_resource_view(
 				wrapper::directx12::resource_view::structured_buffer(sizeof(vector3), data.uvs.size_in_bytes()),
-				mDescriptorHeap.cpu_handle(mDescriptorTable.index(global_geometry_uvs_name[index])),
+				mDescriptorHeap.cpu_handle(mDescriptorTable.index(global_geometry_uvs.name[index])),
 				data.uvs);
 
 			service.render_device.device().create_shader_resource_view(
 				wrapper::directx12::resource_view::structured_buffer(sizeof(uint32) * 3, data.indices.size_in_bytes()),
-				mDescriptorHeap.cpu_handle(mDescriptorTable.index(global_geometry_indices_name[index])),
+				mDescriptorHeap.cpu_handle(mDescriptorTable.index(global_geometry_indices.name[index])),
 				data.indices);
 		}
 
@@ -247,7 +325,7 @@ raytracing::renderers::shade_renderer::shade_renderer(const runtime_service& ser
 
 			service.render_device.device().create_shader_resource_view(
 				wrapper::directx12::resource_view::texture2d(data.format()),
-				mDescriptorHeap.cpu_handle(mDescriptorTable.index(global_texture_name[index])),
+				mDescriptorHeap.cpu_handle(mDescriptorTable.index(global_textures.name[index])),
 				data);
 		}
 
@@ -259,7 +337,7 @@ raytracing::renderers::shade_renderer::shade_renderer(const runtime_service& ser
 
 			service.render_device.device().create_shader_resource_view(
 				wrapper::directx12::resource_view::structured_buffer(stride, size),
-				mDescriptorHeap.cpu_handle(mDescriptorTable.index(global_material_name[index])),
+				mDescriptorHeap.cpu_handle(mDescriptorTable.index(global_materials.name[index])),
 				mMaterialGpuBuffers[index]);
 		}
 	}

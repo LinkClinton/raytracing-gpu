@@ -88,17 +88,16 @@ namespace raytracing::extensions::json
 						material.type = property.value();
 					}else
 					{
-						material.textures[property.key()] = property.value()["image"];
-						material.value[property.key()] = property.value()["value"];
-
-						if (material.textures[property.key()] != "")
+						material.textures[property.key()] = property.value();
+						
+						if (!material.textures[property.key()].image.empty())
 						{
-							if (!context.service.resource_system.has<runtime::resources::cpu_texture>(material.textures[property.key()]))
+							if (!context.service.resource_system.has<runtime::resources::cpu_texture>(material.textures[property.key()].image))
 							{
 								runtime::resources::cpu_texture resource = textures::load_texture(
-									context.working_directory + material.textures[property.key()]);
+									context.working_directory + material.textures[property.key()].image);
 
-								context.service.resource_system.add(material.textures[property.key()], std::move(resource));
+								context.service.resource_system.add(material.textures[property.key()].image, std::move(resource));
 							}
 						}
 					}
@@ -111,23 +110,26 @@ namespace raytracing::extensions::json
 			{
 				scenes::submodule_data light;
 
-				light.type = entity["light"]["type"];
-
-				if (entity["light"].contains("intensity"))
+				for (const auto& property : entity["light"].items())
 				{
-					light.value["intensity"] = entity["light"]["intensity"];
-				}
-
-				if (entity["light"].contains("environment"))
-				{
-					light.textures["environment"] = entity["light"]["environment"];
-
-					if (!context.service.resource_system.has<runtime::resources::cpu_texture>(light.textures["environment"]))
+					if (property.key() == "type")
 					{
-						runtime::resources::cpu_texture resource = textures::load_texture(
-							context.working_directory + light.textures["environment"]);
+						light.type = property.value();
+					}
+					else
+					{
+						light.textures[property.key()] = property.value();
 
-						context.service.resource_system.add(light.textures["environment"], std::move(resource));
+						if (!light.textures[property.key()].image.empty())
+						{
+							if (!context.service.resource_system.has<runtime::resources::cpu_texture>(light.textures[property.key()].image))
+							{
+								runtime::resources::cpu_texture resource = textures::load_texture(
+									context.working_directory + light.textures[property.key()].image);
+
+								context.service.resource_system.add(light.textures[property.key()].image, std::move(resource));
+							}
+						}
 					}
 				}
 

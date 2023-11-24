@@ -159,18 +159,18 @@ void raytracing::runtime::render::render_system::resolve(const runtime_service& 
 		}
 
 		// merge material and light textures
-		std::vector<mapping<std::string, std::string>> textures = 
+		std::vector<mapping<std::string, scenes::texture>> textures = 
 		{
-			entity.material.has_value() ? entity.material->textures : mapping<std::string, std::string>{},
-			entity.light.has_value() ? entity.light->textures : mapping<std::string, std::string>{}
+			entity.material.has_value() ? entity.material->textures : mapping<std::string, scenes::texture>{},
+			entity.light.has_value() ? entity.light->textures : mapping<std::string, scenes::texture>{}
 		};
 
 		// load gpu texture from cpu texture
 		for (const auto& texture :  textures | std::views::join | std::views::values)
 		{
-			if (!texture.empty() && !service.resource_system.has<resources::gpu_texture>(texture))
+			if (!texture.image.empty() && !service.resource_system.has<resources::gpu_texture>(texture.image))
 			{
-				const auto& [info, data] = service.resource_system.resource<resources::cpu_texture>(texture);
+				const auto& [info, data] = service.resource_system.resource<resources::cpu_texture>(texture.image);
 
 				resources::gpu_texture resource =
 				{
@@ -192,7 +192,7 @@ void raytracing::runtime::render::render_system::resolve(const runtime_service& 
 
 				upload_gpu_texture_heaps.emplace_back(upload);
 
-				service.resource_system.add(texture, std::move(resource));
+				service.resource_system.add(texture.image, std::move(resource));
 			}
 
 		}

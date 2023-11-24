@@ -9,12 +9,17 @@
 
 namespace raytracing::scenes
 {
+	struct texture final
+	{
+		vector3 value = vector3(1);
+		std::string image = "";
+	};
+
 	struct submodule_data final
 	{
 		std::string type = "unknown";
 
-		mapping<std::string, std::string> textures;
-		mapping<std::string, vector3> value;
+		mapping<std::string, texture> textures;
 	};
 
 	struct submodule_mesh final

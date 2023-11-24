@@ -1,4 +1,5 @@
 #include "material.hpp"
+#include "texture.hpp"
 
 static std::vector<raytracing::renderers::internal::material_metadata> metadata = 
 {
@@ -50,17 +51,4 @@ const raytracing::renderers::internal::material_metadata& raytracing::renderers:
 raytracing::uint32 raytracing::renderers::internal::material_metadata::count()
 {
 	return static_cast<uint32>(metadata.size());
-}
-
-raytracing::renderers::internal::texture raytracing::renderers::internal::read_property_from_material(
-	const mapping<std::string, uint32>& texture_indexer, const scenes::submodule_data& material,
-	const std::string& property)
-{
-	const texture result =
-	{
-		.value = material.value.at(property),
-		.index = material.textures.at(property).empty() ? index_null : texture_indexer.at(material.textures.at(property))
-	};
-
-	return result;
 }

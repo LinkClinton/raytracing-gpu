@@ -65,6 +65,9 @@
     <ClCompile Include="renderers\internal\material.cpp">
       <Filter>renderers\internal</Filter>
     </ClCompile>
+    <ClCompile Include="renderers\internal\light.cpp">
+      <Filter>renderers\internal</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="extensions">
@@ -248,6 +251,12 @@
       <Filter>extensions\models</Filter>
     </ClInclude>
     <ClInclude Include="renderers\internal\material.hpp">
+      <Filter>renderers\internal</Filter>
+    </ClInclude>
+    <ClInclude Include="renderers\internal\texture.hpp">
+      <Filter>renderers\internal</Filter>
+    </ClInclude>
+    <ClInclude Include="renderers\internal\light.hpp">
       <Filter>renderers\internal</Filter>
     </ClInclude>
   </ItemGroup>

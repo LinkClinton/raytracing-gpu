@@ -108,4 +108,20 @@ namespace nlohmann
 		}
 	};
 
+	template <>
+	struct adl_serializer<raytracing::scenes::texture>
+	{
+		static void to_json(json& json, const raytracing::scenes::texture& texture)
+		{
+			json["image"] = texture.image;
+			json["value"] = texture.value;
+		}
+
+		static void from_json(const json& json, raytracing::scenes::texture& texture)
+		{
+			texture.image = json["image"];
+			texture.value = json["value"];
+		}
+	};
+
 }
