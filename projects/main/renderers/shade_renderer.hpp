@@ -57,10 +57,10 @@ namespace raytracing::renderers
 		wrapper::directx12::buffer mEntitiesDataGpuBuffer;
 		wrapper::directx12::buffer mFrameDataCpuBuffer;
 
-		std::vector<wrapper::directx12::buffer> mMaterialCpuBuffers;
-		std::vector<wrapper::directx12::buffer> mMaterialGpuBuffers;
-		std::vector<wrapper::directx12::buffer> mLightCpuBuffers;
-		std::vector<wrapper::directx12::buffer> mLightGpuBuffers;
+		wrapper::directx12::buffer mMaterialCpuBuffer;
+		wrapper::directx12::buffer mMaterialGpuBuffer;
+		wrapper::directx12::buffer mLightCpuBuffer;
+		wrapper::directx12::buffer mLightGpuBuffer;
 
 		frame_data mFrameData;
 	};

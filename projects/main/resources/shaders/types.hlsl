@@ -45,6 +45,18 @@ struct RayQuery
 
 #define SHADER_RESOURCE_DEFINE(type, name, base, space) type name : register(base, space)
 
+// const variable define
+#define ONE_OVER_PI 0.318309886183790671537767526745028724
+#define ONE_OVER_TWO_PI 0.159154943091895335768883763372514362
+#define QUARTER_PI 0.785398163397448309615660845819875721
+#define HALF_PI 1.57079632679489661923132169163975144
+#define TWO_PI 6.28318530717958647692528676655900576
+#define ONE_PI 3.14159265358979323846264338327950288
+
+// math macros
+
+#define MAX(x, y) (x > y ? x : y)
+
 // hash functions from https://github.com/ospray/ospray
 uint murmur_hash3_mix(uint hash, uint k)
 {
@@ -118,5 +130,15 @@ float pcg32_random::next_float()
     return ldexp((float)next_uint(), -32);
 }
 
+struct texture_handle
+{
+    float3 value;
+    uint index;
+};
+
+float4 sample_level(Texture2D<float4> textures[], SamplerState texture_sampler, texture_handle handle, float2 uv, float lod)
+{
+    return handle.index != INDEX_NULL ? textures[NonUniformResourceIndex(handle.index)].SampleLevel(texture_sampler, uv, lod) : 1;
+}
 
 #endif

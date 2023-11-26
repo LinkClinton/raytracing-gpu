@@ -285,5 +285,14 @@
     <CopyFileToFolders Include="resources\shaders\macros.hlsl">
       <Filter>resources\shaders</Filter>
     </CopyFileToFolders>
+    <CopyFileToFolders Include="resources\shaders\materials\material.hlsl">
+      <Filter>resources\shaders\materials</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="resources\shaders\materials\diffuse_material.hlsl">
+      <Filter>resources\shaders\materials</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="resources\shaders\materials\material_wrapper.hlsl">
+      <Filter>resources\shaders\materials</Filter>
+    </CopyFileToFolders>
   </ItemGroup>
 </Project>

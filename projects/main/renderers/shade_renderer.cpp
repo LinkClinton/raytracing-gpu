@@ -23,8 +23,8 @@ raytracing::renderers::shade_renderer::shade_renderer(const runtime_service& ser
 	mapping<std::string, uint32> geometry_indexer;
 	mapping<std::string, uint32> texture_indexer;
 	
-	mapping<std::string, std::vector<internal::texture>> material_data;
-	mapping<std::string, std::vector<internal::texture>> light_data;
+	std::vector<internal::texture> material_data;
+	std::vector<internal::texture> light_data;
 
 	// create render data
 	{
@@ -54,7 +54,7 @@ raytracing::renderers::shade_renderer::shade_renderer(const runtime_service& ser
 
 				const auto& metadata = internal::material_metadata::get_by_name(entity.material->type);
 
-				data.material_index = static_cast<uint32>(material_data[metadata.name].size() / metadata.textures.size());
+				data.material_index = static_cast<uint32>(material_data.size());
 				data.material_type = metadata.identity;
 
 				for (const auto& texture : metadata.textures)
@@ -62,7 +62,7 @@ raytracing::renderers::shade_renderer::shade_renderer(const runtime_service& ser
 					const auto [value, image] = entity.material->textures.at(texture);
 					const auto index = image.empty() ? index_null : texture_indexer.at(image);
 
-					material_data[metadata.name].push_back({ value, index });
+					material_data.emplace_back(value, index);
 				}
 			}
 
@@ -78,7 +78,7 @@ raytracing::renderers::shade_renderer::shade_renderer(const runtime_service& ser
 
 				const auto& metadata = internal::light_metadata::get_by_name(entity.light->type);
 
-				data.light_index = static_cast<uint32>(light_data[metadata.name].size() / metadata.textures.size());
+				data.light_index = static_cast<uint32>(light_data.size());
 				data.light_type = metadata.identity;
 
 				for (const auto& texture : metadata.textures)
@@ -86,7 +86,7 @@ raytracing::renderers::shade_renderer::shade_renderer(const runtime_service& ser
 					const auto [value, image] = entity.light->textures.at(texture);
 					const auto index = image.empty() ? index_null : texture_indexer.at(image);
 
-					light_data[metadata.name].push_back({ value, index });
+					light_data.emplace_back(value, index);
 				}
 			}
 			
@@ -150,57 +150,33 @@ raytracing::renderers::shade_renderer::shade_renderer(const runtime_service& ser
 		mEntitiesDataGpuBuffer.copy_from(mCommandList, mEntitiesDataCpuBuffer);
 		mEntitiesDataGpuBuffer.barrier(mCommandList, D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE);
 
-		mMaterialCpuBuffers.resize(internal::material_metadata::count());
-		mMaterialGpuBuffers.resize(internal::material_metadata::count());
+		mMaterialCpuBuffer = wrapper::directx12::buffer::create(
+			service.render_device.device(),
+			wrapper::directx12::resource_info::upload(),
+			std::max(material_data.size() * sizeof(internal::texture), static_cast<size_t>(256)));
 
-		for (uint32 index = 0; index < internal::material_metadata::count(); index++)
-		{
-			const auto& metadata = internal::material_metadata::get_by_identity(index);
+		mMaterialGpuBuffer = wrapper::directx12::buffer::create(
+			service.render_device.device(),
+			wrapper::directx12::resource_info::common(),
+			std::max(material_data.size() * sizeof(internal::texture), static_cast<size_t>(256)));
 
-			const void* buffer_data = material_data[metadata.name].data();
-			const size_t buffer_size = material_data[metadata.name].size() * sizeof(internal::texture);
+		mMaterialCpuBuffer.copy_from_cpu(material_data.data(), material_data.size() * sizeof(internal::texture));
+		mMaterialGpuBuffer.copy_from(mCommandList, mMaterialCpuBuffer);
+		mMaterialGpuBuffer.barrier(mCommandList, D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE);
 
-			mMaterialCpuBuffers[index] = wrapper::directx12::buffer::create(
-				service.render_device.device(),
-				wrapper::directx12::resource_info::upload(),
-				std::max(buffer_size, static_cast<size_t>(256)));
+		mLightCpuBuffer = wrapper::directx12::buffer::create(
+			service.render_device.device(),
+			wrapper::directx12::resource_info::upload(),
+			std::max(light_data.size() * sizeof(internal::texture), static_cast<size_t>(256)));
 
-			mMaterialGpuBuffers[index] = wrapper::directx12::buffer::create(
-				service.render_device.device(),
-				wrapper::directx12::resource_info::common(),
-				std::max(buffer_size, static_cast<size_t>(256)));
+		mLightGpuBuffer = wrapper::directx12::buffer::create(
+			service.render_device.device(),
+			wrapper::directx12::resource_info::common(),
+			std::max(light_data.size() * sizeof(internal::texture), static_cast<size_t>(256)));
 
-			mMaterialCpuBuffers[index].copy_from_cpu(buffer_data, buffer_size);
-
-			mMaterialGpuBuffers[index].copy_from(mCommandList, mMaterialCpuBuffers[index]);
-			mMaterialGpuBuffers[index].barrier(mCommandList, D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE);
-		}
-
-		mLightCpuBuffers.resize(internal::light_metadata::count());
-		mLightGpuBuffers.resize(internal::light_metadata::count());
-
-		for (uint32 index = 0; index < internal::light_metadata::count(); index++)
-		{
-			const auto& metadata = internal::light_metadata::get_by_identity(index);
-
-			const void* buffer_data = light_data[metadata.name].data();
-			const size_t buffer_size = light_data[metadata.name].size() * sizeof(internal::texture);
-
-			mLightCpuBuffers[index] = wrapper::directx12::buffer::create(
-				service.render_device.device(),
-				wrapper::directx12::resource_info::upload(),
-				std::max(buffer_size, static_cast<size_t>(256)));
-
-			mLightGpuBuffers[index] = wrapper::directx12::buffer::create(
-				service.render_device.device(),
-				wrapper::directx12::resource_info::common(),
-				std::max(buffer_size, static_cast<size_t>(256)));
-
-			mLightCpuBuffers[index].copy_from_cpu(buffer_data, buffer_size);
-
-			mLightGpuBuffers[index].copy_from(mCommandList, mLightCpuBuffers[index]);
-			mLightGpuBuffers[index].barrier(mCommandList, D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE);
-		}
+		mLightCpuBuffer.copy_from_cpu(light_data.data(), light_data.size() * sizeof(internal::texture));
+		mLightGpuBuffer.copy_from(mCommandList, mLightCpuBuffer);
+		mLightGpuBuffer.barrier(mCommandList, D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE);
 	}
 
 	// create shader libraries
@@ -227,9 +203,7 @@ raytracing::renderers::shade_renderer::shade_renderer(const runtime_service& ser
 			{ "global_geometry_normals", global_resource_array { {}, 4, 0 } },
 			{ "global_geometry_uvs", global_resource_array { {}, 5, 0 } },
 			{ "global_geometry_indices", global_resource_array { {}, 6, 0 } },
-			{ "global_textures", global_resource_array{ {}, GLOBAL_TEXTURE_REGISTER_SPACE, 0} },
-			{ "global_materials", global_resource_array{ {}, GLOBAL_MATERIAL_REGISTER_SPACE, 0} },
-			{ "global_lights", global_resource_array{{}, GLOBAL_LIGHT_REGISTER_SPACE, 0} }
+			{ "global_textures", global_resource_array{ {}, 7, 0} }
 		};
 
 		auto& global_geometry_positions = global_resource_arrays["global_geometry_positions"];
@@ -237,9 +211,7 @@ raytracing::renderers::shade_renderer::shade_renderer(const runtime_service& ser
 		auto& global_geometry_uvs = global_resource_arrays["global_geometry_uvs"];
 		auto& global_geometry_indices = global_resource_arrays["global_geometry_indices"];
 		auto& global_textures = global_resource_arrays["global_textures"];
-		auto& global_materials = global_resource_arrays["global_materials"];
-		auto& global_lights = global_resource_arrays["global_lights"];
-
+		
 		for (size_t index = 0; index < geometry_indexer.size(); index++)
 		{
 			global_geometry_positions.name.push_back(std::format("global_geometry_positions_{}", index));
@@ -252,20 +224,10 @@ raytracing::renderers::shade_renderer::shade_renderer(const runtime_service& ser
 		{
 			global_textures.name.push_back(std::format("global_texture_{}", index));
 		}
-
-		for (uint32 index = 0; index < internal::material_metadata::count(); index++)
-		{
-			global_materials.name.push_back(std::format("global_{}_material", 
-				internal::material_metadata::get_by_identity(index).name));
-		}
-
-		for (uint32 index = 0; index < internal::light_metadata::count(); index++)
-		{
-			global_lights.name.push_back(std::format("global_{}_light",
-				internal::light_metadata::get_by_identity(index).name));
-		}
-
-		mDescriptorTable.add_uav_range({ "global_render_target_hdr", "global_render_target_sdr" }, 0, 2);
+		
+		mDescriptorTable
+			.add_uav_range({ "global_render_target_hdr", "global_render_target_sdr" }, 0, 2)
+			.add_srv_range({ "global_materials", "global_lights" }, 0, 8);
 
 		for (const auto& resource_array : global_resource_arrays | std::views::values)
 		{
@@ -291,7 +253,7 @@ raytracing::renderers::shade_renderer::shade_renderer(const runtime_service& ser
 			wrapper::directx12::resource_view::read_write_texture2d(render_target_sdr.data.format()),
 			mDescriptorHeap.cpu_handle(mDescriptorTable.index("global_render_target_sdr")),
 			render_target_sdr.data);
-
+		
 		// create geometry(positions, normals, uvs, indices) gpu buffer view
 		for (const auto& [name, index] : geometry_indexer)
 		{
@@ -330,16 +292,20 @@ raytracing::renderers::shade_renderer::shade_renderer(const runtime_service& ser
 		}
 
 		// create material buffer view
-		for (uint32 index = 0; index < internal::material_metadata::count(); index++)
-		{
-			const size_t stride = internal::material_metadata::get_by_identity(index).size;
-			const size_t size = mMaterialGpuBuffers[index].size_in_bytes();
+		const size_t material_buffer_size = mMaterialGpuBuffer.size_in_bytes();
 
-			service.render_device.device().create_shader_resource_view(
-				wrapper::directx12::resource_view::structured_buffer(stride, size),
-				mDescriptorHeap.cpu_handle(mDescriptorTable.index(global_materials.name[index])),
-				mMaterialGpuBuffers[index]);
-		}
+		service.render_device.device().create_shader_resource_view(
+			wrapper::directx12::resource_view::structured_buffer(sizeof(internal::texture), material_buffer_size),
+			mDescriptorHeap.cpu_handle(mDescriptorTable.index("global_materials")),
+			mMaterialGpuBuffer);
+
+		// create light buffer view
+		const size_t light_buffer_size = mLightGpuBuffer.size_in_bytes();
+
+		service.render_device.device().create_shader_resource_view(
+			wrapper::directx12::resource_view::structured_buffer(sizeof(internal::texture), light_buffer_size),
+			mDescriptorHeap.cpu_handle(mDescriptorTable.index("global_lights")),
+			mLightGpuBuffer);
 	}
 
 	// create root signature
@@ -348,7 +314,8 @@ raytracing::renderers::shade_renderer::shade_renderer(const runtime_service& ser
 			.add_constant_buffer_view("global_frame_data", 0, 0)
 			.add_shader_resource_view("global_entities_data", 1, 0)
 			.add_shader_resource_view("global_acceleration", 0, 1)
-			.add_descriptor_table("global_descriptor_table", mDescriptorTable);
+			.add_descriptor_table("global_descriptor_table", mDescriptorTable)
+			.add_static_sampler("global_texture_sampler", 0, 10);
 
 		mRootSignature = wrapper::directx12::root_signature::create(service.render_device.device(), mRootSignatureInfo);
 	}
