@@ -41,14 +41,14 @@ void ray_generation()
     ray.TMin = 0;
     ray.TMax = 1e20;
 
-    RAY_QUERY(RAY_FLAG_FORCE_OPAQUE) query;
-
+    RayQuery<RAY_FLAG_FORCE_OPAQUE> query;
+	
     query.TraceRayInline(
 		global_acceleration,
 		RAY_FLAG_FORCE_OPAQUE,
-		0xFF, 
+		0xFF,
 		ray);
-
+    
     query.Proceed();
 
     float3 depth = global_render_target_hdr[DispatchRaysIndex().xy].rgb;

@@ -6,7 +6,7 @@
 struct diffuse_material_metadata
 {
     static const uint count = 1;
-    static const uint identity = 0;
+    static const uint type = 0;
 
     static const uint diffuse = 0;
 };
@@ -22,10 +22,8 @@ struct diffuse_material
     material_sample sample(float3 wo, float2 value);
 
     static diffuse_material create(
-		StructuredBuffer<texture_handle> package,
-		Texture2D<float4> textures[],
-		SamplerState texture_sampler,
-		uint index, float2 uv, float lod);
+		material_create_context context, 
+		material_create_info info);
 };
 
 float3 diffuse_material::evaluate(float3 wo, float3 wi)
@@ -46,14 +44,12 @@ material_sample diffuse_material::sample(float3 wo, float2 value)
 }
 
 diffuse_material diffuse_material::create(
-	StructuredBuffer<texture_handle> package, 
-	Texture2D<float4> textures[],
-	SamplerState texture_sampler, 
-	uint index, float2 uv, float lod)
+	material_create_context context,
+	material_create_info info)
 {
     diffuse_material material;
 
-    material.diffuse = package[index + 0].value * sample_level(textures, texture_sampler, package[index + 0], uv, lod).rgb;
+    material.diffuse = context.sample(info.index + 0, info.uv);
 
     return material;
 }

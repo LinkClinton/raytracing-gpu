@@ -92,7 +92,9 @@ raytracing::renderers::depth_renderer::depth_renderer(const runtime_service& ser
 			.add_shader_resource_view("global_acceleration", 0, 1)
 			.add_descriptor_table("global_descriptor_table", mDescriptorTable);
 
-		mRootSignature = wrapper::directx12::root_signature::create(service.render_device.device(), mRootSignatureInfo);
+		mRootSignature = wrapper::directx12::root_signature::create(
+			D3D12_ROOT_SIGNATURE_FLAG_NONE, 
+			service.render_device.device(), mRootSignatureInfo);
 	}
 
 	// create shader associations and raytracing pipeline

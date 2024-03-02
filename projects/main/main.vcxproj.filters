@@ -151,6 +151,9 @@
     <Filter Include="renderers\internal">
       <UniqueIdentifier>{f5e85679-fa80-4956-a0b0-d40ecb6aa134}</UniqueIdentifier>
     </Filter>
+    <Filter Include="resources\shaders\resources">
+      <UniqueIdentifier>{1b04f002-6f8a-4f82-b635-92294c38549f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="extensions\glm\glm.hpp">
@@ -293,6 +296,9 @@
     </CopyFileToFolders>
     <CopyFileToFolders Include="resources\shaders\materials\material_wrapper.hlsl">
       <Filter>resources\shaders\materials</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="resources\shaders\resources\dynamic_texture_heap.hlsl">
+      <Filter>resources\shaders\resources</Filter>
     </CopyFileToFolders>
   </ItemGroup>
 </Project>

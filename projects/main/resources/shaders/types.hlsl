@@ -9,35 +9,9 @@
 #define uint64_t uint
 #define int64_t int
 
-enum COMMITTED_STATUS : uint
-{
-    COMMITTED_NOTHING,
-    COMMITTED_TRIANGLE_HIT,
-    COMMITTED_PROCEDURAL_PRIMITIVE_HIT
-};
-
-struct RayQuery
-{
-    void TraceRayInline(
-		RaytracingAccelerationStructure AccelerationStructure,
-		uint RayFlags,
-		uint InstanceInclusionMask,
-		RayDesc Ray);
-
-    void Proceed();
-
-    COMMITTED_STATUS CommittedStatus();
-
-    float CommittedRayT();
-
-    uint CommittedInstanceID();
-};
-
-#define RAY_QUERY(flags) RayQuery
+#define RAY_FLAG_FORCE_OPAQUE 0
 
 #else
-
-#define RAY_QUERY(flags) RayQuery<flags>
 
 #endif
 
@@ -130,15 +104,10 @@ float pcg32_random::next_float()
     return ldexp((float)next_uint(), -32);
 }
 
-struct texture_handle
+struct texture_info
 {
-    float3 value;
+    float3 scale;
     uint index;
 };
-
-float4 sample_level(Texture2D<float4> textures[], SamplerState texture_sampler, texture_handle handle, float2 uv, float lod)
-{
-    return handle.index != INDEX_NULL ? textures[NonUniformResourceIndex(handle.index)].SampleLevel(texture_sampler, uv, lod) : 1;
-}
 
 #endif

@@ -33,10 +33,8 @@ SHADER_RESOURCE_DEFINE(StructuredBuffer<float3>, global_geometry_normals[], t0, 
 SHADER_RESOURCE_DEFINE(StructuredBuffer<float3>, global_geometry_uvs[], t0, space5);
 SHADER_RESOURCE_DEFINE(StructuredBuffer<uint3>,  global_geometry_indices[], t0, space6);
 
-SHADER_RESOURCE_DEFINE(Texture2D<float4>, global_textures[], t0, space7);
-
-SHADER_RESOURCE_DEFINE(StructuredBuffer<texture_handle>, global_materials, t0, space8);
-SHADER_RESOURCE_DEFINE(StructuredBuffer<texture_handle>, global_lights, t1, space8);
+SHADER_RESOURCE_DEFINE(StructuredBuffer<texture_info>, global_materials, t0, space8);
+SHADER_RESOURCE_DEFINE(StructuredBuffer<texture_info>, global_lights, t1, space8);
 
 SHADER_RESOURCE_DEFINE(SamplerState, global_texture_sampler, s0, space10);
 

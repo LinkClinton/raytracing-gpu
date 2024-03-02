@@ -181,8 +181,18 @@ raytracing::renderers::shade_renderer::shade_renderer(const runtime_service& ser
 
 	// create shader libraries
 	{
+		auto compile_option = wrapper::directx12::extensions::dxc_compile_option::none;
+
+		compile_option = compile_option | wrapper::directx12::extensions::dxc_compile_option::hlsl2021;
+
+#if _DEBUG
+		compile_option = compile_option | wrapper::directx12::extensions::dxc_compile_option::debug;
+#endif
+
 		wrapper::directx12::shader_code shader = wrapper::directx12::extensions::compile_from_file_using_dxc(
-			L"./resources/shaders/renderers/shade_renderer/ray_generation.hlsl", L"", L"lib_6_6");
+			L"./resources/shaders/renderers/shade_renderer/ray_generation.hlsl", L"", L"lib_6_6",
+			compile_option
+		);
 
 		mShaderLibrary = wrapper::directx12::shader_library::create(shader, { L"ray_generation" });
 	}
@@ -317,7 +327,9 @@ raytracing::renderers::shade_renderer::shade_renderer(const runtime_service& ser
 			.add_descriptor_table("global_descriptor_table", mDescriptorTable)
 			.add_static_sampler("global_texture_sampler", 0, 10);
 
-		mRootSignature = wrapper::directx12::root_signature::create(service.render_device.device(), mRootSignatureInfo);
+		mRootSignature = wrapper::directx12::root_signature::create(
+			D3D12_ROOT_SIGNATURE_FLAG_CBV_SRV_UAV_HEAP_DIRECTLY_INDEXED, 
+			service.render_device.device(), mRootSignatureInfo);
 	}
 
 	// create shader associations and raytracing pipeline
