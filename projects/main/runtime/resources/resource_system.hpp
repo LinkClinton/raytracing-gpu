@@ -3,7 +3,9 @@
 #include "../../interfaces/noncopyable.hpp"
 #include "../../types.hpp"
 
+#include "components/geometry.hpp"
 #include "components/texture.hpp"
+#include "components/buffer.hpp"
 #include "components/mesh.hpp"
 
 namespace raytracing::runtime
@@ -37,16 +39,21 @@ namespace raytracing::runtime::resources
 
 		template <typename Resource>
 		bool has(const std::string& name);
+
+		template <typename Resource>
+		const mapping<std::string, Resource>& pool() const;
 	private:
 		template <typename Resource>
 		mapping<std::string, Resource>& resource_pool();
 
-		mapping<std::string, wrapper::directx12::raytracing_geometry> mRayTracingGeometries;
-
 		mapping<std::string, cpu_texture> mCpuTextures;
 		mapping<std::string, gpu_texture> mGpuTextures;
-		mapping<std::string, cpu_mesh> mCpuMeshes;
-		mapping<std::string, gpu_mesh> mGpuMeshes;
+		mapping<std::string, cpu_buffer> mCpuBuffers;
+		mapping<std::string, gpu_buffer> mGpuBuffers;
+
+		mapping<std::string, geometry_buffer> mGeometryBuffers;
+		mapping<std::string, geometry> mGeometries;
+		mapping<std::string, mesh> mMeshes;
 	};
 
 	template <typename Resource>
@@ -85,6 +92,12 @@ namespace raytracing::runtime::resources
 		return resource_pool<Resource>().find(name) != resource_pool<Resource>().end();
 	}
 
+	template <typename Resource>
+	const mapping<std::string, Resource>& resource_system::pool() const
+	{
+		return resource_pool<Resource>();
+	}
+
 	template <>
 	inline mapping<std::string, cpu_texture>& resource_system::resource_pool()
 	{
@@ -98,21 +111,33 @@ namespace raytracing::runtime::resources
 	}
 
 	template <>
-	inline mapping<std::string, cpu_mesh>& resource_system::resource_pool()
+	inline mapping<std::string, cpu_buffer>& resource_system::resource_pool()
 	{
-		return mCpuMeshes;
+		return mCpuBuffers;
 	}
 
 	template <>
-	inline mapping<std::string, gpu_mesh>& resource_system::resource_pool()
+	inline mapping<std::string, gpu_buffer>& resource_system::resource_pool()
 	{
-		return mGpuMeshes;
+		return mGpuBuffers;
 	}
 
 	template <>
-	inline mapping<std::string, wrapper::directx12::raytracing_geometry>& resource_system::resource_pool()
+	inline mapping<std::string, geometry_buffer>& resource_system::resource_pool()
 	{
-		return mRayTracingGeometries;
+		return mGeometryBuffers;
+	}
+
+	template <>
+	inline mapping<std::string, geometry>& resource_system::resource_pool()
+	{
+		return mGeometries;
+	}
+
+	template <>
+	inline mapping<std::string, mesh>& resource_system::resource_pool()
+	{
+		return mMeshes;
 	}
 
 }

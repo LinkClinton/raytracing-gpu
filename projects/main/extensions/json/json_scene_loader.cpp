@@ -142,7 +142,7 @@ namespace raytracing::extensions::json
 
 				if (entity["shape"]["type"] == "triangles")
 				{
-					runtime::resources::cpu_mesh resource;
+					runtime::resources::mesh resource;
 
 					resource.data.positions = entity["shape"]["triangles"]["positions"];
 					resource.data.indices = entity["shape"]["triangles"]["indices"].get<std::vector<uint32>>();
@@ -175,7 +175,7 @@ namespace raytracing::extensions::json
 				{
 					mesh.name = entity["shape"]["mesh"];
 
-					if (!context.service.resource_system.has<runtime::resources::cpu_mesh>(mesh.name))
+					if (!context.service.resource_system.has<runtime::resources::mesh>(mesh.name))
 					{
 						auto resource = models::load_mesh(context.working_directory + mesh.name);
 

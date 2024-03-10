@@ -6,7 +6,7 @@
 
 #include <filesystem>
 
-raytracing::runtime::resources::components::cpu_mesh raytracing::extensions::models::load_mesh(
+raytracing::runtime::resources::components::mesh raytracing::extensions::models::load_mesh(
 	const std::string& filename)
 {
 	const auto filepath = std::filesystem::path(filename);

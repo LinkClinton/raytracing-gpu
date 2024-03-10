@@ -23,7 +23,7 @@ raytracing::renderers::depth_renderer::depth_renderer(const runtime_service& ser
 			{
 				wrapper::directx12::raytracing_instance instance;
 				
-				instance.geometry = service.resource_system.resource<wrapper::directx12::raytracing_geometry>(entity.mesh->name);
+				instance.geometry = service.resource_system.resource<runtime::resources::geometry>(entity.mesh->name).data.geometry;
 				instance.identity = static_cast<uint32>(index);
 
 				const auto matrix = transpose(entity.transform.matrix());

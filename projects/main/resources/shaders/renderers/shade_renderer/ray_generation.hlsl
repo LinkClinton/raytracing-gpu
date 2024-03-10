@@ -12,7 +12,9 @@ struct frame_data
 
 struct entity_data
 {
-    uint geometry_index;
+    uint geometry_vtx_location;
+    uint geometry_idx_location;
+
     uint material_index;
     uint light_index;
 
@@ -22,19 +24,20 @@ struct entity_data
 
 SHADER_RESOURCE_DEFINE(ConstantBuffer<frame_data>, global_frame_data, b0, space0);
 SHADER_RESOURCE_DEFINE(StructuredBuffer<entity_data>, global_entities_data, t1, space0);
+SHADER_RESOURCE_DEFINE(StructuredBuffer<texture_info>, global_materials, t2, space0);
+SHADER_RESOURCE_DEFINE(StructuredBuffer<texture_info>, global_lights, t3, space0);
 
 SHADER_RESOURCE_DEFINE(RaytracingAccelerationStructure, global_acceleration, t0, space1);
+SHADER_RESOURCE_DEFINE(StructuredBuffer<float3>, global_geometry_positions, t1, space1);
+SHADER_RESOURCE_DEFINE(StructuredBuffer<float3>, global_geometry_normals, t2, space1);
+SHADER_RESOURCE_DEFINE(StructuredBuffer<float3>, global_geometry_uvs, t3, space1);
+SHADER_RESOURCE_DEFINE(StructuredBuffer<uint3>,  global_geometry_indices, t4, space1);
+
 
 SHADER_RESOURCE_DEFINE(RWTexture2D<float4>, global_render_target_hdr, u0, space2);
 SHADER_RESOURCE_DEFINE(RWTexture2D<float4>, global_render_target_sdr, u1, space2);
 
-SHADER_RESOURCE_DEFINE(StructuredBuffer<float3>, global_geometry_positions[], t0, space3);
-SHADER_RESOURCE_DEFINE(StructuredBuffer<float3>, global_geometry_normals[], t0, space4);
-SHADER_RESOURCE_DEFINE(StructuredBuffer<float3>, global_geometry_uvs[], t0, space5);
-SHADER_RESOURCE_DEFINE(StructuredBuffer<uint3>,  global_geometry_indices[], t0, space6);
 
-SHADER_RESOURCE_DEFINE(StructuredBuffer<texture_info>, global_materials, t0, space8);
-SHADER_RESOURCE_DEFINE(StructuredBuffer<texture_info>, global_lights, t1, space8);
 
 SHADER_RESOURCE_DEFINE(SamplerState, global_texture_sampler, s0, space10);
 

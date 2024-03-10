@@ -5,6 +5,7 @@
 #include "extensions/glm/glm.hpp"
 
 #include <unordered_map>
+#include <string>
 
 namespace raytracing
 {

@@ -16,7 +16,9 @@ namespace raytracing::renderers
 
 	struct shade_renderer_entity_data final
 	{
-		uint32 geometry_index = index_null;
+		uint32 geometry_vtx_location = 0;
+		uint32 geometry_idx_location = 0;
+
 		uint32 material_index = index_null;
 		uint32 light_index = index_null;
 

@@ -58,103 +58,39 @@ void raytracing::runtime::render::render_system::resolve(const runtime_service& 
 	command_list.reset(command_allocator);
 
 	std::vector<wrapper::directx12::buffer> upload_gpu_texture_heaps;
-	std::vector<resources::gpu_mesh> upload_gpu_mesh_heaps;
+
+	uint32 geometry_buffer_vtx_count = 0;
+	uint32 geometry_buffer_idx_count = 0;
 
 	for (const auto& entity : service.scene.entities)
 	{
 		if (entity.mesh.has_value())
 		{
 			// vertex attribute gpu buffer
-			if (!service.resource_system.has<resources::gpu_mesh>(entity.mesh->name))
+			if (!service.resource_system.has<resources::geometry>(entity.mesh->name))
 			{
-				const auto& [info, data] = service.resource_system.resource<resources::cpu_mesh>(entity.mesh->name);
+				const auto& [info, data] = service.resource_system.resource<resources::mesh>(entity.mesh->name);
 
-				// empty resource(maybe normals or uvs in general)
-				// will create with other buffer size but copy zero data
-				resources::gpu_mesh resource =
+				// will create geometry data after we create geometry buffer
+				resources::geometry resource =
 				{
-					.info = info,
-					.data = resources::gpu_mesh_data
+					.info = resources::geometry_info
 					{
-						.positions = wrapper::directx12::buffer::create(
-							service.render_device.device(),
-							wrapper::directx12::resource_info::common(),
-							info.vtx_count * sizeof(vector3)),
-						.normals = wrapper::directx12::buffer::create(
-							service.render_device.device(),
-							wrapper::directx12::resource_info::common(),
-							info.vtx_count * sizeof(vector3)),
-						.uvs = wrapper::directx12::buffer::create(
-							service.render_device.device(),
-							wrapper::directx12::resource_info::common(),
-							info.vtx_count * sizeof(vector3)),
-						.indices = wrapper::directx12::buffer::create(
-							service.render_device.device(),
-							wrapper::directx12::resource_info::common(),
-							info.idx_count * sizeof(uint32))
-					}
-				};
-				
-				resources::gpu_mesh upload =
-				{
-					.info = info,
-					.data = resources::gpu_mesh_data
+						.vtx_location = geometry_buffer_vtx_count,
+						.idx_location = geometry_buffer_idx_count,
+						.vtx_count = info.vtx_count,
+						.idx_count = info.idx_count
+					},
+					.data = resources::geometry_data
 					{
-						.positions = wrapper::directx12::buffer::create(
-							service.render_device.device(),
-							wrapper::directx12::resource_info::upload(),
-							info.vtx_count * sizeof(vector3)),
-						.normals = wrapper::directx12::buffer::create(
-							service.render_device.device(),
-							wrapper::directx12::resource_info::upload(),
-							info.vtx_count * sizeof(vector3)),
-						.uvs = wrapper::directx12::buffer::create(
-							service.render_device.device(),
-							wrapper::directx12::resource_info::upload(),
-							info.vtx_count * sizeof(vector3)),
-						.indices =  wrapper::directx12::buffer::create(
-							service.render_device.device(),
-							wrapper::directx12::resource_info::upload(),
-							info.idx_count * sizeof(uint32))
 					}
 				};
 
-				upload.data.positions.copy_from_cpu(data.positions.data(), data.positions.size() * sizeof(vector3));
-				upload.data.normals.copy_from_cpu(data.normals.data(), data.normals.size() * sizeof(vector3));
-				upload.data.uvs.copy_from_cpu(data.uvs.data(), data.uvs.size() * sizeof(vector3));
-				upload.data.indices.copy_from_cpu(data.indices.data(), data.indices.size() * sizeof(uint32));
-
-				resource.data.positions.copy_from(command_list, upload.data.positions);
-				resource.data.normals.copy_from(command_list, upload.data.normals);
-				resource.data.uvs.copy_from(command_list, upload.data.uvs);
-				resource.data.indices.copy_from(command_list, upload.data.indices);
-
-				command_list.resource_barrier(
-					{
-					resource.data.positions.barrier(D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE),
-					resource.data.normals.barrier(D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE),
-					resource.data.uvs.barrier(D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE),
-					resource.data.indices.barrier(D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE)
-				});
-
-				upload_gpu_mesh_heaps.emplace_back(upload);
+				// update the vertex and index buffer count
+				geometry_buffer_vtx_count += info.vtx_count;
+				geometry_buffer_idx_count += info.idx_count;
 
 				service.resource_system.add(entity.mesh->name, std::move(resource));
-			}
-
-			// ray tracing bottom level accelerate structure
-			if (!service.resource_system.has<wrapper::directx12::raytracing_geometry>(entity.mesh->name))
-			{
-				const auto& [info, data] = service.resource_system.resource<resources::gpu_mesh>(entity.mesh->name);
-
-				wrapper::directx12::raytracing_geometry geometry = wrapper::directx12::raytracing_geometry::create(
-					D3D12_RAYTRACING_ACCELERATION_STRUCTURE_BUILD_FLAG_PREFER_FAST_TRACE,
-					command_list, service.render_device.device(),
-					data.positions->GetGPUVirtualAddress(), info.vtx_count,
-					data.indices->GetGPUVirtualAddress(), info.idx_count
-				);
-
-				service.resource_system.add(entity.mesh->name, std::move(geometry));
 			}
 		}
 
@@ -194,7 +130,129 @@ void raytracing::runtime::render::render_system::resolve(const runtime_service& 
 
 				service.resource_system.add(texture.image, std::move(resource));
 			}
+		}
+	}
 
+	const size_t geometry_buffer_vtx_size = geometry_buffer_vtx_count * sizeof(vector3);
+	const size_t geometry_buffer_idx_size = geometry_buffer_idx_count * sizeof(uint32);
+
+	resources::geometry_buffer geometry_upload =
+	{
+		.info = resources::geometry_buffer_info
+		{
+			.vtx_count = geometry_buffer_vtx_count,
+			.idx_count = geometry_buffer_idx_count
+		},
+		.data = resources::geometry_buffer_data
+		{
+			.positions = wrapper::directx12::buffer::create(
+				service.render_device.device(),
+				wrapper::directx12::resource_info::upload(),
+				geometry_buffer_vtx_size),
+			.normals = wrapper::directx12::buffer::create(
+				service.render_device.device(),
+				wrapper::directx12::resource_info::upload(),
+				geometry_buffer_vtx_size),
+			.uvs = wrapper::directx12::buffer::create(
+				service.render_device.device(),
+				wrapper::directx12::resource_info::upload(),
+				geometry_buffer_vtx_size),
+			.indices = wrapper::directx12::buffer::create(
+				service.render_device.device(),
+				wrapper::directx12::resource_info::upload(),
+				geometry_buffer_idx_size)
+		}
+	};
+
+	// create mega geometry buffer store all mesh data
+	{
+		auto positions = std::vector<vector3>(geometry_buffer_vtx_count);
+		auto normals = std::vector<vector3>(geometry_buffer_vtx_count);
+		auto uvs = std::vector<vector3>(geometry_buffer_vtx_count);
+		auto indices = std::vector<uint32>(geometry_buffer_idx_count);
+
+		for (const auto& entity : service.scene.entities)
+		{
+			if (entity.mesh.has_value())
+			{
+				const resources::geometry& geometry = service.resource_system.resource<resources::geometry>(entity.mesh->name);
+				const resources::mesh& mesh = service.resource_system.resource<resources::mesh>(entity.mesh->name);
+				
+				std::ranges::copy(mesh.data.positions, positions.begin() + geometry.info.vtx_location);
+				std::ranges::copy(mesh.data.normals, normals.begin() + geometry.info.vtx_location);
+				std::ranges::copy(mesh.data.uvs, uvs.begin() + geometry.info.vtx_location);
+				std::ranges::copy(mesh.data.indices, indices.begin() + geometry.info.idx_location);
+			}
+		}
+		
+		geometry_upload.data.positions.copy_from_cpu(positions.data(), positions.size() * sizeof(vector3));
+		geometry_upload.data.normals.copy_from_cpu(normals.data(), normals.size() * sizeof(vector3));
+		geometry_upload.data.uvs.copy_from_cpu(uvs.data(), uvs.size() * sizeof(vector3));
+		geometry_upload.data.indices.copy_from_cpu(indices.data(), indices.size() * sizeof(uint32));
+
+		resources::geometry_buffer geometry_resource =
+		{
+			.info = resources::geometry_buffer_info
+			{
+				.vtx_count = geometry_buffer_vtx_count,
+				.idx_count = geometry_buffer_idx_count
+			},
+			.data = resources::geometry_buffer_data
+			{
+				.positions = wrapper::directx12::buffer::create(
+					service.render_device.device(),
+					wrapper::directx12::resource_info::common(),
+					geometry_buffer_vtx_size),
+				.normals = wrapper::directx12::buffer::create(
+					service.render_device.device(),
+					wrapper::directx12::resource_info::common(),
+					geometry_buffer_vtx_size),
+				.uvs = wrapper::directx12::buffer::create(
+					service.render_device.device(),
+					wrapper::directx12::resource_info::common(),
+					geometry_buffer_vtx_size),
+				.indices = wrapper::directx12::buffer::create(
+					service.render_device.device(),
+					wrapper::directx12::resource_info::common(),
+					geometry_buffer_idx_size),
+			}
+		};
+
+		geometry_resource.data.positions.copy_from(command_list, geometry_upload.data.positions);
+		geometry_resource.data.normals.copy_from(command_list, geometry_upload.data.normals);
+		geometry_resource.data.uvs.copy_from(command_list, geometry_upload.data.uvs);
+		geometry_resource.data.indices.copy_from(command_list, geometry_upload.data.indices);
+
+		command_list.resource_barrier({
+			geometry_resource.data.positions.barrier(D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE),
+			geometry_resource.data.normals.barrier(D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE),
+			geometry_resource.data.uvs.barrier(D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE),
+			geometry_resource.data.indices.barrier(D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE)
+		});
+
+		service.resource_system.add("GeometryBuffer", std::move(geometry_resource));
+	}
+
+	// create geometry
+	{
+		const resources::geometry_buffer& buffer = service.resource_system.resource<resources::geometry_buffer>("GeometryBuffer");
+		
+		for (const auto& entity : service.scene.entities)
+		{
+			if (entity.mesh.has_value())
+			{
+				auto& [info, data] = service.resource_system.resource<resources::geometry>(entity.mesh->name);
+
+				const auto vtx_address_offset = info.vtx_location * sizeof(vector3);
+				const auto idx_address_offset = info.idx_location * sizeof(uint32);
+
+				data.geometry = wrapper::directx12::raytracing_geometry::create(
+					D3D12_RAYTRACING_ACCELERATION_STRUCTURE_BUILD_FLAG_PREFER_FAST_TRACE,
+					command_list, service.render_device.device(),
+					buffer.data.positions->GetGPUVirtualAddress() + vtx_address_offset, info.vtx_count,
+					buffer.data.indices->GetGPUVirtualAddress() + idx_address_offset,  info.idx_count
+				);
+			}
 		}
 	}
 

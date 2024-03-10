@@ -106,7 +106,7 @@ namespace raytracing::extensions::models
 		}
 	}
 
-	runtime::resources::components::cpu_mesh load_ply_mesh(const std::string& filename)
+	runtime::resources::components::mesh load_ply_mesh(const std::string& filename)
 	{
 		auto stream = std::ifstream(filename, std::ios::binary);
 
@@ -121,7 +121,7 @@ namespace raytracing::extensions::models
 
 		file.read(stream);
 
-		runtime::resources::components::cpu_mesh mesh;
+		runtime::resources::components::mesh mesh;
 
 		read_vector3_array(positions, mesh.data.positions);
 		read_vector3_array(normals, mesh.data.normals);

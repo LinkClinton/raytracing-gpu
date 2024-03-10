@@ -262,6 +262,12 @@
     <ClInclude Include="renderers\internal\light.hpp">
       <Filter>renderers\internal</Filter>
     </ClInclude>
+    <ClInclude Include="runtime\resources\components\buffer.hpp">
+      <Filter>runtime\resources\components</Filter>
+    </ClInclude>
+    <ClInclude Include="runtime\resources\components\geometry.hpp">
+      <Filter>runtime\resources\components</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <CopyFileToFolders Include="resources\shaders\types.hlsl">

@@ -218,6 +218,8 @@
     <ClInclude Include="runtime\output\output_system.hpp" />
     <ClInclude Include="runtime\render\render_device.hpp" />
     <ClInclude Include="runtime\render\render_system.hpp" />
+    <ClInclude Include="runtime\resources\components\buffer.hpp" />
+    <ClInclude Include="runtime\resources\components\geometry.hpp" />
     <ClInclude Include="runtime\resources\components\mesh.hpp" />
     <ClInclude Include="runtime\resources\components\resource.hpp" />
     <ClInclude Include="runtime\resources\components\texture.hpp" />

@@ -20,7 +20,6 @@ raytracing::renderers::shade_renderer::shade_renderer(const runtime_service& ser
 
 	std::vector<entity_data> entities_data;
 
-	mapping<std::string, uint32> geometry_indexer;
 	mapping<std::string, uint32> texture_indexer;
 	
 	std::vector<internal::texture> material_data;
@@ -34,12 +33,10 @@ raytracing::renderers::shade_renderer::shade_renderer(const runtime_service& ser
 
 			if (entity.mesh.has_value())
 			{
-				if (!geometry_indexer.contains(entity.mesh->name))
-				{
-					geometry_indexer.insert({ entity.mesh->name, static_cast<uint32>(geometry_indexer.size()) });
-				}
+				const runtime::resources::geometry& geometry = service.resource_system.resource<runtime::resources::geometry>(entity.mesh->name);
 
-				data.geometry_index = geometry_indexer.at(entity.mesh->name);
+				data.geometry_vtx_location = geometry.info.vtx_location;
+				data.geometry_idx_location = geometry.info.idx_location;
 			}
 
 			if (entity.material.has_value())
@@ -92,6 +89,15 @@ raytracing::renderers::shade_renderer::shade_renderer(const runtime_service& ser
 			
 			entities_data.push_back(data);
 		}
+
+		// texture index should be the index in descriptor heap instead of the array index of textures array
+		// we need update material and light data
+		const uint32 texture_index_start = 2;
+
+		for (auto& data : std::vector{ material_data, light_data } | std::views::join)
+		{
+			data.index = data.index + texture_index_start;
+		}
 	}
 
 	// create top acceleration 
@@ -106,7 +112,7 @@ raytracing::renderers::shade_renderer::shade_renderer(const runtime_service& ser
 			{
 				wrapper::directx12::raytracing_instance instance;
 
-				instance.geometry = service.resource_system.resource<wrapper::directx12::raytracing_geometry>(entity.mesh->name);
+				instance.geometry = service.resource_system.resource<runtime::resources::geometry>(entity.mesh->name).data.geometry;
 				instance.identity = static_cast<uint32>(index);
 
 				const auto matrix = transpose(entity.transform.matrix());
@@ -199,52 +205,19 @@ raytracing::renderers::shade_renderer::shade_renderer(const runtime_service& ser
 
 	// create descriptor heap/table
 	{
-		struct global_resource_array final
-		{
-			std::vector<std::string> name;
+		mDescriptorTable
+			.add_uav_range({ "global_render_target_hdr", "global_render_target_sdr" }, 0, 2);
 
-			uint32 space;
-			uint32 base;
-		};
-
-		mapping<std::string, global_resource_array> global_resource_arrays =
-		{
-			{ "global_geometry_positions", global_resource_array { {}, 3, 0 } },
-			{ "global_geometry_normals", global_resource_array { {}, 4, 0 } },
-			{ "global_geometry_uvs", global_resource_array { {}, 5, 0 } },
-			{ "global_geometry_indices", global_resource_array { {}, 6, 0 } },
-			{ "global_textures", global_resource_array{ {}, 7, 0} }
-		};
-
-		auto& global_geometry_positions = global_resource_arrays["global_geometry_positions"];
-		auto& global_geometry_normals = global_resource_arrays["global_geometry_normals"];
-		auto& global_geometry_uvs = global_resource_arrays["global_geometry_uvs"];
-		auto& global_geometry_indices = global_resource_arrays["global_geometry_indices"];
-		auto& global_textures = global_resource_arrays["global_textures"];
-		
-		for (size_t index = 0; index < geometry_indexer.size(); index++)
-		{
-			global_geometry_positions.name.push_back(std::format("global_geometry_positions_{}", index));
-			global_geometry_normals.name.push_back(std::format("global_geometry_normals_{}", index));
-			global_geometry_uvs.name.push_back(std::format("global_geometry_uvs_{}", index));
-			global_geometry_indices.name.push_back(std::format("global_geometry_indices_{}", index));
-		}
+		std::vector<std::string> global_textures_name;
 
 		for (size_t index = 0; index < texture_indexer.size(); index++)
 		{
-			global_textures.name.push_back(std::format("global_texture_{}", index));
+			global_textures_name.push_back(std::format("global_texture_{}", index));
 		}
-		
-		mDescriptorTable
-			.add_uav_range({ "global_render_target_hdr", "global_render_target_sdr" }, 0, 2)
-			.add_srv_range({ "global_materials", "global_lights" }, 0, 8);
 
-		for (const auto& resource_array : global_resource_arrays | std::views::values)
+		if (!global_textures_name.empty())
 		{
-			if (!resource_array.name.empty())
-			{
-				mDescriptorTable.add_srv_range(resource_array.name, resource_array.base, resource_array.space);
-			}
+			mDescriptorTable.add_srv_range(global_textures_name, 0, 3);
 		}
 
 		mDescriptorHeap = wrapper::directx12::descriptor_heap::create(service.render_device.device(), mDescriptorTable);
@@ -263,32 +236,6 @@ raytracing::renderers::shade_renderer::shade_renderer(const runtime_service& ser
 			wrapper::directx12::resource_view::read_write_texture2d(render_target_sdr.data.format()),
 			mDescriptorHeap.cpu_handle(mDescriptorTable.index("global_render_target_sdr")),
 			render_target_sdr.data);
-		
-		// create geometry(positions, normals, uvs, indices) gpu buffer view
-		for (const auto& [name, index] : geometry_indexer)
-		{
-			const auto& [info, data] = service.resource_system.resource<runtime::resources::gpu_mesh>(name);
-
-			service.render_device.device().create_shader_resource_view(
-				wrapper::directx12::resource_view::structured_buffer(sizeof(vector3), data.positions.size_in_bytes()),
-				mDescriptorHeap.cpu_handle(mDescriptorTable.index(global_geometry_positions.name[index])),
-				data.positions);
-
-			service.render_device.device().create_shader_resource_view(
-				wrapper::directx12::resource_view::structured_buffer(sizeof(vector3), data.normals.size_in_bytes()),
-				mDescriptorHeap.cpu_handle(mDescriptorTable.index(global_geometry_normals.name[index])),
-				data.normals);
-
-			service.render_device.device().create_shader_resource_view(
-				wrapper::directx12::resource_view::structured_buffer(sizeof(vector3), data.uvs.size_in_bytes()),
-				mDescriptorHeap.cpu_handle(mDescriptorTable.index(global_geometry_uvs.name[index])),
-				data.uvs);
-
-			service.render_device.device().create_shader_resource_view(
-				wrapper::directx12::resource_view::structured_buffer(sizeof(uint32) * 3, data.indices.size_in_bytes()),
-				mDescriptorHeap.cpu_handle(mDescriptorTable.index(global_geometry_indices.name[index])),
-				data.indices);
-		}
 
 		// create texture view
 		for (const auto& [name, index] : texture_indexer)
@@ -297,25 +244,9 @@ raytracing::renderers::shade_renderer::shade_renderer(const runtime_service& ser
 
 			service.render_device.device().create_shader_resource_view(
 				wrapper::directx12::resource_view::texture2d(data.format()),
-				mDescriptorHeap.cpu_handle(mDescriptorTable.index(global_textures.name[index])),
+				mDescriptorHeap.cpu_handle(mDescriptorTable.index(global_textures_name[index])),
 				data);
 		}
-
-		// create material buffer view
-		const size_t material_buffer_size = mMaterialGpuBuffer.size_in_bytes();
-
-		service.render_device.device().create_shader_resource_view(
-			wrapper::directx12::resource_view::structured_buffer(sizeof(internal::texture), material_buffer_size),
-			mDescriptorHeap.cpu_handle(mDescriptorTable.index("global_materials")),
-			mMaterialGpuBuffer);
-
-		// create light buffer view
-		const size_t light_buffer_size = mLightGpuBuffer.size_in_bytes();
-
-		service.render_device.device().create_shader_resource_view(
-			wrapper::directx12::resource_view::structured_buffer(sizeof(internal::texture), light_buffer_size),
-			mDescriptorHeap.cpu_handle(mDescriptorTable.index("global_lights")),
-			mLightGpuBuffer);
 	}
 
 	// create root signature
@@ -323,7 +254,13 @@ raytracing::renderers::shade_renderer::shade_renderer(const runtime_service& ser
 		mRootSignatureInfo
 			.add_constant_buffer_view("global_frame_data", 0, 0)
 			.add_shader_resource_view("global_entities_data", 1, 0)
+			.add_shader_resource_view("global_materials", 2, 0)
+			.add_shader_resource_view("global_lights", 3, 0)
 			.add_shader_resource_view("global_acceleration", 0, 1)
+			.add_shader_resource_view("global_geometry_positions", 1, 1)
+			.add_shader_resource_view("global_geometry_normals", 2, 1)
+			.add_shader_resource_view("global_geometry_uvs", 3, 1)
+			.add_shader_resource_view("global_geometry_indices", 4, 1)
 			.add_descriptor_table("global_descriptor_table", mDescriptorTable)
 			.add_static_sampler("global_texture_sampler", 0, 10);
 
@@ -414,10 +351,18 @@ void raytracing::renderers::shade_renderer::render(const runtime_service& servic
 	mCommandList->SetPipelineState1(mPipeline.get());
 	mCommandList->SetComputeRootSignature(mRootSignature.get());
 
+	const runtime::resources::geometry_buffer& geometry_buffer = service.resource_system.resource<runtime::resources::geometry_buffer>("GeometryBuffer");
+	
 	mCommandList.set_descriptor_heaps({ mDescriptorHeap.get() });
 	mCommandList.set_compute_constant_buffer_view(mRootSignatureInfo.index("global_frame_data"), mFrameDataCpuBuffer);
 	mCommandList.set_compute_shader_resource_view(mRootSignatureInfo.index("global_entities_data"), mEntitiesDataGpuBuffer);
+	mCommandList.set_compute_shader_resource_view(mRootSignatureInfo.index("global_materials"), mMaterialGpuBuffer);
+	mCommandList.set_compute_shader_resource_view(mRootSignatureInfo.index("global_lights"), mLightGpuBuffer);
 	mCommandList.set_compute_shader_resource_view(mRootSignatureInfo.index("global_acceleration"), mAcceleration.acceleration());
+	mCommandList.set_compute_shader_resource_view(mRootSignatureInfo.index("global_geometry_positions"), geometry_buffer.data.positions);
+	mCommandList.set_compute_shader_resource_view(mRootSignatureInfo.index("global_geometry_normals"), geometry_buffer.data.normals);
+	mCommandList.set_compute_shader_resource_view(mRootSignatureInfo.index("global_geometry_uvs"), geometry_buffer.data.uvs);
+	mCommandList.set_compute_shader_resource_view(mRootSignatureInfo.index("global_geometry_indices"), geometry_buffer.data.indices);
 	mCommandList.set_compute_descriptor_table(mRootSignatureInfo.index("global_descriptor_table"), mDescriptorHeap.gpu_handle());
 
 	const auto render_target = service.resource_system.resource<runtime::resources::gpu_texture>("RenderSystem.RenderTarget.HDR");

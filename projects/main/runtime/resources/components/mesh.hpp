@@ -2,9 +2,6 @@
 
 #include "resource.hpp"
 
-#include <directx12-wrapper/raytracings/accleration.hpp>
-#include <directx12-wrapper/resources/buffer.hpp>
-
 namespace raytracing::runtime::resources::components
 {
 	enum class mesh_attribute : uint32
@@ -26,7 +23,7 @@ namespace raytracing::runtime::resources::components
 		mesh_attribute attribute = mesh_attribute::none;
 	};
 	
-	struct cpu_mesh_data final
+	struct mesh_data final
 	{
 		std::vector<vector3> positions;
 		std::vector<vector3> normals;
@@ -34,16 +31,6 @@ namespace raytracing::runtime::resources::components
 
 		std::vector<uint32> indices;
 	};
-	
-	struct gpu_mesh_data final
-	{
-		wrapper::directx12::buffer positions;
-		wrapper::directx12::buffer normals;
-		wrapper::directx12::buffer uvs;
 
-		wrapper::directx12::buffer indices;
-	};
-
-	using cpu_mesh = resource<mesh_info, cpu_mesh_data>;
-	using gpu_mesh = resource<mesh_info, gpu_mesh_data>;
+	using mesh = resource<mesh_info, mesh_data>;
 }
