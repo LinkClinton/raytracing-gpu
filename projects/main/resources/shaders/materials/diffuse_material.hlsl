@@ -28,19 +28,23 @@ struct diffuse_material
 
 float3 diffuse_material::evaluate(float3 wo, float3 wi)
 {
-    return diffuse * ONE_OVER_PI;
+    return in_same_hemisphere(wo, wi) ? diffuse * ONE_OVER_PI : 0;
 }
 
 float diffuse_material::pdf(float3 wo, float3 wi)
 {
-    //todo:
-    return 0;
+    return sampling_uniform_hemisphere::pdf();
 }
 
 material_sample diffuse_material::sample(float3 wo, float2 value)
 {
-    //todo:
-    return (material_sample) 0;
+    material_sample sample;
+
+    sample.wi = sampling_uniform_hemisphere::get(value);
+    sample.pdf = sampling_uniform_hemisphere::pdf();
+    sample.value = evaluate(wo, sample.wi);
+
+    return sample;
 }
 
 diffuse_material diffuse_material::create(

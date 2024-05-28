@@ -154,6 +154,9 @@
     <Filter Include="resources\shaders\resources">
       <UniqueIdentifier>{1b04f002-6f8a-4f82-b635-92294c38549f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="resources\shaders\utilities">
+      <UniqueIdentifier>{b897505e-123b-423f-a53a-49dd2b7cc28f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="extensions\glm\glm.hpp">
@@ -305,6 +308,15 @@
     </CopyFileToFolders>
     <CopyFileToFolders Include="resources\shaders\resources\dynamic_texture_heap.hlsl">
       <Filter>resources\shaders\resources</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="resources\shaders\utilities\random.hlsl">
+      <Filter>resources\shaders\utilities</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="resources\shaders\utilities\sampling.hlsl">
+      <Filter>resources\shaders\utilities</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="resources\shaders\utilities\shading.hlsl">
+      <Filter>resources\shaders\utilities</Filter>
     </CopyFileToFolders>
   </ItemGroup>
 </Project>

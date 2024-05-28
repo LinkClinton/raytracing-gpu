@@ -229,7 +229,7 @@ void raytracing::runtime::render::render_system::resolve(const runtime_service& 
 			geometry_resource.data.uvs.barrier(D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE),
 			geometry_resource.data.indices.barrier(D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE)
 		});
-
+		
 		service.resource_system.add("GeometryBuffer", std::move(geometry_resource));
 	}
 
@@ -297,7 +297,7 @@ void raytracing::runtime::render::render_system::resolve(const runtime_service& 
 	
 	service.resource_system.add<resources::gpu_texture>("RenderSystem.RenderTarget.HDR", mRenderTargetHDR);
 	service.resource_system.add<resources::gpu_texture>("RenderSystem.RenderTarget.SDR", mRenderTargetSDR);
-
+	
 	//todo : create renderer from config
 	mRenderer = std::make_shared<renderers::shade_renderer>(service);
 }

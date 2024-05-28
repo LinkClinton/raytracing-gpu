@@ -1,7 +1,7 @@
 #ifndef __INDEPENDENT_SAMPLER_HLSL__
 #define __INDEPENDENT_SAMPLER_HLSL__
 
-#include "../types.hlsl"
+#include "../utilities/random.hlsl"
 
 struct independent_sampler
 {

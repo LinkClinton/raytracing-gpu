@@ -2,6 +2,8 @@
 #define __MATERIAL_HLSL__
 
 #include "../resources/dynamic_texture_heap.hlsl"
+#include "../utilities/sampling.hlsl"
+#include "../utilities/shading.hlsl"
 
 struct material_sample
 {

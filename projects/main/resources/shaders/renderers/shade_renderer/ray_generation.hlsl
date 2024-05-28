@@ -33,11 +33,8 @@ SHADER_RESOURCE_DEFINE(StructuredBuffer<float3>, global_geometry_normals, t2, sp
 SHADER_RESOURCE_DEFINE(StructuredBuffer<float3>, global_geometry_uvs, t3, space1);
 SHADER_RESOURCE_DEFINE(StructuredBuffer<uint3>,  global_geometry_indices, t4, space1);
 
-
 SHADER_RESOURCE_DEFINE(RWTexture2D<float4>, global_render_target_hdr, u0, space2);
 SHADER_RESOURCE_DEFINE(RWTexture2D<float4>, global_render_target_sdr, u1, space2);
-
-
 
 SHADER_RESOURCE_DEFINE(SamplerState, global_texture_sampler, s0, space10);
 
